@@ -1,0 +1,137 @@
+/* l360 Side Buttons Styling */
+.l360-side-buttons {
+    position: fixed;
+    right: 5px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.l360-side-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    color: var(--l360-white, #fff);
+    /* Added fallback color */
+    font-size: 12px;
+    font-weight: 600;
+    text-align: center;
+    padding: 15px 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+    transition: all 0.3s ease;
+    border: 2px solid var(--l360-white, #fff);
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    backdrop-filter: blur(5px);
+    border-radius: 4px;
+    letter-spacing: 1px;
+}
+
+.l360-side-btn:hover {
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
+    color: var(--l360-white, #fff);
+    text-decoration: none;
+    filter: brightness(1.1);
+    transform: translateX(-3px);
+}
+
+.l360-btn-enroll {
+    background: linear-gradient(145deg, var(--l360-accent, #e11d48), #a0012e);
+}
+
+.l360-btn-contact {
+    background: linear-gradient(145deg, #2563eb, #1e4a8a);
+    animation: l360-subtle-pulse 2s infinite;
+}
+
+@keyframes l360-subtle-pulse {
+    0% {
+        box-shadow: 0 4px 15px rgba(37, 99, 235, 0.15);
+    }
+
+    50% {
+        box-shadow: 0 4px 20px rgba(37, 99, 235, 0.4);
+    }
+
+    100% {
+        box-shadow: 0 4px 15px rgba(37, 99, 235, 0.15);
+    }
+}
+
+@media (max-width: 768px) {
+    .l360-side-buttons {
+        right: 2px;
+        gap: 8px;
+    }
+
+    .l360-side-btn {
+        font-size: 11px;
+        padding: 12px 10px;
+        letter-spacing: 0.5px;
+    }
+}
+
+@media (max-width: 480px) {
+    .l360-side-buttons {
+        right: 2px;
+        gap: 6px;
+    }
+
+    .l360-side-btn {
+        font-size: 10px;
+        padding: 10px 8px;
+    }
+}
+
+@media (max-width: 360px) {
+    .l360-side-btn {
+        font-size: 9px;
+        padding: 8px 6px;
+    }
+}
+
+/* WhatsApp Float Styling */
+.whatsapp-float {
+    position: fixed;
+    bottom: 25px;
+    right: 25px;
+    width: 60px;
+    height: 60px;
+    background-color: #25D366;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    z-index: 9998;
+    transition: all 0.3s ease;
+    animation: pulse 2s infinite;
+    text-decoration: none;
+    font-size: 32px;
+}
+
+.whatsapp-float:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+    color: white;
+}
+
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7);
+    }
+
+    70% {
+        box-shadow: 0 0 0 10px rgba(37, 211, 102, 0);
+    }
+
+    100% {
+        box-shadow: 0 0 0 0 rgba(37, 211, 102, 0);
+    }
+}

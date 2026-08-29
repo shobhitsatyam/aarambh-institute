@@ -12,9 +12,14 @@ const app = express();
 app.use(cors()); // Configure this later for specific domains to improve security
 app.use(express.json());
 
+const contactRoutes = require('./routes/contactRoutes');
+const apiRoutes = require('./routes/apiRoutes');
+
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/data', dataRoutes);
+app.use('/api/contact', contactRoutes);
+app.use('/api', apiRoutes);
 
 const PORT = process.env.PORT || 5000;
 

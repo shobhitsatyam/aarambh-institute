@@ -1,0 +1,274 @@
+.l360-about-section {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.l360-about-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: stretch;
+    gap: 25px;
+}
+
+.l360-about-card {
+    flex: 1;
+    background: var(--l360-white);
+    border-radius: 5px;
+    box-shadow: var(--l360-shadow-sm);
+    transition: all 0.3s ease;
+    border: 1px solid var(--l360-gray-light);
+    overflow: hidden;
+}
+
+.l360-about-card:hover {
+    box-shadow: var(--l360-shadow-md);
+    border-color: var(--l360-accent);
+}
+
+.l360-about-card-header {
+    padding: 20px 24px;
+    background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+    border-bottom: 2px solid var(--l360-accent);
+}
+
+.l360-about-card-header h2 {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--l360-dark);
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.l360-about-card-header h2 i {
+    color: var(--l360-accent);
+    font-size: 20px;
+}
+
+.l360-about-card-content {
+    padding: 24px;
+}
+
+.l360-about-text {
+    line-height: 1.6;
+    color: var(--l360-gray);
+    font-size: 14px;
+    margin-bottom: 16px;
+}
+
+.l360-about-highlight {
+    color: var(--l360-accent);
+    font-weight: 600;
+    background: rgba(196, 1, 56, 0.05);
+    padding: 2px 6px;
+    border-radius: 4px;
+}
+
+.l360-about-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+}
+
+.l360-about-student-item {
+    background: var(--l360-light);
+    border-radius: 10px;
+    padding: 5px;
+    text-align: center;
+    transition: all 0.3s ease;
+    border: 1px solid var(--l360-gray-light);
+}
+
+.l360-about-student-item:hover {
+    background: var(--l360-white);
+    border-color: var(--l360-accent);
+    box-shadow: var(--l360-shadow-sm);
+}
+
+.l360-about-student-image {
+    width: 70px;
+    height: 70px;
+    margin: 0 auto 12px;
+    border-radius: 50%;
+    overflow: hidden;
+    background: linear-gradient(135deg, var(--l360-primary) 0%, var(--l360-secondary) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.l360-about-student-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.l360-about-student-item:hover .l360-about-student-image {
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(196, 1, 56, 0.3);
+}
+
+.l360-about-student-name {
+    font-weight: 600;
+    color: var(--l360-dark);
+    font-size: 14px;
+    margin-bottom: 4px;
+}
+
+.l360-about-student-result {
+    font-size: 12px;
+    color: var(--l360-accent);
+    font-weight: 500;
+    background: rgba(196, 1, 56, 0.08);
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 20px;
+}
+
+.l360-about-announcements-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    max-height: 380px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.l360-about-announcements-list::-webkit-scrollbar {
+    width: 4px;
+}
+
+.l360-about-announcements-list::-webkit-scrollbar-track {
+    background: var(--l360-gray-light);
+    border-radius: 4px;
+}
+
+.l360-about-announcements-list::-webkit-scrollbar-thumb {
+    background: var(--l360-accent);
+    border-radius: 4px;
+}
+
+.l360-about-announcement-item {
+    padding: 14px 0;
+    border-bottom: 1px solid var(--l360-gray-light);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: all 0.2s ease;
+    width: 100%;
+    overflow: hidden;
+}
+
+.l360-about-announcement-item:hover {
+    padding-left: 8px;
+    background: var(--l360-light);
+    margin: 0;
+    padding: 14px 8px;
+    border-radius: 8px;
+    width: calc(100% - 0px);
+}
+
+.l360-about-announcement-badge {
+    flex-shrink: 0;
+}
+
+.l360-about-announcement-badge img {
+    width: 28px;
+    height: auto;
+    display: block;
+}
+
+.l360-about-announcement-link {
+    flex: 1;
+    text-decoration: none;
+    color: var(--l360-dark);
+    font-size: 13px;
+    font-weight: 500;
+    transition: color 0.2s ease;
+    line-height: 1.4;
+    word-break: break-word;
+    overflow-wrap: break-word;
+}
+
+.l360-about-announcement-link:hover {
+    color: var(--l360-accent);
+}
+
+.l360-about-no-data {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--l360-gray);
+    font-size: 13px;
+}
+
+@media (max-width: 1024px) {
+    .l360-about-container {
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .l360-about-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .l360-about-section {
+        padding: 15px;
+    }
+
+    .l360-about-card-header {
+        padding: 16px 20px;
+    }
+
+    .l360-about-card-header h2 {
+        font-size: 18px;
+    }
+
+    .l360-about-card-header h2 i {
+        font-size: 18px;
+    }
+
+    .l360-about-card-content {
+        padding: 20px;
+    }
+
+    .l360-about-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+    }
+
+    .l360-about-student-item {
+        padding: 12px;
+    }
+
+    .l360-about-student-image {
+        width: 55px;
+        height: 55px;
+    }
+
+    .l360-about-student-name {
+        font-size: 13px;
+    }
+
+    .l360-about-student-result {
+        font-size: 11px;
+    }
+}
+
+@media (max-width: 480px) {
+    .l360-about-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .l360-about-text {
+        font-size: 13px;
+    }
+
+    .l360-about-announcement-link {
+        font-size: 12px;
+    }
+}

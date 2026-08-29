@@ -1,0 +1,219 @@
+.l360-free-video-section {
+    background: var(--l360-white);
+    padding: 20px;
+    border-top: 1px solid var(--l360-gray-light);
+    border-bottom: 1px solid var(--l360-gray-light);
+}
+
+.l360-free-video-wrapper {
+    max-width: 1280px;
+    margin: 0 auto;
+}
+
+.l360-free-video-header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.l360-free-video-badge {
+    display: inline-block;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--l360-accent);
+    margin-bottom: 12px;
+    background: rgba(196, 1, 56, 0.1);
+    padding: 5px 12px;
+    border-radius: 4px;
+}
+
+.l360-free-video-heading {
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--l360-dark);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.l360-free-video-heading img {
+    width: 32px;
+    height: 32px;
+}
+
+.l360-free-video-subheading {
+    font-size: 14px;
+    color: var(--l360-gray);
+    max-width: 700px;
+    margin: 0 auto;
+    line-height: 1.6;
+}
+
+.l360-features-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 25px;
+    margin-bottom: 40px;
+}
+
+.l360-feature-card {
+    text-align: center;
+    padding: 25px 20px;
+    background: var(--l360-light);
+    border-radius: 5px;
+    transition: var(--l360-transition);
+    border: 1px solid var(--l360-gray-light);
+}
+
+.l360-feature-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--l360-accent);
+    box-shadow: var(--l360-shadow-md);
+}
+
+.l360-feature-card img {
+    width: 50px;
+    height: 50px;
+    margin-bottom: 15px;
+}
+
+.l360-feature-card h4 {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--l360-dark);
+    margin-bottom: 10px;
+}
+
+.l360-feature-card p {
+    font-size: 12px;
+    color: var(--l360-gray);
+    line-height: 1.5;
+}
+
+.l360-free-video-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 30px;
+    margin-top: 30px;
+}
+
+.l360-free-video-card {
+    background: var(--l360-white);
+    border-radius: 5px;
+    overflow: hidden;
+    box-shadow: var(--l360-shadow-sm);
+    transition: var(--l360-transition);
+    border: 1px solid var(--l360-gray-light);
+    display: flex;
+    flex-direction: column;
+}
+
+.l360-free-video-card:hover {
+    box-shadow: var(--l360-shadow-md);
+    border-color: var(--l360-accent);
+    transform: translateY(-4px);
+}
+
+.l360-video-wrapper {
+    position: relative;
+    padding-bottom: 56.25%;
+    height: 0;
+    overflow: hidden;
+    background: #000;
+}
+
+.l360-video-wrapper iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+.l360-free-video-content {
+    padding: 20px;
+}
+
+.l360-free-video-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--l360-dark);
+    margin-bottom: 10px;
+}
+
+.l360-free-video-desc {
+    font-size: 13px;
+    color: var(--l360-gray);
+    line-height: 1.6;
+    margin-bottom: 15px;
+}
+
+.l360-free-badge {
+    display: inline-block;
+    background: linear-gradient(135deg, #10b981, #059669);
+    color: white;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 4px 12px;
+    border-radius: 20px;
+}
+
+@media (max-width: 992px) {
+    .l360-features-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+    }
+
+    .l360-free-video-grid {
+        grid-template-columns: 1fr;
+        gap: 25px;
+    }
+}
+
+@media (max-width: 768px) {
+    .l360-free-video-heading {
+        font-size: 20px;
+    }
+
+    .l360-free-video-subheading {
+        font-size: 13px;
+    }
+
+    .l360-features-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+    }
+
+    .l360-feature-card {
+        padding: 20px 15px;
+    }
+
+    .l360-feature-card img {
+        width: 40px;
+        height: 40px;
+    }
+
+    .l360-feature-card h4 {
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 576px) {
+    .l360-features-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+
+    .l360-free-video-heading {
+        font-size: 18px;
+    }
+
+    .l360-free-video-title {
+        font-size: 15px;
+    }
+}

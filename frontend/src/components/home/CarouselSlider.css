@@ -1,0 +1,340 @@
+.l360-hero-section {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 40px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 30px;
+    flex-wrap: wrap;
+    background: var(--l360-white);
+}
+
+.l360-hero-left-content {
+    flex: 1.2;
+}
+
+.l360-hero-left-content h1 {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 12px;
+    color: var(--l360-dark);
+    line-height: 1.3;
+}
+
+.l360-hero-left-content p {
+    font-size: 14px;
+    color: var(--l360-gray);
+    margin-bottom: 20px;
+    line-height: 1.5;
+}
+
+.l360-hero-features {
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+    margin-top: 20px;
+}
+
+.l360-feature-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.l360-feature-item i {
+    width: 32px;
+    height: 32px;
+    background: rgba(196, 1, 56, 0.1);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--l360-accent);
+    font-size: 14px;
+}
+
+.l360-feature-item span {
+    font-size: 13px;
+    color: var(--l360-dark);
+    font-weight: 500;
+}
+
+.l360-hero-right-content {
+    flex: 0.8;
+    max-width: 450px;
+}
+
+.l360-search-container {
+    background: var(--l360-white);
+    border: 1px solid var(--l360-gray-light);
+    border-radius: 50px;
+    padding: 4px 4px 4px 22px;
+    display: flex;
+    align-items: center;
+    transition: var(--l360-transition);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.l360-search-container:focus-within {
+    border-color: var(--l360-accent);
+    box-shadow: 0 0 0 3px rgba(196, 1, 56, 0.1);
+}
+
+.l360-search-container i {
+    color: #9ca3af;
+    font-size: 15px;
+    margin-right: 10px;
+}
+
+.l360-search-container input {
+    flex: 1;
+    border: none;
+    padding: 12px 0;
+    font-size: 14px;
+    background: transparent;
+    outline: none;
+    color: var(--l360-dark);
+}
+
+.l360-search-container input::placeholder {
+    color: #9ca3af;
+}
+
+.l360-search-container button {
+    background: var(--l360-accent);
+    color: var(--l360-white);
+    border: none;
+    padding: 8px 28px;
+    border-radius: 50px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--l360-transition);
+    white-space: nowrap;
+}
+
+.l360-search-container button:hover {
+    background: #a0012e;
+    transform: translateY(-1px);
+}
+
+.l360-banner {
+    background: linear-gradient(135deg, var(--l360-primary) 0%, var(--l360-secondary) 100%);
+    color: var(--l360-white);
+    position: relative;
+    overflow: hidden;
+    height: 45vh;
+}
+
+.l360-banner-carousel {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+.l360-carousel-slides {
+    display: flex;
+    width: 300%;
+    height: 100%;
+    transition: transform 0.6s ease-in-out;
+}
+
+.l360-carousel-slide {
+    width: 33.333%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.l360-carousel-slide::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.l360-slide-content {
+    position: relative;
+    z-index: 1;
+    max-width: 750px;
+    padding: 0 20px;
+    text-align: center;
+}
+
+.l360-slide-content h2 {
+    font-size: 2rem;
+    margin-bottom: 16px;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+    font-weight: 600;
+}
+
+.l360-slide-content p {
+    font-size: 1rem;
+    margin-bottom: 28px;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+    line-height: 1.5;
+}
+
+.l360-slide-btn {
+    display: inline-block;
+    padding: 10px 28px;
+    background-color: var(--l360-accent);
+    color: var(--l360-white);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 14px;
+    transition: var(--l360-transition);
+    border-radius: 4px;
+}
+
+.l360-slide-btn:hover {
+    background-color: #a0012e;
+    transform: translateY(-2px);
+}
+
+@media (max-width: 992px) {
+    .l360-hero-section {
+        padding: 32px 20px;
+        gap: 25px;
+    }
+
+    .l360-hero-left-content p {
+        font-size: 13px;
+    }
+
+    .l360-feature-item span {
+        font-size: 12px;
+    }
+
+    .l360-hero-right-content {
+        max-width: 100%;
+        width: 100%;
+    }
+}
+
+@media (max-width: 768px) {
+    .l360-hero-section {
+        flex-direction: column;
+        text-align: center;
+        padding: 30px 20px;
+    }
+
+    .l360-hero-left-content h1 {
+        font-size: 18px;
+    }
+
+    .l360-hero-left-content p {
+        font-size: 12px;
+    }
+
+    .l360-hero-features {
+        justify-content: center;
+        gap: 20px;
+    }
+
+    .l360-feature-item {
+        justify-content: center;
+    }
+
+    .l360-search-container {
+        padding: 3px 3px 3px 18px;
+    }
+
+    .l360-search-container input {
+        padding: 10px 0;
+        font-size: 13px;
+    }
+
+    .l360-search-container button {
+        padding: 6px 22px;
+        font-size: 12px;
+    }
+
+    .l360-banner {
+        height: 50vh;
+        min-height: 400px;
+    }
+
+    .l360-slide-content h2 {
+        font-size: 1.6rem;
+    }
+
+    .l360-slide-content p {
+        font-size: 0.9rem;
+        margin-bottom: 20px;
+    }
+
+    .l360-slide-btn {
+        padding: 8px 24px;
+        font-size: 13px;
+    }
+}
+
+@media (max-width: 480px) {
+    .l360-hero-section {
+        padding: 24px 15px;
+    }
+
+    .l360-hero-left-content h1 {
+        font-size: 16px;
+    }
+
+    .l360-hero-left-content p {
+        font-size: 11px;
+    }
+
+    .l360-hero-features {
+        gap: 15px;
+    }
+
+    .l360-feature-item i {
+        width: 28px;
+        height: 28px;
+        font-size: 12px;
+    }
+
+    .l360-feature-item span {
+        font-size: 11px;
+    }
+
+    .l360-search-container {
+        padding: 2px 2px 2px 15px;
+    }
+
+    .l360-search-container input {
+        padding: 8px 0;
+        font-size: 12px;
+    }
+
+    .l360-search-container button {
+        padding: 5px 18px;
+        font-size: 11px;
+    }
+
+    .l360-banner {
+        height: 45vh;
+        min-height: 350px;
+    }
+
+    .l360-slide-content h2 {
+        font-size: 1.3rem;
+    }
+
+    .l360-slide-content p {
+        font-size: 0.8rem;
+    }
+
+    .l360-slide-btn {
+        padding: 6px 20px;
+        font-size: 12px;
+    }
+}

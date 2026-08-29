@@ -1,0 +1,211 @@
+ .l360-admission-section {
+     max-width: 1280px;
+     margin: 20px auto;
+     padding: 0 20px;
+ }
+
+ .l360-admission-header {
+     text-align: center;
+     margin-bottom: 40px;
+ }
+
+ .l360-admission-header h2 {
+     font-size: 22px;
+     font-weight: 600;
+     color: var(--l360-dark);
+     margin-bottom: 12px;
+ }
+
+ .l360-admission-header h2 span {
+     color: var(--l360-accent);
+     position: relative;
+     display: inline-block;
+ }
+
+ .l360-admission-header h2 span::after {
+     content: '';
+     position: absolute;
+     bottom: -4px;
+     left: 0;
+     width: 100%;
+     height: 2px;
+     background: var(--l360-accent);
+ }
+
+ .l360-admission-header p {
+     font-size: 14px;
+     color: var(--l360-gray);
+     max-width: 650px;
+     margin: 0 auto;
+ }
+
+ .l360-admission-container {
+     display: grid;
+     grid-template-columns: repeat(4, 1fr);
+     gap: 24px;
+ }
+
+ .l360-admission-card {
+     background: var(--l360-white);
+     border-radius: 5px;
+     overflow: hidden;
+     transition: all 0.3s ease;
+     border: 1px solid var(--l360-gray-light);
+     box-shadow: var(--l360-shadow-sm);
+     display: flex;
+     flex-direction: column;
+ }
+
+ .l360-admission-card:hover {
+     transform: translateY(-6px);
+     box-shadow: var(--l360-shadow-md);
+     border-color: var(--l360-accent);
+ }
+
+ .l360-admission-image {
+     position: relative;
+     overflow: hidden;
+     height: 200px;
+ }
+
+ .l360-admission-image img {
+     width: 100%;
+     height: 100%;
+     object-fit: cover;
+     transition: transform 0.4s ease;
+ }
+
+ .l360-admission-card:hover .l360-admission-image img {
+     transform: scale(1.05);
+ }
+
+ .l360-admission-badge {
+     position: absolute;
+     top: 12px;
+     right: 12px;
+     background: var(--l360-accent);
+     color: var(--l360-white);
+     padding: 4px 10px;
+     border-radius: 20px;
+     font-size: 11px;
+     font-weight: 600;
+     z-index: 1;
+ }
+
+ .l360-admission-content {
+     padding: 20px;
+     flex: 1;
+     display: flex;
+     flex-direction: column;
+ }
+
+ .l360-admission-content h3 {
+     font-size: 16px;
+     font-weight: 600;
+     color: var(--l360-dark);
+     margin-bottom: 12px;
+     line-height: 1.4;
+ }
+
+ .l360-admission-content p {
+     font-size: 13px;
+     color: var(--l360-gray);
+     line-height: 1.6;
+     margin-bottom: 20px;
+     flex: 1;
+ }
+
+ .l360-admission-btn {
+     display: inline-flex;
+     align-items: center;
+     justify-content: center;
+     gap: 8px;
+     background: var(--l360-primary);
+     color: var(--l360-white);
+     text-decoration: none;
+     padding: 9px 18px;
+     border-radius: 4px;
+     font-size: 13px;
+     font-weight: 500;
+     transition: all 0.3s ease;
+     text-align: center;
+ }
+
+ .l360-admission-btn i {
+     font-size: 11px;
+     transition: transform 0.2s ease;
+ }
+
+ .l360-admission-btn:hover {
+     background: var(--l360-accent);
+ }
+
+ .l360-admission-btn:hover i {
+     transform: translateX(4px);
+ }
+
+ @media (max-width: 1100px) {
+     .l360-admission-container {
+         grid-template-columns: repeat(2, 1fr);
+         gap: 20px;
+     }
+ }
+
+ @media (max-width: 768px) {
+     .l360-admission-section {
+         margin: 15px auto;
+         padding: 0 15px;
+     }
+
+     .l360-admission-header h2 {
+         font-size: 20px;
+     }
+
+     .l360-admission-header p {
+         font-size: 13px;
+     }
+
+     .l360-admission-container {
+         grid-template-columns: 1fr;
+         gap: 20px;
+     }
+
+     .l360-admission-image {
+         height: 180px;
+     }
+
+     .l360-admission-content h3 {
+         font-size: 15px;
+     }
+
+     .l360-admission-content p {
+         font-size: 12px;
+     }
+
+     .l360-admission-btn {
+         padding: 8px 16px;
+         font-size: 12px;
+     }
+ }
+
+ @media (max-width: 480px) {
+     .l360-admission-section {
+         margin: 10px auto;
+     }
+
+     .l360-admission-header h2 {
+         font-size: 18px;
+     }
+
+     .l360-admission-image {
+         height: 160px;
+     }
+
+     .l360-admission-content {
+         padding: 16px;
+     }
+
+     .l360-admission-content h3 {
+         font-size: 14px;
+     }
+ }
