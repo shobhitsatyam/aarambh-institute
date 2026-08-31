@@ -1,44 +1,62 @@
 .l360-hiw-section {
     max-width: 1280px;
-    margin: 0 auto;
+    margin: 60px auto;
     padding: 20px;
 }
 
 .l360-hiw-container {
-    background: var(--l360-white);
-    border-radius: 5px;
-    padding: 20px 40px;
-    box-shadow: var(--l360-shadow-sm);
-    border: 1px solid var(--l360-gray-light);
+    background: #ffffff;
+    border-radius: 24px;
+    padding: 50px 60px;
+    box-shadow: 0 15px 40px -5px rgba(0, 0, 0, 0.05);
+    border: 1px solid #e2e8f0;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Subtle background pattern */
+.l360-hiw-container::before {
+    content: '';
+    position: absolute;
+    top: -50px;
+    right: -50px;
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(225, 29, 72, 0.05) 0%, transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
 }
 
 .l360-hiw-header {
     text-align: center;
-    margin-bottom: 50px;
+    margin-bottom: 70px;
 }
 
 .l360-hiw-header-title {
-    font-size: 22px;
-    font-weight: 600;
-    color: var(--l360-dark);
+    font-size: 36px;
+    font-weight: 800;
+    color: #0f172a;
     margin-bottom: 15px;
     position: relative;
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .l360-hiw-header-title img {
-    width: 40px;
-    height: 40px;
-    margin-right: 12px;
-    vertical-align: middle;
+    width: 45px;
+    height: 45px;
+    margin-right: 15px;
+    filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
 }
 
 .l360-hiw-header-subtitle {
-    font-size: 14px;
-    color: var(--l360-gray);
-    max-width: 600px;
+    font-size: 16.5px;
+    color: #475569;
+    max-width: 700px;
     margin: 0 auto;
     line-height: 1.6;
+    font-weight: 500;
 }
 
 .l360-hiw-steps-wrapper {
@@ -46,226 +64,261 @@
     align-items: stretch;
     gap: 30px;
     position: relative;
-    margin-bottom: 40px;
+    margin-bottom: 70px;
     flex-wrap: wrap;
 }
 
 .l360-hiw-step-item {
     flex: 1;
     min-width: 280px;
-    background: var(--l360-white);
-    border: 1px solid var(--l360-gray-light);
-    border-radius: 5px;
-    padding: 35px 28px;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 20px;
+    padding: 50px 30px 40px;
     position: relative;
-    transition: var(--l360-transition);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     text-align: center;
+    box-shadow: 0 10px 25px -5px rgba(0,0,0,0.04);
 }
 
 .l360-hiw-step-item:hover {
-    box-shadow: var(--l360-shadow-md);
-    border-color: var(--l360-accent);
+    transform: translateY(-10px);
+    box-shadow: 0 25px 50px -10px rgba(0,0,0,0.1);
+    border-color: #cbd5e1;
 }
 
 .l360-hiw-step-badge {
     position: absolute;
-    top: -15px;
+    top: -18px;
     left: 50%;
     transform: translateX(-50%);
-    background: var(--l360-accent);
-    color: var(--l360-white);
-    font-size: 12px;
-    font-weight: 600;
-    padding: 5px 15px;
-    border-radius: 25px;
-    letter-spacing: 0.5px;
+    background: linear-gradient(135deg, #e11d48, #9f1239);
+    color: #fff;
+    font-size: 13.5px;
+    font-weight: 800;
+    padding: 8px 24px;
+    border-radius: 30px;
+    letter-spacing: 1px;
     white-space: nowrap;
-    box-shadow: 0 3px 10px rgba(196, 1, 56, 0.3);
+    box-shadow: 0 8px 20px rgba(225, 29, 72, 0.4);
+    border: 2px solid #ffffff;
 }
 
 .l360-hiw-step-icon {
-    width: 80px;
-    height: 80px;
-    background: linear-gradient(135deg, #fff5f7 0%, #ffe8ed 100%);
+    width: 90px;
+    height: 90px;
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: 0 auto 25px;
-    transition: var(--l360-transition);
+    margin: 0 auto 30px;
+    transition: transform 0.4s ease;
+    box-shadow: inset 0 0 20px rgba(255,255,255,0.8), 0 10px 20px -5px rgba(0,0,0,0.05);
+    border: 1px solid #e2e8f0;
+}
+
+.l360-hiw-step-item:hover .l360-hiw-step-icon {
+    transform: scale(1.1) rotate(5deg);
+    background: linear-gradient(135deg, #fff1f2 0%, #ffe4e6 100%);
+    border-color: #fecdd3;
+    box-shadow: inset 0 0 20px rgba(255,255,255,0.8), 0 10px 20px -5px rgba(225,29,72,0.15);
 }
 
 .l360-hiw-step-icon img {
-    width: 40px;
-    height: 40px;
-    transition: var(--l360-transition);
+    width: 45px;
+    height: 45px;
+    transition: transform 0.4s ease;
 }
 
 .l360-hiw-step-heading {
-    font-size: 18px;
-    font-weight: 600;
-    color: var(--l360-dark);
+    font-size: 20px;
+    font-weight: 700;
+    color: #0f172a;
     margin-bottom: 15px;
 }
 
 .l360-hiw-step-description {
-    color: var(--l360-gray);
-    font-size: 13px;
+    color: #64748b;
+    font-size: 14.5px;
     line-height: 1.7;
-    margin-bottom: 20px;
+    margin-bottom: 25px;
 }
 
 .l360-hiw-feature-list {
-    margin-top: 20px;
+    margin-top: 25px;
     padding-left: 0;
     list-style: none;
     text-align: left;
 }
 
 .l360-hiw-feature-item {
-    color: var(--l360-gray);
-    font-size: 12px;
+    color: #475569;
+    font-size: 14px;
     line-height: 1.6;
-    margin-bottom: 10px;
+    margin-bottom: 12px;
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
+    padding: 10px 12px;
+    border-radius: 8px;
+    transition: background 0.3s ease;
+}
+
+.l360-hiw-feature-item:hover {
+    background: #f1f5f9;
 }
 
 .l360-hiw-feature-item img {
-    width: 16px;
-    height: 16px;
+    width: 20px;
+    height: 20px;
     flex-shrink: 0;
+    filter: hue-rotate(330deg); /* Make it reddish/pinkish */
 }
 
 .l360-hiw-step-connector {
     display: flex;
     align-items: center;
-    color: var(--l360-accent);
-    font-size: 20px;
+    color: #e2e8f0;
 }
 
 .l360-hiw-step-connector img {
-    width: 30px;
-    height: 30px;
+    width: 40px;
+    height: 40px;
+    animation: bounceRight 2s infinite;
+    opacity: 0.3;
 }
 
-.l360-hiw-footer {
-    text-align: center;
-    margin-top: 40px;
-    padding-top: 30px;
-    border-top: 1px solid var(--l360-gray-light);
-}
-
-.l360-hiw-cta-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 12px;
-    background: var(--l360-accent);
-    color: var(--l360-white);
-    border: none;
-    padding: 10px 20px;
-    font-size: 13px;
-    font-weight: 600;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: var(--l360-transition);
-    text-decoration: none;
-    box-shadow: 0 3px 10px rgba(196, 1, 56, 0.3);
-}
-
-.l360-hiw-cta-btn:hover {
-    background: #a0012e;
-    box-shadow: 0 5px 20px rgba(196, 1, 56, 0.4);
-}
-
-.l360-hiw-cta-btn i {
-    font-size: 12px;
-    transition: transform 0.2s;
-}
-
-.l360-hiw-cta-btn:hover i {
-    transform: translateX(5px);
+@keyframes bounceRight {
+    0%, 100% { transform: translateX(0); }
+    50% { transform: translateX(10px); }
 }
 
 .l360-hiw-additional-features {
-    margin-top: 40px;
-    padding: 30px;
-    background: linear-gradient(135deg, #fff5f7 0%, #ffe8ed 100%);
-    border-radius: 5px;
+    margin-top: 50px;
+    padding: 50px;
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    border-radius: 24px;
     text-align: center;
+    border: 1px solid #e2e8f0;
+    box-shadow: inset 0 2px 10px rgba(0,0,0,0.02);
 }
 
 .l360-hiw-additional-features h3 {
-    font-size: 18px;
-    font-weight: 600;
-    color: var(--l360-dark);
-    margin-bottom: 20px;
+    font-size: 26px;
+    font-weight: 800;
+    color: #0f172a;
+    margin-bottom: 40px;
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
 }
 
 .l360-hiw-additional-features h3 img {
-    width: 28px;
-    height: 28px;
-    vertical-align: middle;
-    margin-right: 10px;
+    width: 32px;
+    height: 32px;
 }
 
 .l360-hiw-features-grid {
     display: grid;
     grid-template-columns: repeat(6, 1fr);
     gap: 20px;
-    margin-top: 25px;
 }
 
 .l360-hiw-feature-card {
-    background: var(--l360-white);
-    padding: 25px 15px;
-    border-radius: 5px;
-    transition: var(--l360-transition);
-    border: 1px solid var(--l360-gray-light);
+    background: #ffffff;
+    padding: 35px 20px;
+    border-radius: 16px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid #e2e8f0;
     text-align: center;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.04);
 }
 
 .l360-hiw-feature-card:hover {
-    box-shadow: var(--l360-shadow-sm);
-    border-color: var(--l360-accent);
+    transform: translateY(-8px);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+    border-color: #cbd5e1;
 }
 
 .l360-hiw-feature-card img {
-    width: 50px;
-    height: 50px;
-    margin-bottom: 12px;
+    width: 60px;
+    height: 60px;
+    margin-bottom: 20px;
     object-fit: contain;
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.l360-hiw-feature-card:hover img {
+    transform: scale(1.15);
 }
 
 .l360-hiw-feature-card h4 {
-    font-size: 14px;
-    font-weight: 600;
-    color: var(--l360-dark);
-    margin-bottom: 8px;
+    font-size: 16px;
+    font-weight: 700;
+    color: #0f172a;
+    margin-bottom: 12px;
 }
 
 .l360-hiw-feature-card p {
-    font-size: 11px;
-    color: var(--l360-gray);
-    line-height: 1.5;
+    font-size: 13px;
+    color: #64748b;
+    line-height: 1.6;
+}
+
+.l360-hiw-footer {
+    text-align: center;
+    margin-top: 60px;
+    padding-top: 50px;
+    border-top: 1px solid #e2e8f0;
+}
+
+.l360-hiw-cta-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    background: linear-gradient(135deg, #e11d48, #be123c);
+    color: #ffffff;
+    border: none;
+    padding: 16px 36px;
+    font-size: 16px;
+    font-weight: 700;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    box-shadow: 0 8px 20px rgba(225, 29, 72, 0.3);
+}
+
+.l360-hiw-cta-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 25px rgba(225, 29, 72, 0.4);
+}
+
+.l360-hiw-cta-btn i {
+    font-size: 15px;
+    transition: transform 0.3s ease;
+}
+
+.l360-hiw-cta-btn:hover i {
+    transform: translateX(6px);
 }
 
 @media (max-width: 1200px) {
     .l360-hiw-features-grid {
         grid-template-columns: repeat(3, 1fr);
-        gap: 20px;
+        gap: 25px;
     }
 }
 
 @media (max-width: 992px) {
     .l360-hiw-container {
-        padding: 20px 30px;
+        padding: 30px 40px;
     }
 
     .l360-hiw-steps-wrapper {
         flex-direction: column;
-        gap: 40px;
+        gap: 50px;
     }
 
     .l360-hiw-step-connector {
@@ -279,115 +332,50 @@
     }
 
     .l360-hiw-header-title {
-        font-size: 20px;
-    }
-
-    .l360-hiw-header-title img {
-        width: 32px;
-        height: 32px;
-    }
-
-    .l360-hiw-features-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 20px;
+        font-size: 28px;
     }
 }
 
 @media (max-width: 768px) {
     .l360-hiw-container {
         padding: 20px 25px;
+        border-radius: 12px;
     }
 
     .l360-hiw-header-title {
-        font-size: 18px;
+        font-size: 24px;
     }
 
-    .l360-hiw-header-subtitle {
-        font-size: 13px;
-    }
-
-    .l360-hiw-step-heading {
-        font-size: 17px;
-    }
-
-    .l360-hiw-step-icon {
-        width: 70px;
-        height: 70px;
-    }
-
-    .l360-hiw-step-icon img {
+    .l360-hiw-header-title img {
         width: 35px;
         height: 35px;
     }
 
+    .l360-hiw-step-heading {
+        font-size: 18px;
+    }
+
+    .l360-hiw-step-icon {
+        width: 80px;
+        height: 80px;
+    }
+
+    .l360-hiw-step-icon img {
+        width: 40px;
+        height: 40px;
+    }
+
     .l360-hiw-additional-features {
-        padding: 25px 20px;
+        padding: 30px 20px;
+        border-radius: 12px;
     }
 
     .l360-hiw-additional-features h3 {
-        font-size: 16px;
+        font-size: 20px;
     }
 
     .l360-hiw-features-grid {
         grid-template-columns: repeat(2, 1fr);
         gap: 15px;
-    }
-}
-
-@media (max-width: 576px) {
-    .l360-hiw-container {
-        padding: 20px 20px;
-    }
-
-    .l360-hiw-header {
-        margin-bottom: 35px;
-    }
-
-    .l360-hiw-header-title {
-        font-size: 16px;
-    }
-
-    .l360-hiw-step-item {
-        padding: 30px 20px;
-    }
-
-    .l360-hiw-step-icon {
-        width: 60px;
-        height: 60px;
-    }
-
-    .l360-hiw-step-icon img {
-        width: 30px;
-        height: 30px;
-    }
-
-    .l360-hiw-step-heading {
-        font-size: 16px;
-    }
-
-    .l360-hiw-step-description,
-    .l360-hiw-feature-item {
-        font-size: 12px;
-    }
-
-    .l360-hiw-cta-btn {
-        padding: 10px 24px;
-        font-size: 12px;
-        width: 100%;
-        justify-content: center;
-    }
-
-    .l360-hiw-features-grid {
-        grid-template-columns: 1fr;
-        gap: 15px;
-    }
-
-    .l360-hiw-feature-card {
-        padding: 20px;
-    }
-
-    .l360-hiw-feature-card img {
-        width: 45px;
-        height: 45px;
     }
 }

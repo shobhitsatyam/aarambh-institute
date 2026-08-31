@@ -8,6 +8,7 @@ const ContactForm = () => {
         email: '',
         course: ''
     });
+    const [errors, setErrors] = useState({});
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [modal, setModal] = useState({ show: false, type: '', title: '', message: '' });
 
@@ -16,20 +17,57 @@ const ContactForm = () => {
         setTimeout(() => setModal({ show: false, type: '', title: '', message: '' }), type === 'success' ? 3000 : 4000);
     };
 
+    const validateField = (name, value) => {
+        switch (name) {
+            case 'full_name':
+                if (!value.trim()) return 'Full name is required.';
+                if (value.trim().length < 3) return 'Name must be at least 3 characters long.';
+                return '';
+            case 'mobile':
+                if (!value.trim()) return 'Phone number is required.';
+                if (!/^[6-9]\d{9}$/.test(value)) return 'Enter a valid 10-digit Indian phone number.';
+                return '';
+            case 'email':
+                if (!value.trim()) return 'Email is required.';
+                if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) return 'Enter a valid email address.';
+                return '';
+            case 'course':
+                if (!value) return 'Please select a course.';
+                return '';
+            default:
+                return '';
+        }
+    };
+
     const handleChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
+        const { name, value } = e.target;
+        setFormData({ ...formData, [name]: value });
+        // Clear error as user types
+        if (errors[name]) {
+            setErrors({ ...errors, [name]: '' });
+        }
+    };
+
+    const handleBlur = (e) => {
+        const { name, value } = e.target;
+        const error = validateField(name, value);
+        setErrors(prev => ({ ...prev, [name]: error }));
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        // Validations
-        if (!formData.full_name.trim()) return showModal('error', 'Validation Error', 'Please enter your full name.');
-        const phoneRegex = /^[6-9]\d{9}$/;
-        if (!phoneRegex.test(formData.mobile)) return showModal('error', 'Validation Error', 'Please enter a valid 10-digit mobile number.');
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(formData.email)) return showModal('error', 'Validation Error', 'Please enter a valid email address.');
-        if (!formData.course) return showModal('error', 'Validation Error', 'Please select your course.');
+        // Validate all fields before submission
+        const newErrors = {};
+        Object.keys(formData).forEach(key => {
+            const error = validateField(key, formData[key]);
+            if (error) newErrors[key] = error;
+        });
+
+        if (Object.keys(newErrors).length > 0) {
+            setErrors(newErrors);
+            return; // Stop submission if there are validation errors
+        }
 
         setIsSubmitting(true);
         try {
@@ -77,19 +115,22 @@ const ContactForm = () => {
                     <form onSubmit={handleSubmit}>
                         <div className="l360-form-group">
                             <label>Full Name</label>
-                            <input type="text" name="full_name" value={formData.full_name} onChange={handleChange} placeholder="Enter your full name" required />
+                            <input type="text" name="full_name" value={formData.full_name} onChange={handleChange} onBlur={handleBlur} placeholder="Enter your full name" className={errors.full_name ? 'error-input' : ''} required />
+                            {errors.full_name && <span className="l360-error-text"><i className="fas fa-exclamation-circle"></i> {errors.full_name}</span>}
                         </div>
                         <div className="l360-form-group">
                             <label>Phone Number</label>
-                            <input type="tel" name="mobile" value={formData.mobile} onChange={handleChange} placeholder="Enter your phone number" required />
+                            <input type="tel" name="mobile" value={formData.mobile} onChange={handleChange} onBlur={handleBlur} placeholder="Enter your phone number" className={errors.mobile ? 'error-input' : ''} maxLength="10" required />
+                            {errors.mobile && <span className="l360-error-text"><i className="fas fa-exclamation-circle"></i> {errors.mobile}</span>}
                         </div>
                         <div className="l360-form-group">
                             <label>Email Address</label>
-                            <input type="email" name="email" value={formData.email} onChange={handleChange} placeholder="Enter your email address" required />
+                            <input type="email" name="email" value={formData.email} onChange={handleChange} onBlur={handleBlur} placeholder="Enter your email address" className={errors.email ? 'error-input' : ''} required />
+                            {errors.email && <span className="l360-error-text"><i className="fas fa-exclamation-circle"></i> {errors.email}</span>}
                         </div>
                         <div className="l360-form-group">
                             <label>Select Course</label>
-                            <select name="course" value={formData.course} onChange={handleChange} required>
+                            <select name="course" value={formData.course} onChange={handleChange} onBlur={handleBlur} className={errors.course ? 'error-input' : ''} required>
                                 <option value="" disabled>Select your course</option>
                                 <option value="nios-10th">NIOS 10th</option>
                                 <option value="nios-12th">NIOS 12th</option>
@@ -99,6 +140,7 @@ const ContactForm = () => {
                                 <option value="bosse-12th">BOSSE 12th</option>
                                 <option value="on-demand">NIOS On-Demand Exam</option>
                             </select>
+                            {errors.course && <span className="l360-error-text"><i className="fas fa-exclamation-circle"></i> {errors.course}</span>}
                         </div>
                         <button type="submit" className="l360-cta-submit" disabled={isSubmitting}>
                             {isSubmitting ? 'Sending...' : 'Request Callback'} <i className="fas fa-arrow-right"></i>

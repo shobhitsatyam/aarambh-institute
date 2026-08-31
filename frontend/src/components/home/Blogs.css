@@ -24,21 +24,22 @@
 
  .l360-blog-badge {
      display: inline-block;
-     font-size: 12px;
-     font-weight: 600;
+     font-size: 13px;
+     font-weight: 800;
      text-transform: uppercase;
-     letter-spacing: 1px;
-     color: var(--l360-accent);
-     margin-bottom: 12px;
-     background: rgba(196, 1, 56, 0.1);
-     padding: 5px 12px;
-     border-radius: 4px;
+     letter-spacing: 1.5px;
+     color: #ffffff;
+     margin-bottom: 15px;
+     background: linear-gradient(135deg, #e11d48, #9f1239);
+     padding: 8px 18px;
+     border-radius: 30px;
+     box-shadow: 0 6px 15px rgba(225, 29, 72, 0.3);
  }
 
  .l360-blog-heading {
-     font-size: 22px;
-     font-weight: 600;
-     color: var(--l360-dark);
+     font-size: 38px;
+     font-weight: 800;
+     color: #0f172a;
      line-height: 1.2;
      margin-bottom: 12px;
  }
@@ -53,21 +54,23 @@
  .l360-blog-view-link {
      display: inline-flex;
      align-items: center;
-     gap: 8px;
-     padding: 9px 18px;
-     background: var(--l360-accent);
-     color: var(--l360-white);
-     border-radius: 4px;
-     font-size: 13px;
-     font-weight: 600;
+     gap: 12px;
+     background: linear-gradient(135deg, #e11d48, #be123c);
+     color: #ffffff;
+     padding: 12px 24px;
+     border-radius: 50px;
      text-decoration: none;
-     transition: var(--l360-transition);
+     font-size: 14.5px;
+     font-weight: 800;
+     transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+     box-shadow: 0 8px 20px rgba(225, 29, 72, 0.3);
      white-space: nowrap;
  }
 
  .l360-blog-view-link:hover {
-     background: #a0012e;
-     transform: translateY(-2px);
+     background: linear-gradient(135deg, #f43f5e, #9f1239);
+     transform: translateY(-4px);
+     box-shadow: 0 12px 25px rgba(225, 29, 72, 0.45);
  }
 
  .l360-blog-view-link i {
@@ -86,18 +89,18 @@
  }
 
  .l360-blog-card {
-     background: var(--l360-white);
-     border-radius: 5px;
+     background: #ffffff;
+     border-radius: 24px;
      overflow: hidden;
-     box-shadow: var(--l360-shadow-sm);
-     transition: var(--l360-transition);
-     border: 1px solid var(--l360-gray-light);
+     box-shadow: 0 15px 40px -10px rgba(0, 0, 0, 0.08);
+     transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+     border: 1px solid #e2e8f0;
  }
 
  .l360-blog-card:hover {
-     box-shadow: var(--l360-shadow-md);
-     border-color: var(--l360-accent);
-     transform: translateY(-4px);
+     box-shadow: 0 25px 50px -15px rgba(225, 29, 72, 0.25);
+     border-color: #fecdd3;
+     transform: translateY(-12px);
  }
 
  .l360-blog-image {

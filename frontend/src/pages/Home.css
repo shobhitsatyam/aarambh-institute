@@ -1,97 +1,67 @@
-/* l360 Side Buttons Styling */
-.l360-side-buttons {
+/* Sleek Side Sticky Buttons */
+.side-sticky-container {
     position: fixed;
-    right: 5px;
+    right: 0;
     top: 50%;
     transform: translateY(-50%);
     z-index: 9999;
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    align-items: flex-end;
+    gap: 15px;
 }
 
-.l360-side-btn {
+.side-sticky-btn {
     display: flex;
-    flex-direction: column;
     align-items: center;
-    justify-content: center;
+    gap: 15px;
+    padding: 15px;
+    background: #fff;
+    color: #fff;
     text-decoration: none;
-    color: var(--l360-white, #fff);
-    /* Added fallback color */
-    font-size: 12px;
-    font-weight: 600;
-    text-align: center;
-    padding: 15px 10px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
-    transition: all 0.3s ease;
-    border: 2px solid var(--l360-white, #fff);
-    writing-mode: vertical-rl;
-    text-orientation: mixed;
-    backdrop-filter: blur(5px);
-    border-radius: 4px;
+    border-radius: 12px 0 0 12px;
+    font-size: 15px;
+    font-weight: 700;
     letter-spacing: 1px;
+    text-transform: uppercase;
+    box-shadow: -5px 5px 20px rgba(0,0,0,0.15);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    width: 55px; /* Only show icon initially */
+    overflow: hidden;
+    white-space: nowrap;
 }
 
-.l360-side-btn:hover {
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
-    color: var(--l360-white, #fff);
-    text-decoration: none;
-    filter: brightness(1.1);
-    transform: translateX(-3px);
+.side-sticky-btn:hover {
+    width: 200px; /* Expand to show text */
 }
 
-.l360-btn-enroll {
-    background: linear-gradient(145deg, var(--l360-accent, #e11d48), #a0012e);
+.side-sticky-btn i {
+    font-size: 20px;
+    min-width: 25px; /* keep icon fixed width */
+    display: flex;
+    justify-content: center;
 }
 
-.l360-btn-contact {
-    background: linear-gradient(145deg, #2563eb, #1e4a8a);
-    animation: l360-subtle-pulse 2s infinite;
+.btn-enroll {
+    background: linear-gradient(135deg, #e11d48, #be123c);
 }
 
-@keyframes l360-subtle-pulse {
-    0% {
-        box-shadow: 0 4px 15px rgba(37, 99, 235, 0.15);
-    }
-
-    50% {
-        box-shadow: 0 4px 20px rgba(37, 99, 235, 0.4);
-    }
-
-    100% {
-        box-shadow: 0 4px 15px rgba(37, 99, 235, 0.15);
-    }
+.btn-contact {
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
 }
 
 @media (max-width: 768px) {
-    .l360-side-buttons {
-        right: 2px;
-        gap: 8px;
+    .side-sticky-btn {
+        width: 45px;
+        padding: 10px;
+        font-size: 13px;
     }
-
-    .l360-side-btn {
-        font-size: 11px;
-        padding: 12px 10px;
-        letter-spacing: 0.5px;
+    .side-sticky-btn i {
+        font-size: 16px;
+        min-width: 20px;
     }
-}
-
-@media (max-width: 480px) {
-    .l360-side-buttons {
-        right: 2px;
-        gap: 6px;
-    }
-
-    .l360-side-btn {
-        font-size: 10px;
-        padding: 10px 8px;
-    }
-}
-
-@media (max-width: 360px) {
-    .l360-side-btn {
-        font-size: 9px;
-        padding: 8px 6px;
+    .side-sticky-btn:hover {
+        width: 160px;
     }
 }
 

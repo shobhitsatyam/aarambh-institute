@@ -1,37 +1,52 @@
 .l360-hero-section {
     max-width: 1280px;
-    margin: 0 auto;
-    padding: 40px 20px;
+    margin: 20px auto 30px;
+    padding: 50px 40px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: 30px;
+    gap: 40px;
     flex-wrap: wrap;
-    background: var(--l360-white);
+    background: linear-gradient(145deg, #ffffff 0%, #f4f7fa 100%);
+    border-radius: 24px;
+    box-shadow: 0 15px 45px -5px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(203, 213, 225, 0.5);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.l360-hero-section:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 25px 55px -10px rgba(0, 0, 0, 0.12);
+    border-color: rgba(203, 213, 225, 0.8);
 }
 
 .l360-hero-left-content {
-    flex: 1.2;
+    flex: 1.3;
 }
 
 .l360-hero-left-content h1 {
-    font-size: 20px;
-    font-weight: 600;
-    margin-bottom: 12px;
-    color: var(--l360-dark);
-    line-height: 1.3;
+    font-size: 42px;
+    font-weight: 800;
+    margin-bottom: 15px;
+    background: linear-gradient(135deg, #0f172a 0%, #334155 50%, #e11d48 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    line-height: 1.2;
+    letter-spacing: -1px;
 }
 
 .l360-hero-left-content p {
-    font-size: 14px;
-    color: var(--l360-gray);
-    margin-bottom: 20px;
-    line-height: 1.5;
+    font-size: 16px;
+    color: #475569;
+    margin-bottom: 30px;
+    line-height: 1.6;
+    font-weight: 500;
+    max-width: 90%;
 }
 
 .l360-hero-features {
     display: flex;
-    gap: 24px;
+    gap: 16px;
     flex-wrap: wrap;
     margin-top: 20px;
 }
@@ -40,91 +55,112 @@
     display: flex;
     align-items: center;
     gap: 10px;
+    background: #ffffff;
+    padding: 8px 18px;
+    border-radius: 50px;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
+    border: 1px solid #e2e8f0;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.l360-feature-item:hover {
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 0 12px 25px rgba(225, 29, 72, 0.15);
+    border-color: #e11d48;
+    background: linear-gradient(to right, #ffffff, #fff5f7);
 }
 
 .l360-feature-item i {
-    width: 32px;
-    height: 32px;
-    background: rgba(196, 1, 56, 0.1);
+    width: 28px;
+    height: 28px;
+    background: rgba(225, 29, 72, 0.1);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--l360-accent);
-    font-size: 14px;
+    color: #e11d48;
+    font-size: 13px;
 }
 
 .l360-feature-item span {
     font-size: 13px;
-    color: var(--l360-dark);
-    font-weight: 500;
+    color: #334155;
+    font-weight: 600;
 }
 
 .l360-hero-right-content {
-    flex: 0.8;
-    max-width: 450px;
+    flex: 0.9;
+    max-width: 500px;
+    width: 100%;
 }
 
 .l360-search-container {
-    background: var(--l360-white);
-    border: 1px solid var(--l360-gray-light);
+    background: #ffffff;
+    border: 1.5px solid #cbd5e1;
     border-radius: 50px;
-    padding: 4px 4px 4px 22px;
+    padding: 6px 6px 6px 22px;
     display: flex;
     align-items: center;
-    transition: var(--l360-transition);
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+    box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.1);
 }
 
 .l360-search-container:focus-within {
-    border-color: var(--l360-accent);
-    box-shadow: 0 0 0 3px rgba(196, 1, 56, 0.1);
+    border-color: #e11d48;
+    box-shadow: 0 10px 35px -5px rgba(225, 29, 72, 0.2);
+    transform: translateY(-2px);
 }
 
 .l360-search-container i {
-    color: #9ca3af;
-    font-size: 15px;
-    margin-right: 10px;
+    color: #94a3b8;
+    font-size: 16px;
+    margin-right: 12px;
 }
 
 .l360-search-container input {
     flex: 1;
     border: none;
-    padding: 12px 0;
+    padding: 10px 0;
     font-size: 14px;
     background: transparent;
     outline: none;
-    color: var(--l360-dark);
+    color: #0f172a;
+    font-weight: 500;
 }
 
 .l360-search-container input::placeholder {
-    color: #9ca3af;
+    color: #94a3b8;
+    font-weight: 400;
 }
 
 .l360-search-container button {
-    background: var(--l360-accent);
-    color: var(--l360-white);
+    background: linear-gradient(135deg, #e11d48, #be123c);
+    color: #ffffff;
     border: none;
-    padding: 8px 28px;
+    padding: 10px 28px;
     border-radius: 50px;
     font-size: 13px;
-    font-weight: 500;
+    font-weight: 700;
     cursor: pointer;
-    transition: var(--l360-transition);
-    white-space: nowrap;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    box-shadow: 0 4px 12px rgba(225, 29, 72, 0.25);
 }
 
 .l360-search-container button:hover {
-    background: #a0012e;
+    background: linear-gradient(135deg, #be123c, #9f1239);
     transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(225, 29, 72, 0.35);
 }
 
 .l360-banner {
-    background: linear-gradient(135deg, var(--l360-primary) 0%, var(--l360-secondary) 100%);
-    color: var(--l360-white);
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    color: #ffffff;
     position: relative;
     overflow: hidden;
-    height: 45vh;
+    height: 60vh;
+    min-height: 550px;
 }
 
 .l360-banner-carousel {
@@ -150,6 +186,7 @@
     align-items: center;
     justify-content: center;
     position: relative;
+    perspective: 1000px; /* For 3D effect */
 }
 
 .l360-carousel-slide::before {
@@ -159,46 +196,75 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.5);
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.4) 50%, rgba(0, 0, 0, 0.7) 100%);
+    z-index: 0;
 }
 
 .l360-slide-content {
     position: relative;
     z-index: 1;
-    max-width: 750px;
-    padding: 0 20px;
+    max-width: 900px;
+    padding: 20px;
     text-align: center;
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    transform-style: preserve-3d;
+}
+
+.l360-slide-content:hover {
+    transform: translateY(-10px) scale(1.02) rotateX(2deg);
 }
 
 .l360-slide-content h2 {
-    font-size: 2rem;
-    margin-bottom: 16px;
-    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
-    font-weight: 600;
+    color: #ffffff;
+    font-size: 3.2rem;
+    line-height: 1.25;
+    margin-bottom: 24px;
+    text-shadow: 0 4px 15px rgba(0, 0, 0, 0.6);
+    font-weight: 800;
+    letter-spacing: -1px;
+    transition: transform 0.4s ease;
+}
+
+.l360-slide-content:hover h2 {
+    transform: translateZ(40px);
 }
 
 .l360-slide-content p {
-    font-size: 1rem;
-    margin-bottom: 28px;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
-    line-height: 1.5;
+    color: rgba(255, 255, 255, 0.95);
+    font-size: 1.25rem;
+    margin-bottom: 40px;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.6);
+    line-height: 1.7;
+    max-width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+    font-weight: 500;
+    transition: transform 0.4s ease;
+}
+
+.l360-slide-content:hover p {
+    transform: translateZ(30px);
 }
 
 .l360-slide-btn {
     display: inline-block;
-    padding: 10px 28px;
-    background-color: var(--l360-accent);
-    color: var(--l360-white);
+    padding: 14px 35px;
+    background: linear-gradient(135deg, #e11d48, #9f1239);
+    color: #ffffff;
     text-decoration: none;
-    font-weight: 600;
+    font-weight: 700;
     font-size: 14px;
-    transition: var(--l360-transition);
-    border-radius: 4px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+    border-radius: 50px;
+    box-shadow: 0 8px 20px rgba(225, 29, 72, 0.4);
 }
 
 .l360-slide-btn:hover {
-    background-color: #a0012e;
-    transform: translateY(-2px);
+    background: linear-gradient(135deg, #be123c, #881337);
+    transform: translateY(-3px);
+    box-shadow: 0 12px 25px rgba(225, 29, 72, 0.6);
 }
 
 @media (max-width: 992px) {
@@ -225,28 +291,34 @@
     .l360-hero-section {
         flex-direction: column;
         text-align: center;
-        padding: 30px 20px;
+        padding: 40px 20px;
+        margin: 20px 15px;
+        border-radius: 20px;
     }
 
     .l360-hero-left-content h1 {
-        font-size: 18px;
+        font-size: 32px;
+        margin-bottom: 12px;
     }
 
     .l360-hero-left-content p {
-        font-size: 12px;
+        font-size: 14px;
+        margin-left: auto;
+        margin-right: auto;
     }
 
     .l360-hero-features {
         justify-content: center;
-        gap: 20px;
+        gap: 12px;
     }
 
     .l360-feature-item {
         justify-content: center;
+        padding: 6px 12px;
     }
 
     .l360-search-container {
-        padding: 3px 3px 3px 18px;
+        padding: 5px 5px 5px 20px;
     }
 
     .l360-search-container input {

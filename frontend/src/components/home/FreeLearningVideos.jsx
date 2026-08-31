@@ -74,7 +74,7 @@ const FreeLearningVideos = () => {
                 </div>
 
                 <div className="l360-youtube-cta" style={{ textAlign: 'center', marginTop: '40px' }}>
-                    <a href="https://www.youtube.com/@aarambhinstitutepatna" target="_blank" rel="noreferrer" className="l360-youtube-btn" style={{ background: 'linear-gradient(135deg, var(--l360-accent), #a0012e)' }}>
+                    <a href="https://www.youtube.com/@aarambhinstitutepatna" target="_blank" rel="noreferrer" className="l360-youtube-btn">
                         <img src="/assets/images/icons/youtube-white.png" alt="YouTube" />
                         Watch More Videos on Our Channel
                         <i className="fas fa-arrow-right"></i>

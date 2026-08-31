@@ -1,6 +1,6 @@
 .l360-about-section {
     max-width: 1280px;
-    margin: 0 auto;
+    margin: 40px auto;
     padding: 20px;
 }
 
@@ -8,60 +8,71 @@
     display: flex;
     justify-content: space-between;
     align-items: stretch;
-    gap: 25px;
+    gap: 30px;
 }
 
 .l360-about-card {
     flex: 1;
-    background: var(--l360-white);
-    border-radius: 5px;
-    box-shadow: var(--l360-shadow-sm);
-    transition: all 0.3s ease;
-    border: 1px solid var(--l360-gray-light);
+    background: #ffffff;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.05);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid rgba(226, 232, 240, 0.8);
     overflow: hidden;
+    display: flex;
+    flex-direction: column;
 }
 
 .l360-about-card:hover {
-    box-shadow: var(--l360-shadow-md);
-    border-color: var(--l360-accent);
+    transform: translateY(-8px);
+    box-shadow: 0 20px 45px -10px rgba(0, 0, 0, 0.12);
+    border-color: #cbd5e1;
 }
 
 .l360-about-card-header {
-    padding: 20px 24px;
-    background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
-    border-bottom: 2px solid var(--l360-accent);
+    padding: 24px;
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    border-bottom: 3px solid #e11d48;
 }
 
 .l360-about-card-header h2 {
     font-size: 20px;
-    font-weight: 600;
-    color: var(--l360-dark);
+    font-weight: 700;
+    color: #0f172a;
     margin: 0;
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
 }
 
 .l360-about-card-header h2 i {
-    color: var(--l360-accent);
-    font-size: 20px;
+    color: #e11d48;
+    font-size: 22px;
+    background: rgba(225, 29, 72, 0.1);
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
 }
 
 .l360-about-card-content {
-    padding: 24px;
+    padding: 30px 24px;
+    flex: 1;
 }
 
 .l360-about-text {
-    line-height: 1.6;
-    color: var(--l360-gray);
-    font-size: 14px;
-    margin-bottom: 16px;
+    line-height: 1.7;
+    color: #475569;
+    font-size: 14.5px;
+    margin-bottom: 20px;
 }
 
 .l360-about-highlight {
-    color: var(--l360-accent);
+    color: #e11d48;
     font-weight: 600;
-    background: rgba(196, 1, 56, 0.05);
+    background: rgba(225, 29, 72, 0.05);
     padding: 2px 6px;
     border-radius: 4px;
 }
@@ -73,31 +84,34 @@
 }
 
 .l360-about-student-item {
-    background: var(--l360-light);
-    border-radius: 10px;
-    padding: 5px;
+    background: #f8fafc;
+    border-radius: 12px;
+    padding: 10px;
     text-align: center;
     transition: all 0.3s ease;
-    border: 1px solid var(--l360-gray-light);
+    border: 1px solid #e2e8f0;
 }
 
 .l360-about-student-item:hover {
-    background: var(--l360-white);
-    border-color: var(--l360-accent);
-    box-shadow: var(--l360-shadow-sm);
+    background: #ffffff;
+    border-color: #e11d48;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+    transform: translateY(-2px);
 }
 
 .l360-about-student-image {
-    width: 70px;
-    height: 70px;
+    width: 75px;
+    height: 75px;
     margin: 0 auto 12px;
     border-radius: 50%;
     overflow: hidden;
-    background: linear-gradient(135deg, var(--l360-primary) 0%, var(--l360-secondary) 100%);
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
     display: flex;
     align-items: center;
     justify-content: center;
     transition: all 0.3s ease;
+    border: 2px solid #ffffff;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
 }
 
 .l360-about-student-image img {
@@ -107,22 +121,23 @@
 }
 
 .l360-about-student-item:hover .l360-about-student-image {
-    transform: scale(1.05);
-    box-shadow: 0 4px 12px rgba(196, 1, 56, 0.3);
+    transform: scale(1.08);
+    box-shadow: 0 6px 15px rgba(225, 29, 72, 0.2);
+    border-color: #e11d48;
 }
 
 .l360-about-student-name {
-    font-weight: 600;
-    color: var(--l360-dark);
-    font-size: 14px;
-    margin-bottom: 4px;
+    font-weight: 700;
+    color: #0f172a;
+    font-size: 13px;
+    margin-bottom: 6px;
 }
 
 .l360-about-student-result {
-    font-size: 12px;
-    color: var(--l360-accent);
-    font-weight: 500;
-    background: rgba(196, 1, 56, 0.08);
+    font-size: 11px;
+    color: #e11d48;
+    font-weight: 700;
+    background: rgba(225, 29, 72, 0.08);
     display: inline-block;
     padding: 4px 10px;
     border-radius: 20px;
@@ -132,43 +147,42 @@
     list-style: none;
     padding: 0;
     margin: 0;
-    max-height: 380px;
+    max-height: 400px;
     overflow-y: auto;
     overflow-x: hidden;
 }
 
 .l360-about-announcements-list::-webkit-scrollbar {
-    width: 4px;
+    width: 5px;
 }
 
 .l360-about-announcements-list::-webkit-scrollbar-track {
-    background: var(--l360-gray-light);
-    border-radius: 4px;
+    background: #f1f5f9;
+    border-radius: 5px;
 }
 
 .l360-about-announcements-list::-webkit-scrollbar-thumb {
-    background: var(--l360-accent);
-    border-radius: 4px;
+    background: #e11d48;
+    border-radius: 5px;
 }
 
 .l360-about-announcement-item {
-    padding: 14px 0;
-    border-bottom: 1px solid var(--l360-gray-light);
+    padding: 16px 12px;
+    border-bottom: 1px solid #f1f5f9;
     display: flex;
     align-items: center;
-    gap: 12px;
-    transition: all 0.2s ease;
+    gap: 15px;
+    transition: all 0.3s ease;
     width: 100%;
     overflow: hidden;
+    border-radius: 10px;
 }
 
 .l360-about-announcement-item:hover {
-    padding-left: 8px;
-    background: var(--l360-light);
-    margin: 0;
-    padding: 14px 8px;
-    border-radius: 8px;
-    width: calc(100% - 0px);
+    background: #f8fafc;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+    transform: translateX(5px);
+    border-bottom-color: transparent;
 }
 
 .l360-about-announcement-badge {
@@ -176,7 +190,7 @@
 }
 
 .l360-about-announcement-badge img {
-    width: 28px;
+    width: 32px;
     height: auto;
     display: block;
 }
@@ -184,23 +198,23 @@
 .l360-about-announcement-link {
     flex: 1;
     text-decoration: none;
-    color: var(--l360-dark);
-    font-size: 13px;
-    font-weight: 500;
+    color: #334155;
+    font-size: 13.5px;
+    font-weight: 600;
     transition: color 0.2s ease;
-    line-height: 1.4;
+    line-height: 1.5;
     word-break: break-word;
     overflow-wrap: break-word;
 }
 
 .l360-about-announcement-link:hover {
-    color: var(--l360-accent);
+    color: #e11d48;
 }
 
 .l360-about-no-data {
     text-align: center;
     padding: 40px 20px;
-    color: var(--l360-gray);
+    color: #64748b;
     font-size: 13px;
 }
 

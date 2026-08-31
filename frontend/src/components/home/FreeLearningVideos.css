@@ -17,21 +17,22 @@
 
 .l360-free-video-badge {
     display: inline-block;
-    font-size: 12px;
-    font-weight: 600;
+    font-size: 13px;
+    font-weight: 800;
     text-transform: uppercase;
-    letter-spacing: 1px;
-    color: var(--l360-accent);
-    margin-bottom: 12px;
-    background: rgba(196, 1, 56, 0.1);
-    padding: 5px 12px;
-    border-radius: 4px;
+    letter-spacing: 1.5px;
+    color: #ffffff;
+    margin-bottom: 15px;
+    background: linear-gradient(135deg, #e11d48, #9f1239);
+    padding: 8px 18px;
+    border-radius: 30px;
+    box-shadow: 0 6px 15px rgba(225, 29, 72, 0.3);
 }
 
 .l360-free-video-heading {
-    font-size: 22px;
-    font-weight: 600;
-    color: var(--l360-dark);
+    font-size: 38px;
+    font-weight: 800;
+    color: #0f172a;
     margin-bottom: 12px;
     display: flex;
     align-items: center;
@@ -62,36 +63,42 @@
 
 .l360-feature-card {
     text-align: center;
-    padding: 25px 20px;
-    background: var(--l360-light);
-    border-radius: 5px;
-    transition: var(--l360-transition);
-    border: 1px solid var(--l360-gray-light);
+    padding: 35px 25px;
+    background: #ffffff;
+    border-radius: 20px;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
 }
 
 .l360-feature-card:hover {
-    transform: translateY(-4px);
-    border-color: var(--l360-accent);
-    box-shadow: var(--l360-shadow-md);
+    transform: translateY(-8px);
+    border-color: #cbd5e1;
+    box-shadow: 0 20px 40px -10px rgba(15, 23, 42, 0.1);
 }
 
 .l360-feature-card img {
-    width: 50px;
-    height: 50px;
-    margin-bottom: 15px;
+    width: 60px;
+    height: 60px;
+    margin-bottom: 20px;
+    transition: transform 0.3s ease;
+}
+
+.l360-feature-card:hover img {
+    transform: scale(1.1);
 }
 
 .l360-feature-card h4 {
-    font-size: 16px;
-    font-weight: 600;
-    color: var(--l360-dark);
-    margin-bottom: 10px;
+    font-size: 18px;
+    font-weight: 800;
+    color: #0f172a;
+    margin-bottom: 12px;
 }
 
 .l360-feature-card p {
-    font-size: 12px;
-    color: var(--l360-gray);
-    line-height: 1.5;
+    font-size: 14.5px;
+    color: #475569;
+    line-height: 1.6;
 }
 
 .l360-free-video-grid {
@@ -102,20 +109,20 @@
 }
 
 .l360-free-video-card {
-    background: var(--l360-white);
-    border-radius: 5px;
+    background: #ffffff;
+    border-radius: 24px;
     overflow: hidden;
-    box-shadow: var(--l360-shadow-sm);
-    transition: var(--l360-transition);
-    border: 1px solid var(--l360-gray-light);
+    box-shadow: 0 15px 40px -10px rgba(0, 0, 0, 0.08);
+    transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    border: 1px solid #e2e8f0;
     display: flex;
     flex-direction: column;
 }
 
 .l360-free-video-card:hover {
-    box-shadow: var(--l360-shadow-md);
-    border-color: var(--l360-accent);
-    transform: translateY(-4px);
+    box-shadow: 0 25px 50px -15px rgba(16, 185, 129, 0.25);
+    border-color: #a7f3d0;
+    transform: translateY(-12px);
 }
 
 .l360-video-wrapper {
@@ -124,6 +131,7 @@
     height: 0;
     overflow: hidden;
     background: #000;
+    border-bottom: 2px solid #f1f5f9;
 }
 
 .l360-video-wrapper iframe {
@@ -136,21 +144,27 @@
 }
 
 .l360-free-video-content {
-    padding: 20px;
+    padding: 25px;
 }
 
 .l360-free-video-title {
-    font-size: 16px;
-    font-weight: 600;
-    color: var(--l360-dark);
-    margin-bottom: 10px;
+    font-size: 18px;
+    font-weight: 800;
+    color: #0f172a;
+    margin-bottom: 12px;
+    line-height: 1.5;
+    transition: color 0.3s ease;
+}
+
+.l360-free-video-card:hover .l360-free-video-title {
+    color: #059669;
 }
 
 .l360-free-video-desc {
-    font-size: 13px;
-    color: var(--l360-gray);
+    font-size: 14.5px;
+    color: #475569;
     line-height: 1.6;
-    margin-bottom: 15px;
+    margin-bottom: 5px;
 }
 
 .l360-free-badge {
@@ -158,9 +172,12 @@
     background: linear-gradient(135deg, #10b981, #059669);
     color: white;
     font-size: 11px;
-    font-weight: 600;
-    padding: 4px 12px;
-    border-radius: 20px;
+    font-weight: 800;
+    padding: 6px 14px;
+    border-radius: 30px;
+    margin-bottom: 12px;
+    letter-spacing: 1px;
+    box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3);
 }
 
 @media (max-width: 992px) {

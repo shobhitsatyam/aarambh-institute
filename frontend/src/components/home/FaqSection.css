@@ -31,22 +31,23 @@
 
 .l360-faq-badge {
     display: inline-block;
-    font-size: 12px;
-    font-weight: 600;
+    font-size: 13px;
+    font-weight: 800;
     text-transform: uppercase;
-    letter-spacing: 1px;
-    color: var(--l360-accent);
-    margin-bottom: 12px;
-    background: rgba(196, 1, 56, 0.1);
-    padding: 5px 12px;
-    border-radius: 4px;
+    letter-spacing: 1.5px;
+    color: #ffffff;
+    margin-bottom: 15px;
+    background: linear-gradient(135deg, #e11d48, #9f1239);
+    padding: 8px 18px;
+    border-radius: 30px;
+    box-shadow: 0 6px 15px rgba(225, 29, 72, 0.3);
 }
 
 .l360-faq-heading {
-    font-size: 22px;
-    font-weight: 600;
-    color: var(--l360-dark);
-    margin-bottom: 12px;
+    font-size: 38px;
+    font-weight: 800;
+    color: #0f172a;
+    margin-bottom: 15px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -74,37 +75,39 @@
 }
 
 .l360-faq-item {
-    background: var(--l360-white);
-    border-radius: 5px;
-    border: 1px solid var(--l360-gray-light);
+    background: #ffffff;
+    border-radius: 16px;
+    border: 1px solid #e2e8f0;
     overflow: hidden;
-    transition: var(--l360-transition);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: 0 10px 25px -10px rgba(0, 0, 0, 0.05);
 }
 
 .l360-faq-item:hover {
-    border-color: var(--l360-accent);
-    box-shadow: var(--l360-shadow-sm);
+    border-color: #cbd5e1;
+    box-shadow: 0 20px 40px -10px rgba(15, 23, 42, 0.1);
+    transform: translateY(-4px);
 }
 
 .l360-faq-question {
-    padding: 18px 20px;
+    padding: 20px 25px;
     cursor: pointer;
     display: flex;
     justify-content: space-between;
     align-items: center;
     gap: 15px;
-    background: var(--l360-white);
-    transition: var(--l360-transition);
+    background: #ffffff;
+    transition: all 0.3s ease;
 }
 
 .l360-faq-question:hover {
-    background: var(--l360-light);
+    background: #f8fafc;
 }
 
 .l360-faq-question h3 {
-    font-size: 15px;
-    font-weight: 600;
-    color: var(--l360-dark);
+    font-size: 16px;
+    font-weight: 700;
+    color: #0f172a;
     margin: 0;
     flex: 1;
     line-height: 1.4;
@@ -190,20 +193,28 @@
 .l360-faq-contact-btn {
     display: inline-flex;
     align-items: center;
-    gap: 10px;
-    background: var(--l360-accent);
-    color: var(--l360-white);
-    padding: 10px 24px;
-    border-radius: 4px;
+    gap: 12px;
+    background: linear-gradient(135deg, #e11d48, #be123c);
+    color: #ffffff;
+    padding: 16px 32px;
+    border-radius: 50px;
     text-decoration: none;
-    font-size: 14px;
-    font-weight: 600;
-    transition: var(--l360-transition);
+    font-size: 16px;
+    font-weight: 800;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: 0 8px 20px rgba(225, 29, 72, 0.3);
+}
+
+.l360-faq-contact-btn:hover {
+    background: linear-gradient(135deg, #f43f5e, #9f1239);
+    transform: translateY(-4px);
+    box-shadow: 0 12px 25px rgba(225, 29, 72, 0.45);
 }
 
 .l360-faq-contact-btn img {
-    width: 18px;
-    height: 18px;
+    width: 20px;
+    height: 20px;
+    filter: brightness(0) invert(1);
 }
 
 @media (max-width: 992px) {
