@@ -41,7 +41,7 @@ const Blogs = () => {
 
                     <div className="l360-blog-card">
                         <div className="l360-blog-image">
-                            <img src="https://nios.world/wp-content/uploads/2026/03/task_01kmd390vees7sqgt2k8trt2p7_1774261172_img_0.webp" alt="NIOS Exam Tips" />
+                            <img src="https://images.unsplash.com/photo-1453728013993-6d66e9c9123a?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="NIOS Exam Tips" />
                             <div className="l360-blog-category">Exam Tips</div>
                         </div>
                         <div className="l360-blog-card-content">

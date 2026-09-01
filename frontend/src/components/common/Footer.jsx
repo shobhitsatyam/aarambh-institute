@@ -3,6 +3,10 @@ import { Link } from 'react-router-dom';
 import './Footer.css';
 
 const Footer = () => {
+  const scrollToTop = () => {
+    window.scrollTo(0, 0);
+  };
+
   return (
     <footer className="l360-footer">
       {/* Floating Newsletter and Follow Section */}
@@ -62,12 +66,12 @@ const Footer = () => {
             Popular Boards
           </h4>
           <div className="l360-category-tags">
-            <Link to="/nios-10th" className="l360-category-tag">NIOS 10th</Link>
-            <Link to="/nios-12th" className="l360-category-tag">NIOS 12th</Link>
-            <Link to="/bbose-10th" className="l360-category-tag">BBOSE 10th</Link>
-            <Link to="/bbose-12th" className="l360-category-tag">BBOSE 12th</Link>
-            <Link to="/bosse-12th" className="l360-category-tag">BOSSE Board</Link>
-            <Link to="/nios-on-demand-exam" className="l360-category-tag">On-Demand Exam</Link>
+            <Link to="/nios-10th" onClick={scrollToTop} className="l360-category-tag">NIOS 10th</Link>
+            <Link to="/nios-12th" onClick={scrollToTop} className="l360-category-tag">NIOS 12th</Link>
+            <Link to="/bbose-10th" onClick={scrollToTop} className="l360-category-tag">BBOSE 10th</Link>
+            <Link to="/bbose-12th" onClick={scrollToTop} className="l360-category-tag">BBOSE 12th</Link>
+            <Link to="/bosse-12th" onClick={scrollToTop} className="l360-category-tag">BOSSE Board</Link>
+            <Link to="/nios-on-demand-exam" onClick={scrollToTop} className="l360-category-tag">On-Demand Exam</Link>
           </div>
         </div>
 
@@ -77,12 +81,12 @@ const Footer = () => {
             Trending Searches
           </h4>
           <div className="l360-category-tags">
-            <Link to="#" className="l360-category-tag">NIOS Admission 2026-27</Link>
-            <Link to="#" className="l360-category-tag">BBOSE Result</Link>
-            <Link to="#" className="l360-category-tag">Study Material</Link>
-            <Link to="#" className="l360-category-tag">On Demand Exam</Link>
-            <Link to="#" className="l360-category-tag">Practical Exam</Link>
-            <Link to="#" className="l360-category-tag">BOSSE Registration</Link>
+            <Link to="#" onClick={scrollToTop} className="l360-category-tag">NIOS Admission 2026-27</Link>
+            <Link to="#" onClick={scrollToTop} className="l360-category-tag">BBOSE Result</Link>
+            <Link to="#" onClick={scrollToTop} className="l360-category-tag">Study Material</Link>
+            <Link to="#" onClick={scrollToTop} className="l360-category-tag">On Demand Exam</Link>
+            <Link to="#" onClick={scrollToTop} className="l360-category-tag">Practical Exam</Link>
+            <Link to="#" onClick={scrollToTop} className="l360-category-tag">BOSSE Registration</Link>
           </div>
         </div>
 
@@ -92,14 +96,14 @@ const Footer = () => {
             Our Presence
           </h4>
           <div className="l360-category-tags">
-            <Link to="#" className="l360-category-tag">Patna</Link>
-            <Link to="#" className="l360-category-tag">Delhi</Link>
-            <Link to="#" className="l360-category-tag">Mumbai</Link>
-            <Link to="#" className="l360-category-tag">Kolkata</Link>
-            <Link to="#" className="l360-category-tag">Lucknow</Link>
-            <Link to="#" className="l360-category-tag">Ranchi</Link>
-            <Link to="#" className="l360-category-tag">Varanasi</Link>
-            <Link to="#" className="l360-category-tag">All India</Link>
+            <Link to="#" onClick={scrollToTop} className="l360-category-tag">Patna</Link>
+            <Link to="#" onClick={scrollToTop} className="l360-category-tag">Delhi</Link>
+            <Link to="#" onClick={scrollToTop} className="l360-category-tag">Mumbai</Link>
+            <Link to="#" onClick={scrollToTop} className="l360-category-tag">Kolkata</Link>
+            <Link to="#" onClick={scrollToTop} className="l360-category-tag">Lucknow</Link>
+            <Link to="#" onClick={scrollToTop} className="l360-category-tag">Ranchi</Link>
+            <Link to="#" onClick={scrollToTop} className="l360-category-tag">Varanasi</Link>
+            <Link to="#" onClick={scrollToTop} className="l360-category-tag">All India</Link>
           </div>
         </div>
       </div>
@@ -160,12 +164,12 @@ const Footer = () => {
               OUR SERVICES
             </h4>
             <ul>
-              <li><Link to="/nios-12th"><i className="fas fa-chevron-right"></i> NIOS Admission</Link></li>
-              <li><Link to="/bbose-12th"><i className="fas fa-chevron-right"></i> BBOSE Admission</Link></li>
-              <li><Link to="/bosse-12th"><i className="fas fa-chevron-right"></i> BOSSE Admission</Link></li>
-              <li><Link to="/register"><i className="fas fa-chevron-right"></i> Study Materials</Link></li>
-              <li><Link to="/nios-on-demand-exam"><i className="fas fa-chevron-right"></i> On-Demand Exam</Link></li>
-              <li><Link to="/login"><i className="fas fa-chevron-right"></i> Online Coaching</Link></li>
+              <li><Link to="/nios-12th" onClick={scrollToTop}><i className="fas fa-chevron-right"></i> NIOS Admission</Link></li>
+              <li><Link to="/bbose-12th" onClick={scrollToTop}><i className="fas fa-chevron-right"></i> BBOSE Admission</Link></li>
+              <li><Link to="/bosse-12th" onClick={scrollToTop}><i className="fas fa-chevron-right"></i> BOSSE Admission</Link></li>
+              <li><Link to="/register" onClick={scrollToTop}><i className="fas fa-chevron-right"></i> Study Materials</Link></li>
+              <li><Link to="/nios-on-demand-exam" onClick={scrollToTop}><i className="fas fa-chevron-right"></i> On-Demand Exam</Link></li>
+              <li><Link to="/login" onClick={scrollToTop}><i className="fas fa-chevron-right"></i> Online Coaching</Link></li>
             </ul>
           </div>
 
@@ -175,12 +179,12 @@ const Footer = () => {
               QUICK LINKS
             </h4>
             <ul>
-              <li><Link to="/about-us"><i className="fas fa-chevron-right"></i> About Us</Link></li>
-              <li><Link to="/admission"><i className="fas fa-chevron-right"></i> Admission</Link></li>
-              <li><Link to="/director"><i className="fas fa-chevron-right"></i> Director</Link></li>
-              <li><Link to="/blog"><i className="fas fa-chevron-right"></i> Blog</Link></li>
-              <li><Link to="/contact-us"><i className="fas fa-chevron-right"></i> Contact Us</Link></li>
-              <li><Link to="#"><i className="fas fa-chevron-right"></i> Privacy Policy</Link></li>
+              <li><Link to="/about-us" onClick={scrollToTop}><i className="fas fa-chevron-right"></i> About Us</Link></li>
+              <li><Link to="/admission" onClick={scrollToTop}><i className="fas fa-chevron-right"></i> Admission</Link></li>
+              <li><Link to="/director" onClick={scrollToTop}><i className="fas fa-chevron-right"></i> Director</Link></li>
+              <li><Link to="/blog" onClick={scrollToTop}><i className="fas fa-chevron-right"></i> Blog</Link></li>
+              <li><Link to="/contact-us" onClick={scrollToTop}><i className="fas fa-chevron-right"></i> Contact Us</Link></li>
+              <li><Link to="#" onClick={scrollToTop}><i className="fas fa-chevron-right"></i> Privacy Policy</Link></li>
             </ul>
           </div>
         </div>

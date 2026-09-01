@@ -14,6 +14,8 @@ const PopupForm = () => {
     address: '',
     message: ''
   });
+  
+  const [errors, setErrors] = useState({});
 
   // Handle Popup Auto-Open using SessionStorage
   useEffect(() => {
@@ -55,24 +57,54 @@ const PopupForm = () => {
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+    // Clear the error for the field being typed
+    if (errors[e.target.name]) {
+      setErrors({ ...errors, [e.target.name]: '' });
+    }
+  };
+
+  const validateForm = () => {
+    let newErrors = {};
+    let isValid = true;
+
+    if (!formData.name.trim()) {
+      newErrors.name = 'Full name is required';
+      isValid = false;
+    }
+
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!formData.email.trim()) {
+      newErrors.email = 'Email is required';
+      isValid = false;
+    } else if (!emailPattern.test(formData.email)) {
+      newErrors.email = 'Enter a valid email address';
+      isValid = false;
+    }
+
+    const mobilePattern = /^[0-9]{10}$/;
+    if (!formData.mobile.trim()) {
+      newErrors.mobile = 'Mobile number is required';
+      isValid = false;
+    } else if (!mobilePattern.test(formData.mobile)) {
+      newErrors.mobile = 'Enter a valid 10-digit number';
+      isValid = false;
+    }
+
+    if (!formData.board_interest) {
+      newErrors.board_interest = 'Please select board interest';
+      isValid = false;
+    }
+
+    setErrors(newErrors);
+    return isValid;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validations
-    if (!formData.name.trim()) return showToast('Please enter your name', true);
-    if (!formData.email.trim()) return showToast('Please enter your email', true);
-
-    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailPattern.test(formData.email)) return showToast('Enter a valid email address', true);
-
-    if (!formData.mobile.trim()) return showToast('Please enter mobile number', true);
-
-    const mobilePattern = /^[0-9]{10}$/;
-    if (!mobilePattern.test(formData.mobile)) return showToast('Enter valid 10-digit mobile number', true);
-
-    if (!formData.board_interest) return showToast('Please select board interest', true);
+    if (!validateForm()) {
+      return; // Stop if validation fails
+    }
 
     setIsLoading(true);
 
@@ -120,21 +152,24 @@ const PopupForm = () => {
           </div>
 
           <div className="popup-body">
-            <form id="popupInquiryForm" onSubmit={handleSubmit}>
+            <form id="popupInquiryForm" onSubmit={handleSubmit} noValidate>
               <div className="popup-form-row">
-                <div className="popup-form-group">
+                <div className={`popup-form-group ${errors.name ? 'has-error' : ''}`}>
                   <label>Full Name <span className="required">*</span></label>
-                  <input type="text" name="name" value={formData.name} onChange={handleChange} placeholder="Enter full name" required />
+                  <input type="text" name="name" value={formData.name} onChange={handleChange} placeholder="Enter full name" />
+                  {errors.name && <span className="popup-error-text">{errors.name}</span>}
                 </div>
-                <div className="popup-form-group">
+                <div className={`popup-form-group ${errors.email ? 'has-error' : ''}`}>
                   <label>Email <span className="required">*</span></label>
-                  <input type="email" name="email" value={formData.email} onChange={handleChange} placeholder="your@email.com" required />
+                  <input type="email" name="email" value={formData.email} onChange={handleChange} placeholder="your@email.com" />
+                  {errors.email && <span className="popup-error-text">{errors.email}</span>}
                 </div>
               </div>
               <div className="popup-form-row">
-                <div className="popup-form-group">
+                <div className={`popup-form-group ${errors.mobile ? 'has-error' : ''}`}>
                   <label>Mobile <span className="required">*</span></label>
-                  <input type="tel" name="mobile" value={formData.mobile} onChange={handleChange} placeholder="10-digit number" required />
+                  <input type="tel" name="mobile" value={formData.mobile} onChange={handleChange} placeholder="10-digit number" />
+                  {errors.mobile && <span className="popup-error-text">{errors.mobile}</span>}
                 </div>
                 <div className="popup-form-group">
                   <label>Select Class</label>
@@ -149,9 +184,9 @@ const PopupForm = () => {
                 </div>
               </div>
               <div className="popup-form-row">
-                <div className="popup-form-group">
+                <div className={`popup-form-group ${errors.board_interest ? 'has-error' : ''}`}>
                   <label>Board Interest <span className="required">*</span></label>
-                  <select name="board_interest" value={formData.board_interest} onChange={handleChange} required>
+                  <select name="board_interest" value={formData.board_interest} onChange={handleChange}>
                     <option value="">Select Board</option>
                     <option value="NIOS">NIOS Board</option>
                     <option value="BBOSE">BBOSE Board</option>
@@ -160,6 +195,7 @@ const PopupForm = () => {
                     <option value="ICSE">ICSE Board</option>
                     <option value="Other">Other Board</option>
                   </select>
+                  {errors.board_interest && <span className="popup-error-text">{errors.board_interest}</span>}
                 </div>
                 <div className="popup-form-group">
                   <label>City / Location</label>
