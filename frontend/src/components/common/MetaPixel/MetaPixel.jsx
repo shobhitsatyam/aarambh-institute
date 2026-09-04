@@ -4,13 +4,15 @@ import { useLocation } from 'react-router-dom';
 // YAHAN APNA META PIXEL ID DAALEN (e.g., '123456789012345')
 const PIXEL_ID = '4484542351870388';
 
+let isPixelInitialized = false;
+
 const MetaPixel = () => {
   const location = useLocation();
 
   useEffect(() => {
 
     // Initialize the Meta Pixel script only once
-    if (!window.fbq) {
+    if (!isPixelInitialized) {
       /* eslint-disable */
       !function (f, b, e, v, n, t, s) {
         if (f.fbq) return; n = f.fbq = function () {
@@ -26,6 +28,7 @@ const MetaPixel = () => {
       /* eslint-enable */
 
       window.fbq('init', PIXEL_ID);
+      isPixelInitialized = true;
     }
 
     // Track PageView every time the route (URL) changes
