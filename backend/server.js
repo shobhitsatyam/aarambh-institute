@@ -14,11 +14,13 @@ app.use(express.json());
 
 const contactRoutes = require('./routes/contactRoutes');
 const apiRoutes = require('./routes/apiRoutes');
+const blogRoutes = require('./routes/blogRoutes');
 
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/data', dataRoutes);
 app.use('/api/contact', contactRoutes);
+app.use('/api/blogs', blogRoutes);
 app.use('/api', apiRoutes);
 
 const PORT = process.env.PORT || 5000;
