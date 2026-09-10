@@ -68,7 +68,7 @@ const Header = () => {
             ))}
 
             <li className="relative group h-full">
-              <Link to="/admission" className="flex items-center h-full px-4 text-[12px] font-bold text-gray-200 uppercase tracking-widest hover:text-white hover:bg-accent transition-all duration-300">
+              <Link to="#" className="flex items-center h-full px-4 text-[12px] font-bold text-gray-200 uppercase tracking-widest hover:text-white hover:bg-accent transition-all duration-300">
                 Admission <i className="fas fa-chevron-down text-[9px] ml-1.5 opacity-70 group-hover:rotate-180 transition-transform duration-300"></i>
               </Link>
               {/* Dropdown Menu */}
@@ -125,9 +125,12 @@ const Header = () => {
             ))}
           </ul>
 
-          {/* Enroll Now Button inside Nav Bar */}
-          <div className="h-full flex items-center ml-4">
-            <Link to="/register" className="flex items-center justify-center gap-2 bg-gradient-to-r from-accent to-[#be123c] text-white px-6 py-2 rounded-full font-bold text-[12px] uppercase tracking-widest hover:shadow-[0_0_15px_rgba(225,29,72,0.5)] hover:scale-105 transition-all duration-300">
+          {/* Auth Buttons inside Nav Bar */}
+          <div className="h-full flex items-center ml-4 gap-3">
+            <Link to="/login" className="flex items-center justify-center gap-2 border-2 border-accent text-accent hover:bg-accent hover:text-white px-5 py-1.5 rounded-full font-bold text-[12px] uppercase tracking-widest transition-all duration-300">
+              <i className="fas fa-sign-in-alt"></i> Login
+            </Link>
+            <Link to="/register" className="flex items-center justify-center gap-2 bg-gradient-to-r from-accent to-[#be123c] text-white px-5 py-1.5 rounded-full font-bold text-[12px] uppercase tracking-widest hover:shadow-[0_0_15px_rgba(225,29,72,0.5)] hover:scale-105 transition-all duration-300">
               <i className="fas fa-graduation-cap"></i> Enroll Now
             </Link>
           </div>
@@ -228,9 +231,14 @@ const Header = () => {
           <li className="border-b border-gray-100"><Link to="/contact-us" className="block py-3 text-[14px] font-semibold text-primary hover:text-accent transition-colors" onClick={toggleMobileMenu}>Contact</Link></li>
         </ul>
 
-        <Link to="/register" className="flex items-center justify-center gap-2 w-full mt-6 py-3 px-4 bg-gradient-to-r from-accent to-accent-dark text-white rounded-full font-bold text-[14px] hover:shadow-[0_8px_20px_rgba(225,29,72,0.3)] transition-all duration-300 hover:-translate-y-0.5" onClick={toggleMobileMenu}>
-          <i className="fas fa-graduation-cap"></i> Enroll Now
-        </Link>
+        <div className="flex flex-col gap-3 mt-6">
+          <Link to="/login" className="flex items-center justify-center gap-2 w-full py-3 px-4 border-2 border-accent text-accent hover:bg-accent hover:text-white rounded-full font-bold text-[14px] transition-all duration-300" onClick={toggleMobileMenu}>
+            <i className="fas fa-sign-in-alt"></i> Login
+          </Link>
+          <Link to="/register" className="flex items-center justify-center gap-2 w-full py-3 px-4 bg-gradient-to-r from-accent to-[#be123c] text-white rounded-full font-bold text-[14px] hover:shadow-[0_8px_20px_rgba(225,29,72,0.3)] transition-all duration-300 hover:-translate-y-0.5" onClick={toggleMobileMenu}>
+            <i className="fas fa-graduation-cap"></i> Enroll Now
+          </Link>
+        </div>
       </div>
 
       <div className={`fixed inset-0 bg-primary/40 backdrop-blur-sm z-[999] transition-all duration-300 ${isMobileMenuOpen ? 'opacity-100 visible' : 'opacity-0 invisible'}`} onClick={toggleMobileMenu}></div>

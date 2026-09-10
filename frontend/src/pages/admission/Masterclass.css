@@ -1,0 +1,528 @@
+/* Premium Light Mode UI for Masterclass Landing Page */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap');
+
+.l360-masterclass-container {
+    font-family: 'Inter', sans-serif;
+    background-color: #f8fafc;
+    color: #0f172a;
+    padding-bottom: 80px;
+}
+
+/* --- Alert Bar --- */
+.l360-mc-alert-bar {
+    background: linear-gradient(90deg, #dc2626, #ef4444);
+    color: white;
+    text-align: center;
+    padding: 10px 20px;
+    font-weight: 700;
+    font-size: 0.95rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    animation: alert-pulse 2s infinite;
+}
+
+@keyframes alert-pulse {
+    0%, 100% { background: linear-gradient(90deg, #dc2626, #ef4444); }
+    50% { background: linear-gradient(90deg, #b91c1c, #dc2626); }
+}
+
+/* --- Hero Section --- */
+.l360-mc-hero {
+    background: linear-gradient(135deg, #eff6ff 0%, #e0e7ff 100%);
+    padding: 80px 20px 60px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.l360-mc-hero h1 {
+    font-family: 'Outfit', sans-serif;
+    font-size: 3.5rem;
+    font-weight: 800;
+    color: #1e293b;
+    margin-bottom: 20px;
+    line-height: 1.2;
+}
+
+.l360-mc-highlight-yellow {
+    color: #f59e0b;
+    text-shadow: 0 2px 4px rgba(245, 158, 11, 0.2);
+}
+
+.l360-mc-highlight-green {
+    color: #10b981;
+}
+
+.l360-mc-hero p {
+    font-size: 1.25rem;
+    color: #475569;
+    max-width: 900px;
+    margin: 0 auto;
+    line-height: 1.6;
+    font-weight: 500;
+}
+
+/* --- Video & Form Section (Laser Card) --- */
+.l360-mc-main-content {
+    max-width: 1000px; /* Reduced to make it medium size */
+    margin: -40px auto 60px;
+    padding: 0 20px;
+    position: relative;
+    z-index: 10;
+}
+
+.l360-pro-card-wrapper {
+    position: relative;
+    border-radius: 24px;
+    padding: 3px;
+    background: #e2e8f0;
+    overflow: hidden;
+    transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    z-index: 1;
+}
+
+.l360-pro-card-wrapper::before,
+.l360-pro-card-wrapper::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    transform-origin: center;
+    opacity: 0.4;
+    transition: opacity 0.3s ease;
+    z-index: -2;
+}
+
+.l360-pro-card-wrapper::before {
+    background: conic-gradient(from 0deg, transparent 0%, transparent 80%, #3b82f6 100%);
+    animation: rotate-border 4s linear infinite;
+}
+
+.l360-pro-card-wrapper::after {
+    background: conic-gradient(from 0deg, transparent 0%, transparent 80%, #f59e0b 100%);
+    animation: rotate-border 4s linear infinite;
+    animation-delay: -2s;
+}
+
+/* Color Variants for Unique Borders */
+.l360-wrapper-green::before { background: conic-gradient(from 0deg, transparent 0%, transparent 80%, #10b981 100%); }
+.l360-wrapper-green::after { background: conic-gradient(from 0deg, transparent 0%, transparent 80%, #059669 100%); }
+.l360-wrapper-green:hover { box-shadow: 0 25px 50px -12px rgba(16, 185, 129, 0.3); }
+
+.l360-wrapper-purple::before { background: conic-gradient(from 0deg, transparent 0%, transparent 80%, #a855f7 100%); }
+.l360-wrapper-purple::after { background: conic-gradient(from 0deg, transparent 0%, transparent 80%, #7e22ce 100%); }
+.l360-wrapper-purple:hover { box-shadow: 0 25px 50px -12px rgba(168, 85, 247, 0.3); }
+
+.l360-wrapper-orange::before { background: conic-gradient(from 0deg, transparent 0%, transparent 80%, #f97316 100%); }
+.l360-wrapper-orange::after { background: conic-gradient(from 0deg, transparent 0%, transparent 80%, #c2410c 100%); }
+.l360-wrapper-orange:hover { box-shadow: 0 25px 50px -12px rgba(249, 115, 22, 0.3); }
+
+/* Section Specific Wrapper Adjustments */
+.l360-checkbox-wrapper { max-width: 1200px; margin: 0 auto 60px; }
+.l360-trainer-wrapper { max-width: 1000px; margin: 0 auto 80px; }
+.l360-faq-wrapper { max-width: 900px; margin: 0 auto 80px; }
+
+@keyframes rotate-border {
+    100% { transform: rotate(360deg); }
+}
+
+.l360-pro-card-wrapper:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 25px 50px -12px rgba(59, 130, 246, 0.3);
+}
+
+.l360-pro-card-wrapper:hover::before,
+.l360-pro-card-wrapper:hover::after {
+    opacity: 1;
+}
+
+.l360-pro-card-inner {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: 21px;
+    padding: 30px; /* Reduced from 40px */
+    display: grid;
+    grid-template-columns: 1.2fr 1fr; /* Adjusted ratio */
+    gap: 30px; /* Reduced gap */
+    align-items: center; /* Center items vertically */
+}
+
+@media (max-width: 768px) { /* Reduced from 992px to prevent early stacking on laptops */
+    .l360-pro-card-inner {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Video Side */
+.l360-mc-video-box {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.l360-mc-video-title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #ef4444;
+    text-align: center;
+    background: rgba(239, 68, 68, 0.1);
+    padding: 10px;
+    border-radius: 12px;
+}
+
+.l360-mc-iframe-wrapper {
+    position: relative;
+    padding-bottom: 56.25%; /* 16:9 */
+    height: 0;
+    overflow: hidden;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+.l360-mc-iframe-wrapper iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.l360-mc-webinar-info {
+    display: flex;
+    justify-content: space-around;
+    background: #f1f5f9;
+    padding: 15px;
+    border-radius: 12px;
+    font-weight: 600;
+    color: #334155;
+}
+
+/* Form Side */
+.l360-mc-form-box {
+    background: white;
+    border-radius: 16px;
+    padding: 30px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+    width: 100%;
+}
+
+.l360-mc-form-title {
+    text-align: center;
+    font-family: 'Outfit', sans-serif;
+    font-size: 1.8rem;
+    color: #1e293b;
+    margin-bottom: 25px;
+    line-height: 1.3;
+}
+
+.l360-mc-input {
+    width: 100%;
+    padding: 12px 15px; /* Reduced padding */
+    margin-bottom: 15px;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    font-size: 0.95rem; /* Slightly smaller text */
+    transition: all 0.3s;
+    background: #f8fafc;
+}
+
+.l360-mc-input:focus {
+    border-color: #3b82f6;
+    outline: none;
+    background: white;
+    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+}
+
+.l360-mc-submit {
+    width: 100%;
+    padding: 14px; /* Reduced padding */
+    background: linear-gradient(135deg, #3b82f6, #4f46e5);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 1.05rem; /* Slightly smaller text */
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.l360-mc-submit:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(59, 130, 246, 0.4);
+}
+
+.l360-mc-submit.loading {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+/* Form Highlight */
+.form-highlight {
+    animation: flash-border 1.5s ease-in-out;
+}
+
+@keyframes flash-border {
+    0%, 100% { border-color: #e2e8f0; box-shadow: none; }
+    50% { border-color: #3b82f6; box-shadow: 0 0 0 10px rgba(59, 130, 246, 0.2); }
+}
+
+
+/* --- Section Headings --- */
+.l360-section-title {
+    text-align: center;
+    font-family: 'Outfit', sans-serif;
+    font-size: 2.5rem;
+    color: #0f172a;
+    margin: 60px 20px 40px;
+}
+
+.l360-section-subtitle {
+    text-align: center;
+    font-size: 1.2rem;
+    color: #64748b;
+    max-width: 800px;
+    margin: -30px auto 50px;
+}
+
+/* --- Whom is this for Grid --- */
+.l360-mc-target-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 25px;
+    max-width: 1200px;
+    margin: 0 auto 80px;
+    padding: 0 20px;
+}
+
+.l360-target-card {
+    background: white;
+    border-radius: 16px;
+    padding: 30px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    border: 1px solid #e2e8f0;
+    transition: all 0.3s ease;
+    cursor: default;
+}
+
+.l360-target-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.05);
+    border-color: #3b82f6;
+}
+
+.l360-target-icon {
+    width: 60px;
+    height: 60px;
+    background: rgba(59, 130, 246, 0.1);
+    color: #3b82f6;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+}
+
+.l360-target-card h3 {
+    font-size: 1.1rem;
+    color: #1e293b;
+    margin: 0;
+}
+
+/* --- Checkbox Section --- */
+.l360-mc-checkbox-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 20px;
+}
+
+.l360-checkbox-card {
+    background: #f8fafc;
+    border: 2px solid #e2e8f0;
+    border-radius: 16px;
+    padding: 25px;
+    display: flex;
+    align-items: flex-start;
+    gap: 15px;
+    transition: all 0.3s ease;
+}
+
+.l360-checkbox-card:hover {
+    border-color: #10b981;
+    background: white;
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(16, 185, 129, 0.1);
+}
+
+.l360-checkbox-card input[type="checkbox"] {
+    width: 24px;
+    height: 24px;
+    margin-top: 2px;
+    cursor: pointer;
+    accent-color: #10b981;
+}
+
+.l360-checkbox-card p {
+    font-size: 1rem;
+    color: #334155;
+    line-height: 1.5;
+    margin: 0;
+}
+
+/* --- Trainer Section --- */
+.l360-trainer-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 30px;
+}
+
+.l360-trainer-info {
+    text-align: center;
+}
+
+.l360-trainer-info h2 {
+    font-family: 'Outfit', sans-serif;
+    font-size: 2rem;
+    color: #1e293b;
+    margin-bottom: 20px;
+}
+
+.l360-trainer-info p {
+    color: #475569;
+    font-size: 1.1rem;
+    line-height: 1.7;
+    margin-bottom: 15px;
+}
+
+.l360-trainer-img img {
+    width: 100%;
+    border-radius: 20px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+    transform: rotate(2deg);
+    transition: transform 0.4s;
+}
+
+.l360-trainer-card:hover .l360-trainer-img img {
+    transform: rotate(0deg) scale(1.02);
+}
+
+@media (max-width: 768px) {
+    .l360-trainer-card {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* --- FAQ Section --- */
+.l360-faq-item {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    margin-bottom: 15px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.l360-faq-item:hover {
+    background: white;
+    border-color: #3b82f6;
+    box-shadow: 0 4px 15px rgba(59, 130, 246, 0.1);
+}
+
+.l360-faq-question {
+    padding: 20px 25px;
+    font-weight: 600;
+    font-size: 1.1rem;
+    color: #1e293b;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.l360-faq-answer {
+    padding: 0 25px 20px;
+    color: #64748b;
+    line-height: 1.6;
+    font-size: 1rem;
+}
+
+/* Modals */
+.success-modal {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 9999;
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(5px);
+}
+.success-modal.show { display: flex; }
+
+.success-modal-content {
+    background: white;
+    border-radius: 24px;
+    padding: 40px;
+    text-align: center;
+    max-width: 450px;
+    width: 90%;
+    box-shadow: 0 25px 50px rgba(0,0,0,0.25);
+    border-top: 5px solid #10b981;
+}
+
+.success-icon {
+    width: 70px; height: 70px;
+    background: #ecfdf5;
+    color: #10b981;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 2rem;
+    margin: 0 auto 20px;
+}
+
+.error-message {
+    position: fixed;
+    top: 20px; left: 50%;
+    transform: translateX(-50%);
+    background: #ef4444; color: white;
+    padding: 15px 25px;
+    border-radius: 12px;
+    z-index: 10000;
+    display: none;
+    box-shadow: 0 10px 25px rgba(239, 68, 68, 0.3);
+}
+.error-message.show { display: block; }
+
+/* Large CTA Button */
+.l360-large-cta {
+    display: block;
+    max-width: 400px;
+    margin: 0 auto 60px;
+    text-align: center;
+    padding: 20px;
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    color: white;
+    border-radius: 100px;
+    font-size: 1.2rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    box-shadow: 0 15px 30px rgba(245, 158, 11, 0.3);
+    transition: all 0.3s;
+    cursor: pointer;
+}
+
+.l360-large-cta:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 40px rgba(245, 158, 11, 0.4);
+}
