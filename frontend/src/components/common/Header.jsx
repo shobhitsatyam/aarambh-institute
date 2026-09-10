@@ -29,7 +29,7 @@ const Header = () => {
           <Link to="/" className="flex items-center gap-3 lg:gap-5 group">
             <img src="/assets/images/logo/logo.png" alt="Logo" className="h-[50px] lg:h-[75px] drop-shadow-md group-hover:scale-105 transition-transform duration-500 object-contain" />
             <div className="flex flex-col justify-center mt-1">
-              <h1 className="font-['Outfit'] font-black text-[20px] lg:text-[28px] text-primary uppercase tracking-tight leading-none group-hover:text-accent transition-colors duration-500 m-0 p-0">
+              <h1 className="font-['Outfit'] font-black text-[20px] lg:text-[24px] xl:text-[28px] text-primary uppercase tracking-tight leading-none group-hover:text-accent transition-colors duration-500 m-0 p-0">
                 AARAMBH INSTITUTE
               </h1>
               <span className="text-accent font-bold text-[9px] lg:text-[10px] tracking-[0.35em] uppercase mt-1.5 lg:mt-2 block leading-none">
@@ -39,18 +39,18 @@ const Header = () => {
           </Link>
 
           {/* Right side Govt Reg & CIN */}
-          <div className="hidden lg:flex items-center">
+          <div className="hidden xl:flex items-center">
             <img src="/assets/govt.png" alt="Government Registered" className="h-[45px] lg:h-[65px] object-contain drop-shadow-sm" />
           </div>
 
-          <button className="lg:hidden text-2xl text-primary p-2 cursor-pointer hover:text-accent transition-colors" onClick={toggleMobileMenu}>
+          <button className="xl:hidden text-2xl text-primary p-2 cursor-pointer hover:text-accent transition-colors" onClick={toggleMobileMenu}>
               <i className="fas fa-bars"></i>
           </button>
         </div>
       </header>
 
       {/* Tier 2: Navigation Bar */}
-      <nav className="hidden lg:block bg-gradient-to-r from-[#0f172a] via-[#1e293b] to-[#0f172a] border-b-[3px] border-accent relative z-40 shadow-lg">
+      <nav className="hidden xl:block bg-gradient-to-r from-[#0f172a] via-[#1e293b] to-[#0f172a] border-b-[3px] border-accent relative z-40 shadow-lg">
         <div className="max-w-7xl mx-auto px-5 flex justify-between items-center h-[55px]">
           
           {/* Main Links */}
@@ -127,7 +127,7 @@ const Header = () => {
 
           {/* Auth Buttons inside Nav Bar */}
           <div className="h-full flex items-center ml-4 gap-3">
-            <Link to="/login" className="flex items-center justify-center gap-2 border-2 border-accent text-accent hover:bg-accent hover:text-white px-5 py-1.5 rounded-full font-bold text-[12px] uppercase tracking-widest transition-all duration-300">
+            <Link to="/login" className="flex items-center justify-center gap-2 bg-gradient-to-r from-accent to-[#be123c] text-white px-5 py-1.5 rounded-full font-bold text-[12px] uppercase tracking-widest hover:shadow-[0_0_15px_rgba(225,29,72,0.5)] hover:scale-105 transition-all duration-300">
               <i className="fas fa-sign-in-alt"></i> Login
             </Link>
             <Link to="/register" className="flex items-center justify-center gap-2 bg-gradient-to-r from-accent to-[#be123c] text-white px-5 py-1.5 rounded-full font-bold text-[12px] uppercase tracking-widest hover:shadow-[0_0_15px_rgba(225,29,72,0.5)] hover:scale-105 transition-all duration-300">
@@ -172,7 +172,7 @@ const Header = () => {
               +91-9931006379
             </a>
             
-            <span className="text-gray-300 hidden lg:inline">|</span>
+            <span className="text-gray-300 hidden xl:inline">|</span>
             
             <a href="mailto:info@openadmissions.in" className="inline-flex items-center gap-1.5 hover:text-accent transition-colors group">
               <div className="w-5 h-5 rounded-full bg-red-100 flex items-center justify-center group-hover:bg-red-200 transition-colors">
@@ -232,7 +232,7 @@ const Header = () => {
         </ul>
 
         <div className="flex flex-col gap-3 mt-6">
-          <Link to="/login" className="flex items-center justify-center gap-2 w-full py-3 px-4 border-2 border-accent text-accent hover:bg-accent hover:text-white rounded-full font-bold text-[14px] transition-all duration-300" onClick={toggleMobileMenu}>
+          <Link to="/login" className="flex items-center justify-center gap-2 w-full py-3 px-4 bg-gradient-to-r from-accent to-[#be123c] text-white rounded-full font-bold text-[14px] hover:shadow-[0_8px_20px_rgba(225,29,72,0.3)] transition-all duration-300 hover:-translate-y-0.5" onClick={toggleMobileMenu}>
             <i className="fas fa-sign-in-alt"></i> Login
           </Link>
           <Link to="/register" className="flex items-center justify-center gap-2 w-full py-3 px-4 bg-gradient-to-r from-accent to-[#be123c] text-white rounded-full font-bold text-[14px] hover:shadow-[0_8px_20px_rgba(225,29,72,0.3)] transition-all duration-300 hover:-translate-y-0.5" onClick={toggleMobileMenu}>
