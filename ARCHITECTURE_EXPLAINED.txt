@@ -1,0 +1,99 @@
+========================================================================
+AARAMBH INSTITUTE - FRONTEND ARCHITECTURE & DATA FLOW GUIDE
+========================================================================
+
+This file explains exactly how the new React JS frontend works under the 
+hood, how the files are connected, and where the data is coming from for 
+the Admin, Student, and Teacher portals.
+
+------------------------------------------------------------------------
+1. HOW THE LAYOUTS & PAGES WORK (REACT ROUTER)
+------------------------------------------------------------------------
+In the old PHP system, every page (like `dashboard.php` or `profile.php`) 
+had to reload the entire website, including the sidebar and header. 
+
+In our new React app, it works like a "Single Page Application (SPA)":
+
+1. **App.jsx (The Traffic Cop):** 
+   When you go to a URL (e.g., `/student`), `App.jsx` intercepts it.
+   Instead of loading a whole new webpage, it says: "Ah, you want the 
+   student section. Let me load the StudentLayout."
+
+2. **The Layouts (StudentLayout, AdminLayout, TeacherLayout):**
+   These files contain the Sidebars and the Top Headers. They never 
+   reload. Inside them, there is a special React component called `<Outlet />`.
+   Think of `<Outlet />` as an empty box or a TV screen.
+
+3. **The Pages (The Content):**
+   When you click "Live Classes" on the sidebar, React simply takes the 
+   `LiveClasses.jsx` file and injects it straight into that empty `<Outlet />` 
+   box. The sidebar never moves or blinks!
+
+------------------------------------------------------------------------
+2. WHERE IS THE DATA COMING FROM RIGHT NOW?
+------------------------------------------------------------------------
+Currently, if you look at a file like `StudentDashboard.jsx` or 
+`TeacherDashboard.jsx`, you will see code like this at the top:
+
+  const stats = [
+    { label: 'Active Subjects', value: '4' },
+    { label: 'Pending Fees', value: '15,000' }
+  ];
+
+This is called **"Mock Data" (Dummy Data)**. 
+Right now, the data is hardcoded directly inside the frontend files. 
+Why? Because in Phase 1 to Phase 10, our only goal was to build the 
+"UI Shell" (the design, the animations, and the structure) without 
+worrying about databases. It allows us to see how beautiful the app 
+will look when it's finished.
+
+------------------------------------------------------------------------
+3. HOW WILL THE DATA WORK IN THE FUTURE? (THE REAL BACKEND)
+------------------------------------------------------------------------
+In the next phases of development, we will connect this beautiful UI to 
+our Node.js/Express Backend and MySQL Database.
+
+Here is the step-by-step flow of how data will travel in the future:
+
+STEP 1: Student opens `http://localhost:5173/student`.
+STEP 2: The `StudentDashboard.jsx` page loads. It runs a special function 
+        called `useEffect()`.
+STEP 3: The `useEffect()` sends an API request to our backend: 
+        `GET http://localhost:5000/api/student/dashboard`
+STEP 4: The Node.js backend (inside `studentController.js`) receives the 
+        request, looks at the Student's ID, and asks the MySQL Database: 
+        "Hey DB, give me this student's attendance and fees."
+STEP 5: The database returns the real numbers.
+STEP 6: The backend sends the numbers back to the React frontend.
+STEP 7: React automatically updates the Dashboard UI to show the real 
+        data instead of the Mock Data.
+
+------------------------------------------------------------------------
+4. HOW ARE THE 3 ROLES (ADMIN, STUDENT, TEACHER) SEPARATED?
+------------------------------------------------------------------------
+For security and organization, we have strictly separated the roles so 
+they never mix:
+
+1. **Folder Separation:**
+   - `src/pages/admin/...` (Only Admin pages)
+   - `src/pages/student/...` (Only Student pages)
+   - `src/pages/teacher/...` (Only Teacher pages)
+
+2. **Layout Separation:**
+   - Admins use `AdminLayout.jsx` (which has links to Finance, All Students).
+   - Students use `StudentLayout.jsx` (which has links to Study Material, Fees).
+   - Teachers use `TeacherLayout.jsx` (which has links to Grading, My Classes).
+
+3. **Backend Separation (Future):**
+   - We have `adminRoutes.js` and `studentRoutes.js`.
+   - If a Student tries to hit an Admin API (like "delete student"), the 
+     backend will check their token, see they are a student, and block 
+     the request immediately.
+
+------------------------------------------------------------------------
+SUMMARY
+------------------------------------------------------------------------
+In short: The UI you see right now is a highly interactive, animated 
+shell powered by React Components and Mock Data. The Layouts keep the 
+Sidebar fixed, while the Outlet changes the middle content instantly. 
+Soon, we will replace the Mock Data with real API calls to the Backend!

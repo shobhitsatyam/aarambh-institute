@@ -1,83 +1,125 @@
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
 
+/* ==========================================================================
+   PREMIUM 3D LIGHT THEME REDESIGN
+   ========================================================================== */
+
 .l360-enroll-container {
     min-height: calc(100vh - 120px);
     display: flex;
     align-items: center;
     justify-content: center;
     padding: 60px 20px;
-    background: #f8fafc;
+    background: #f1f5f9;
+    /* Soft 3D lighting background */
+    background-image: 
+        radial-gradient(at 0% 0%, rgba(255, 255, 255, 0.8) 0px, transparent 50%),
+        radial-gradient(at 100% 0%, rgba(196, 1, 56, 0.08) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(59, 130, 246, 0.08) 0px, transparent 50%);
     font-family: 'Outfit', sans-serif;
-}
-
-.l360-enroll-wrapper {
-    display: grid;
-    grid-template-columns: 1fr 1.3fr;
-    max-width: 1250px;
-    width: 100%;
-    background: #ffffff;
-    border-radius: 24px;
-    box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.2);
-    position: relative;
-    z-index: 1;
-}
-
-/* Unique Moving Gradient Border */
-.l360-enroll-wrapper::after {
-    content: '';
-    position: absolute;
-    inset: -4px;
-    border-radius: 26px;
-    background: linear-gradient(60deg, #c40138, #ff4d6d, #0f172a, #3b82f6, #c40138);
-    background-size: 300% 300%;
-    z-index: -1;
-    animation: animated-gradient-border 5s linear infinite;
-}
-
-@keyframes animated-gradient-border {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
-}
-
-.l360-enroll-info {
-    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-    padding: 70px 60px;
     position: relative;
     overflow: hidden;
+}
+
+/* Floating animated elements for depth */
+.l360-enroll-container::before {
+    content: '';
+    position: absolute;
+    top: -150px;
+    left: -150px;
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, rgba(196, 1, 56, 0.06) 0%, rgba(0,0,0,0) 60%);
+    border-radius: 50%;
+    animation: drift 15s infinite alternate ease-in-out;
+}
+.l360-enroll-container::after {
+    content: '';
+    position: absolute;
+    bottom: -150px;
+    right: -150px;
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(59, 130, 246, 0.06) 0%, rgba(0,0,0,0) 60%);
+    border-radius: 50%;
+    animation: drift 12s infinite alternate-reverse ease-in-out;
+}
+
+@keyframes drift { 
+    0% { transform: translate(0, 0) scale(1); } 
+    100% { transform: translate(60px, 40px) scale(1.1); } 
+}
+
+/* Main Form Wrapper - 3D Floating Card */
+.l360-enroll-wrapper {
+    display: grid;
+    grid-template-columns: 1fr 1.5fr;
+    max-width: 1200px;
+    width: 100%;
+    background: #ffffff;
+    border-radius: 28px;
+    /* 3D Soft Shadowing */
+    box-shadow: 
+        0 20px 50px rgba(15, 23, 42, 0.08),
+        0 10px 20px rgba(15, 23, 42, 0.04),
+        inset 0 2px 0 rgba(255, 255, 255, 1);
+    position: relative;
+    z-index: 10;
+    overflow: hidden;
+}
+
+/* Animated Glowing Border Edge */
+.l360-enroll-wrapper::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 28px;
+    padding: 3px;
+    background: linear-gradient(90deg, #e11d48, #3b82f6, #8b5cf6, #e11d48);
+    background-size: 300% 100%;
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+    z-index: 100;
+    animation: moveBorder 4s linear infinite;
+}
+
+@keyframes moveBorder {
+    0% { background-position: 0% 0%; }
+    100% { background-position: 100% 0%; }
+}
+
+/* Left Sidebar Info - Premium Dark Contrast */
+.l360-enroll-info {
+    padding: 60px 50px;
     color: #ffffff;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    border-top-left-radius: 24px;
-    border-bottom-left-radius: 24px;
+    background: linear-gradient(145deg, #0f172a 0%, #1e293b 100%);
+    position: relative;
+    overflow: hidden;
 }
 
-/* Beautiful animated background element */
 .l360-enroll-info::before {
     content: '';
     position: absolute;
-    width: 400px;
-    height: 400px;
-    background: linear-gradient(45deg, var(--l360-accent, #c40138), #ff4d6d);
-    border-radius: 50%;
-    top: -150px;
-    left: -150px;
-    filter: blur(100px);
-    opacity: 0.5;
-    animation: float-blob 8s infinite alternate ease-in-out;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    z-index: 0;
 }
 
 .l360-enroll-info h2 {
-    font-size: 32px;
+    font-size: 34px;
     font-weight: 800;
-    margin-bottom: 30px;
-    background: linear-gradient(to right, #ffffff, #94a3b8);
+    margin-bottom: 35px;
+    background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    line-height: 1.2;
+    line-height: 1.3;
     position: relative;
-    z-index: 10;
+    z-index: 1;
 }
 
 .l360-feature-list {
@@ -86,36 +128,39 @@
     margin: 0;
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 16px;
     position: relative;
-    z-index: 10;
+    z-index: 1;
 }
 
 .l360-feature-list li {
     display: flex;
     align-items: flex-start;
-    gap: 15px;
-    font-size: 15px;
+    gap: 16px;
+    font-size: 14px;
     line-height: 1.5;
     color: #cbd5e1;
-    background: rgba(255, 255, 255, 0.05);
-    padding: 15px 20px;
-    border-radius: 12px;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    backdrop-filter: blur(10px);
-    transition: transform 0.3s ease, background 0.3s ease;
+    background: rgba(255, 255, 255, 0.04);
+    padding: 16px 20px;
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    /* 3D Button Effect on hover */
+    box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.05), 0 4px 10px rgba(0,0,0,0.1);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .l360-feature-list li:hover {
-    transform: translateX(8px);
-    background: rgba(255, 255, 255, 0.1);
+    transform: translateY(-3px) translateX(5px);
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(225, 29, 72, 0.4);
+    box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.1), 0 10px 20px rgba(0,0,0,0.2);
 }
 
 .l360-feature-list li i {
-    font-size: 20px;
-    color: var(--l360-accent, #ff4d6d);
-    flex-shrink: 0;
-    margin-top: 2px;
+    font-size: 18px;
+    color: #ff4d6d;
+    margin-top: 3px;
+    filter: drop-shadow(0 2px 4px rgba(225, 29, 72, 0.3));
 }
 
 .l360-feature-list li span {
@@ -125,299 +170,180 @@
     margin-bottom: 2px;
 }
 
+/* Right Form Section */
 .l360-enroll-form {
-    padding: 70px 60px;
+    padding: 50px 60px;
+    background: #ffffff;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    background: #ffffff;
-    border-top-right-radius: 24px;
-    border-bottom-right-radius: 24px;
 }
 
-.l360-enroll-form h2 {
+.l360-form-header {
+    margin-bottom: 30px;
+}
+
+.l360-form-header h2 {
     color: #0f172a;
     font-size: 32px;
     font-weight: 800;
-    margin-bottom: 10px;
+    margin-bottom: 8px;
+    letter-spacing: -0.5px;
 }
 
 .l360-form-subtitle {
-    font-size: 16px;
+    font-size: 15px;
     color: #64748b;
-    margin-bottom: 35px;
-    padding-bottom: 20px;
-    border-bottom: 1px solid #e2e8f0;
+    font-weight: 500;
 }
 
+.l360-form-alert {
+    padding: 16px 20px;
+    border-radius: 14px;
+    margin-bottom: 25px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 14.5px;
+    font-weight: 700;
+    animation: slideDown 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+}
+
+@keyframes slideDown {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.l360-form-alert.alert-success { background: #f0fdf4; border: 1px solid #bbf7d0; color: #166534; }
+.l360-form-alert.alert-success i { color: #16a34a; font-size: 18px; }
+.l360-form-alert.alert-error { background: #fff1f2; border: 1px solid #fecdd3; color: #be123c; }
+.l360-form-alert.alert-error i { color: #e11d48; font-size: 18px; }
+
+/* Form Fields - Light 3D look */
 .l360-form-row {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 20px;
 }
 
-.l360-form-group {
-    margin-bottom: 20px;
-}
-
+.l360-form-group { margin-bottom: 20px; }
 .l360-form-group label {
-    display: block;
-    font-size: 14px;
-    font-weight: 600;
-    color: #334155;
-    margin-bottom: 8px;
+    display: block; font-size: 13.5px; font-weight: 700; color: #334155; margin-bottom: 8px;
 }
+.l360-form-group label span { color: #e11d48; }
 
-.l360-form-group label span {
-    color: #e11d48;
-}
-
-.l360-form-group input,
-.l360-form-group select {
-    width: 100%;
-    padding: 14px 18px;
-    border: 2px solid #e2e8f0;
+.l360-form-group input, .l360-form-group select {
+    width: 100%; padding: 14px 18px; 
+    border: 1px solid #e2e8f0; 
     border-radius: 12px;
-    font-size: 15px;
-    font-family: inherit;
-    transition: all 0.3s ease;
+    font-size: 14.5px; font-weight: 500; color: #0f172a; 
     background: #f8fafc;
-    color: #0f172a;
-}
-
-.l360-form-group input::placeholder,
-.l360-form-group select::placeholder {
-    color: #94a3b8;
-}
-
-.l360-form-group select {
-    cursor: pointer;
-    appearance: none;
-    background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%2394a3b8%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
-    background-repeat: no-repeat, repeat;
-    background-position: right .7em top 50%, 0 0;
-    background-size: .65em auto, 100%;
-}
-
-.l360-form-group input.error-input,
-.l360-form-group select.error-input {
-    border-color: #fecdd3;
-    background-color: #fff1f2;
-}
-
-.l360-form-group input:focus,
-.l360-form-group select:focus {
-    outline: none;
-    border-color: var(--l360-accent, #c40138);
-    background: #ffffff;
-    box-shadow: 0 4px 15px rgba(196, 1, 56, 0.1);
-}
-
-.error-message {
-    font-size: 13px;
-    color: #e11d48;
-    margin-top: 6px;
-    display: block;
-    font-weight: 500;
-}
-
-.l360-email-wrapper {
-    display: flex;
-    gap: 10px;
-    align-items: stretch;
-}
-
-.l360-email-wrapper input {
-    flex: 1;
-}
-
-.l360-otp-btn {
-    background: #1e293b;
-    color: #ffffff;
-    border: none;
-    border-radius: 12px;
-    padding: 0 20px;
-    font-size: 14px;
-    font-weight: 700;
-    cursor: pointer;
-    white-space: nowrap;
-    transition: all 0.3s ease;
-}
-
-.l360-otp-btn:hover:not(:disabled) {
-    background: var(--l360-accent, #c40138);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 10px rgba(196, 1, 56, 0.2);
-}
-
-.l360-otp-btn:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-    background: #94a3b8;
-}
-
-.l360-otp-status {
-    font-size: 13px;
-    margin-top: 6px;
-    display: block;
-    font-weight: 600;
-}
-
-.l360-otp-status.success {
-    color: #166534;
-}
-
-.l360-otp-status.error {
-    color: #e11d48;
-}
-
-.l360-submit-btn {
-    width: 100%;
-    padding: 16px 25px;
-    background: linear-gradient(135deg, var(--l360-accent, #c40138) 0%, #a0012e 100%);
-    color: #ffffff;
-    border: none;
-    border-radius: 12px;
-    font-size: 16px;
-    font-weight: 700;
+    /* Soft Inner shadow for 3D effect */
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
     font-family: inherit;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    box-shadow: 0 8px 20px rgba(196, 1, 56, 0.25);
-    margin-top: 10px;
+}
+.l360-form-group input::placeholder, .l360-form-group select::placeholder { color: #94a3b8; font-weight: 400; }
+.l360-form-group select {
+    cursor: pointer; appearance: none;
+    background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%2394a3b8%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
+    background-repeat: no-repeat, repeat; background-position: right 1.2em top 50%, 0 0; background-size: .65em auto, 100%;
+}
+.l360-form-group input:hover, .l360-form-group select:hover { 
+    border-color: #cbd5e1; background: #ffffff; 
+}
+.l360-form-group input:focus, .l360-form-group select:focus {
+    outline: none; border-color: #c40138; background: #ffffff;
+    box-shadow: 0 4px 15px rgba(196, 1, 56, 0.08), inset 0 2px 4px rgba(0,0,0,0.01); 
+    transform: translateY(-1px);
+}
+.l360-form-group input.error-input, .l360-form-group select.error-input {
+    border-color: #fca5a5; background-color: #fff1f2;
 }
 
+.l360-error-text { font-size: 12.5px; color: #e11d48; margin-top: 6px; display: block; font-weight: 600; }
+
+.l360-email-wrapper { display: flex; gap: 12px; align-items: stretch; }
+.l360-email-wrapper input { flex: 1; }
+
+/* OTP Button - Premium 3D Action */
+.l360-otp-btn {
+    background: #0f172a; color: #ffffff; border: none; border-radius: 12px;
+    padding: 0 22px; font-size: 14px; font-weight: 700; cursor: pointer;
+    white-space: nowrap; transition: all 0.25s ease;
+    /* 3D Button pop */
+    box-shadow: 0 4px 0 #020617;
+    margin-bottom: 4px; /* Space for click push */
+}
+.l360-otp-btn:hover:not(:disabled) {
+    background: #1e293b;
+    transform: translateY(2px);
+    box-shadow: 0 2px 0 #020617;
+}
+.l360-otp-btn:active:not(:disabled) {
+    transform: translateY(4px);
+    box-shadow: 0 0 0 #020617;
+}
+.l360-otp-btn:disabled { 
+    opacity: 0.7; cursor: not-allowed; background: #cbd5e1; color: #475569; box-shadow: none; transform: translateY(4px);
+}
+
+.l360-otp-status { font-size: 13px; margin-top: 6px; display: block; font-weight: 700; }
+.l360-otp-status.success { color: #10b981; }
+
+/* Main Submit Button - Beautiful Gradient 3D */
+.l360-submit-btn {
+    width: 100%; padding: 16px; 
+    background: linear-gradient(135deg, #e11d48 0%, #be123c 100%);
+    color: #ffffff; border: none; border-radius: 14px; font-size: 16px; font-weight: 800; font-family: inherit;
+    cursor: pointer; transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+    margin-top: 20px; 
+    /* 3D Lift */
+    box-shadow: 0 6px 0 #9f1239, 0 15px 20px rgba(225, 29, 72, 0.3);
+    margin-bottom: 6px;
+}
 .l360-submit-btn:hover:not(:disabled) {
-    transform: translateY(-3px);
-    box-shadow: 0 12px 25px rgba(196, 1, 56, 0.35);
+    background: linear-gradient(135deg, #f43f5e 0%, #e11d48 100%);
+    transform: translateY(2px); 
+    box-shadow: 0 4px 0 #9f1239, 0 10px 15px rgba(225, 29, 72, 0.3);
 }
-
-.l360-submit-btn:active:not(:disabled) {
-    transform: translateY(0);
+.l360-submit-btn:active:not(:disabled) { 
+    transform: translateY(6px); 
+    box-shadow: 0 0 0 #9f1239;
 }
-
-.l360-submit-btn:disabled {
-    opacity: 0.7;
-    cursor: not-allowed;
-    background: #94a3b8;
-    box-shadow: none;
+.l360-submit-btn:disabled { 
+    opacity: 0.7; cursor: not-allowed; background: #94a3b8; 
+    box-shadow: none; transform: translateY(6px); margin-bottom: 0;
 }
 
 .l360-login-link {
-    text-align: center;
-    margin-top: 30px;
-    padding-top: 25px;
-    border-top: 1px solid #e2e8f0;
-    font-size: 15px;
-    color: #64748b;
-    font-weight: 500;
+    text-align: center; margin-top: 30px; font-size: 14.5px; color: #64748b; font-weight: 600;
 }
-
 .l360-login-link a {
-    color: var(--l360-accent, #c40138);
-    text-decoration: none;
-    font-weight: 700;
-    margin-left: 5px;
-    transition: color 0.3s ease;
+    color: #e11d48; text-decoration: none; font-weight: 800; margin-left: 6px; transition: color 0.3s ease;
 }
-
-.l360-login-link a:hover {
-    text-decoration: underline;
-}
+.l360-login-link a:hover { color: #be123c; text-decoration: underline; }
 
 .loading-spinner {
-    display: inline-block;
-    width: 20px;
-    height: 20px;
-    border: 3px solid rgba(255,255,255,0.3);
-    border-radius: 50%;
-    border-top-color: #ffffff;
-    animation: spin 0.8s ease-in-out infinite;
+    display: inline-block; width: 20px; height: 20px; border: 3px solid rgba(255,255,255,0.3);
+    border-radius: 50%; border-top-color: #ffffff; animation: spin 0.8s linear infinite;
 }
-
-@keyframes spin {
-    to { transform: rotate(360deg); }
-}
-
-.toast-notification {
-    position: fixed;
-    top: 30px;
-    right: 30px;
-    padding: 16px 24px;
-    border-radius: 12px;
-    color: white;
-    font-size: 15px;
-    font-weight: 600;
-    z-index: 9999;
-    animation: slideIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-}
-
-.toast-success {
-    background-color: #10b981;
-}
-
-.toast-error {
-    background-color: #ef4444;
-}
-
-@keyframes slideIn {
-    from {
-        transform: translateX(100%);
-        opacity: 0;
-    }
-    to {
-        transform: translateX(0);
-        opacity: 1;
-    }
-}
+@keyframes spin { to { transform: rotate(360deg); } }
 
 @media (max-width: 1024px) {
-    .l360-enroll-wrapper {
-        grid-template-columns: 1fr;
-        max-width: 600px;
-    }
-
-    .l360-enroll-info {
-        padding: 50px 40px;
-        border-radius: 24px 24px 0 0;
-    }
-    
-    .l360-enroll-form {
-        border-radius: 0 0 24px 24px;
-    }
+    .l360-enroll-wrapper { grid-template-columns: 1fr; max-width: 600px; }
+    .l360-enroll-info { padding: 40px 30px; border-radius: 28px 28px 0 0; }
+    .l360-enroll-form { padding: 40px 30px; border-radius: 0 0 28px 28px; }
 }
-
 @media (max-width: 768px) {
-    .l360-enroll-container {
-        padding: 30px 15px;
-    }
-
-    .l360-enroll-info,
-    .l360-enroll-form {
-        padding: 30px 20px;
-    }
-
-    .l360-enroll-info h2,
-    .l360-enroll-form h2 {
-        font-size: 26px;
-    }
-
-    .l360-form-row {
-        grid-template-columns: 1fr;
-        gap: 15px;
-    }
-
-    .l360-email-wrapper {
-        flex-direction: column;
-    }
-
-    .l360-otp-btn {
-        width: 100%;
-        padding: 14px;
+    .l360-enroll-container { padding: 30px 15px; }
+    .l360-enroll-info, .l360-enroll-form { padding: 30px 20px; }
+    .l360-form-row { grid-template-columns: 1fr; gap: 16px; }
+    .l360-email-wrapper { flex-direction: column; }
+    .l360-otp-btn { 
+        width: 100%; padding: 14px; margin-bottom: 4px;
+        box-shadow: 0 4px 0 #020617;
     }
 }

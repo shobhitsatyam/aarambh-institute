@@ -11,7 +11,7 @@ const ForgotPassword = () => {
 
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
-  const [toast, setToast] = useState({ show: false, message: '', type: '' });
+  const [alertMsg, setAlertMsg] = useState({ text: '', type: '' });
 
   const [otpTimer, setOtpTimer] = useState(0);
   const navigate = useNavigate();
@@ -30,9 +30,9 @@ const ForgotPassword = () => {
     return `${m}:${s}`;
   };
 
-  const showToastMsg = (message, type = 'success') => {
-    setToast({ show: true, message, type });
-    setTimeout(() => setToast({ show: false, message: '', type: '' }), 3000);
+  const showAlertMsg = (text, type = 'success') => {
+    setAlertMsg({ text, type });
+    setTimeout(() => setAlertMsg({ text: '', type: '' }), 4000);
   };
 
   const handleSendOtp = async () => {
@@ -51,15 +51,15 @@ const ForgotPassword = () => {
       const data = await res.json();
 
       if (data.success || res.ok) {
-        showToastMsg('OTP sent successfully!');
+        showAlertMsg('OTP sent successfully!');
         setStep(2);
         setOtpTimer(240); // 4 minutes
       } else {
-        showToastMsg(data.message || 'Failed to send OTP', 'error');
+        showAlertMsg(data.message || 'Failed to send OTP', 'error');
         setErrors({ email: data.message });
       }
     } catch (err) {
-      showToastMsg('Server error. Try again.', 'error');
+      showAlertMsg('Server error. Try again.', 'error');
     } finally {
       setLoading(false);
     }
@@ -79,14 +79,14 @@ const ForgotPassword = () => {
       const data = await res.json();
 
       if (data.success || res.ok) {
-        showToastMsg('OTP verified successfully!');
+        showAlertMsg('OTP verified successfully!');
         setStep(3);
       } else {
-        showToastMsg(data.message || 'Invalid OTP', 'error');
+        showAlertMsg(data.message || 'Invalid OTP', 'error');
         setErrors({ otp: data.message });
       }
     } catch (err) {
-      showToastMsg('Verification failed.', 'error');
+      showAlertMsg('Verification failed.', 'error');
     } finally {
       setLoading(false);
     }
@@ -112,13 +112,13 @@ const ForgotPassword = () => {
       const data = await res.json();
 
       if (data.success || res.ok) {
-        showToastMsg('Password reset successful!');
+        showAlertMsg('Password reset successful!');
         setTimeout(() => navigate('/login'), 2000);
       } else {
-        showToastMsg(data.message || 'Reset failed', 'error');
+        showAlertMsg(data.message || 'Reset failed', 'error');
       }
     } catch (err) {
-      showToastMsg('Reset failed. Try again.', 'error');
+      showAlertMsg('Reset failed. Try again.', 'error');
     } finally {
       setLoading(false);
     }
@@ -142,6 +142,13 @@ const ForgotPassword = () => {
           </div>
         </div>
 
+        {alertMsg.text && (
+          <div className={`l360-form-alert alert-${alertMsg.type}`}>
+            <i className={`fa-solid ${alertMsg.type === 'success' ? 'fa-check-circle' : 'fa-circle-exclamation'}`}></i>
+            <span>{alertMsg.text}</span>
+          </div>
+        )}
+
         {step === 1 && (
           <div className="step-content active-step">
             <div className="l360-form-group">
@@ -158,7 +165,7 @@ const ForgotPassword = () => {
                   {loading ? 'Sending...' : 'Send OTP'}
                 </button>
               </div>
-              {errors.email && <span className="error-message">{errors.email}</span>}
+              {errors.email && <span className="l360-error-text">{errors.email}</span>}
             </div>
           </div>
         )}
@@ -183,7 +190,7 @@ const ForgotPassword = () => {
               <button type="button" className="l360-otp-btn" onClick={handleVerifyOtp} style={{ marginTop: '15px', width: '100%' }} disabled={loading}>
                 {loading ? 'Verifying...' : 'Verify OTP'}
               </button>
-              {errors.otp && <span className="error-message">{errors.otp}</span>}
+              {errors.otp && <span className="l360-error-text">{errors.otp}</span>}
             </div>
             <div className="l360-login-link">
               <button onClick={handleSendOtp} disabled={otpTimer > 0 || loading} style={{ background: 'none', border: 'none', color: 'var(--l360-accent)', cursor: 'pointer', fontWeight: 600 }}>
@@ -210,7 +217,7 @@ const ForgotPassword = () => {
                     <i className={`fa-regular ${showPassword.new ? 'fa-eye-slash' : 'fa-eye'}`}></i>
                   </button>
                 </div>
-                {errors.new && <span className="error-message">{errors.new}</span>}
+                {errors.new && <span className="l360-error-text">{errors.new}</span>}
               </div>
 
               <div className="l360-form-group">
@@ -227,7 +234,7 @@ const ForgotPassword = () => {
                     <i className={`fa-regular ${showPassword.confirm ? 'fa-eye-slash' : 'fa-eye'}`}></i>
                   </button>
                 </div>
-                {errors.confirm && <span className="error-message">{errors.confirm}</span>}
+                {errors.confirm && <span className="l360-error-text">{errors.confirm}</span>}
               </div>
 
               <button type="submit" className="l360-submit-btn" disabled={loading}>
@@ -241,13 +248,6 @@ const ForgotPassword = () => {
           </div>
         )}
       </div>
-
-      {/* Toast */}
-      {toast.show && (
-        <div className={`toast-notification toast-${toast.type}`}>
-          {toast.message}
-        </div>
-      )}
     </div>
   );
 };

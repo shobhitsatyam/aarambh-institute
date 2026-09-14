@@ -151,6 +151,13 @@ const PopupForm = () => {
             <p>10th या 12th मात्र 45 दिन में पास करें!</p>
           </div>
 
+          {toast.show && (
+            <div className={`l360-form-alert ${toast.isError ? 'alert-error' : 'alert-success'}`} style={{ margin: '0 25px 20px 25px' }}>
+              <i className={`fa-solid ${!toast.isError ? 'fa-check-circle' : 'fa-circle-exclamation'}`}></i>
+              <span>{toast.message}</span>
+            </div>
+          )}
+
           <div className="popup-body">
             <form id="popupInquiryForm" onSubmit={handleSubmit} noValidate>
               <div className="popup-form-row">
@@ -222,12 +229,6 @@ const PopupForm = () => {
         </div>
       </div>
 
-      {/* Toast Message */}
-      {toast.show && (
-        <div className={`popup-success-toast ${toast.isError ? 'popup-error-toast' : ''}`}>
-          {toast.message}
-        </div>
-      )}
     </>
   );
 };

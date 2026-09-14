@@ -8,7 +8,7 @@ const Register = () => {
   });
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
-  const [toast, setToast] = useState({ show: false, message: '', type: '' });
+  const [alertMsg, setAlertMsg] = useState({ text: '', type: '' });
 
   // OTP Specific States
   const [otpTimer, setOtpTimer] = useState(0);
@@ -16,6 +16,10 @@ const Register = () => {
   const [otpLoading, setOtpLoading] = useState(false);
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    window.scrollTo(0, 0); // Scroll to top when page loads
+  }, []);
 
   useEffect(() => {
     let interval;
@@ -31,9 +35,11 @@ const Register = () => {
     return `${m}:${s}`;
   };
 
-  const showToastMsg = (message, type = 'success') => {
-    setToast({ show: true, message, type });
-    setTimeout(() => setToast({ show: false, message: '', type: '' }), 3000);
+  const showAlert = (text, type = 'success') => {
+    setAlertMsg({ text, type });
+    if (type === 'success') {
+      setTimeout(() => setAlertMsg({ text: '', type: '' }), 5000);
+    }
   };
 
   const handleChange = (e) => {
@@ -73,14 +79,14 @@ const Register = () => {
       const data = await res.json();
 
       if (data.success || res.ok) {
-        showToastMsg('OTP sent successfully!');
+        showAlert('OTP sent successfully to your email!', 'success');
         setOtpTimer(240); // 4 minutes
       } else {
-        showToastMsg(data.message || 'Failed to send OTP', 'error');
+        showAlert(data.message || 'Failed to send OTP', 'error');
         setErrors({ email: data.message });
       }
     } catch (err) {
-      showToastMsg('Server error. Try again.', 'error');
+      showAlert('Server error while sending OTP. Try again.', 'error');
     } finally {
       setOtpLoading(false);
     }
@@ -99,14 +105,14 @@ const Register = () => {
       const data = await res.json();
 
       if (data.success || res.ok) {
-        showToastMsg('Email verified successfully!');
+        showAlert('Email verified successfully! You can now register.', 'success');
         setEmailVerified(true);
       } else {
-        showToastMsg(data.message || 'Invalid OTP', 'error');
+        showAlert(data.message || 'Invalid OTP', 'error');
         setErrors({ otp: data.message });
       }
     } catch (err) {
-      showToastMsg('Verification failed.', 'error');
+      showAlert('Verification failed. Try again.', 'error');
     } finally {
       setOtpLoading(false);
     }
@@ -114,7 +120,8 @@ const Register = () => {
 
   const handleRegister = async (e) => {
     e.preventDefault();
-    if (!emailVerified) return showToastMsg('Please verify your email with OTP first', 'error');
+    setAlertMsg({ text: '', type: '' });
+    if (!emailVerified) return showAlert('Please verify your email with OTP first to proceed.', 'error');
 
     let validationErrors = {};
     if (!formData.full_name || formData.full_name.trim().length < 3) validationErrors.full_name = 'Name must be at least 3 characters';
@@ -138,13 +145,13 @@ const Register = () => {
       const data = await res.json();
 
       if (data.success || res.ok) {
-        showToastMsg('Registration successful! Please login.');
+        showAlert('Registration successful! Redirecting to login...', 'success');
         setTimeout(() => navigate('/login'), 2000);
       } else {
-        showToastMsg(data.message || 'Registration failed', 'error');
+        showAlert(data.message || 'Registration failed. Please check the details.', 'error');
       }
     } catch (err) {
-      showToastMsg('Registration failed. Try again.', 'error');
+      showAlert('Registration failed due to server error. Try again.', 'error');
     } finally {
       setLoading(false);
     }
@@ -156,32 +163,41 @@ const Register = () => {
         <div className="l360-enroll-info">
           <h2>Why Enroll With AARAMBH INSTITUTE?</h2>
           <ul className="l360-feature-list">
-            <li><i className="fa-solid fa-check-circle"></i><span>Complete LMS Access</span> - Study anytime, anywhere</li>
-            <li><i className="fa-solid fa-check-circle"></i><span>Live Interactive Classes</span> - Learn from expert faculty</li>
-            <li><i className="fa-solid fa-check-circle"></i><span>Downloadable Study Materials</span> - Chapter-wise notes & guides</li>
-            <li><i className="fa-solid fa-check-circle"></i><span>Practice Tests & Mock Exams</span> - Track your progress</li>
-            <li><i className="fa-solid fa-check-circle"></i><span>24/7 Doubt Clearing</span> - Get your questions answered</li>
-            <li><i className="fa-solid fa-check-circle"></i><span>Recorded Video Lectures</span> - Revise anytime</li>
-            <li><i className="fa-solid fa-check-circle"></i><span>Assignment Support</span> - Guidance for TMA submission</li>
-            <li><i className="fa-solid fa-check-circle"></i><span>Exam Preparation Tips</span> - Strategies to score high</li>
+            <li><i className="fa-solid fa-laptop-code"></i><span>Complete LMS Access</span> - Study anytime, anywhere</li>
+            <li><i className="fa-solid fa-chalkboard-user"></i><span>Live Interactive Classes</span> - Learn from expert faculty</li>
+            <li><i className="fa-solid fa-book-open"></i><span>Downloadable Study Materials</span> - Chapter-wise notes & guides</li>
+            <li><i className="fa-solid fa-clipboard-check"></i><span>Practice Tests & Mock Exams</span> - Track your progress</li>
+            <li><i className="fa-solid fa-headset"></i><span>24/7 Doubt Clearing</span> - Get your questions answered</li>
+            <li><i className="fa-solid fa-circle-play"></i><span>Recorded Video Lectures</span> - Revise anytime</li>
+            <li><i className="fa-solid fa-pen-to-square"></i><span>Assignment Support</span> - Guidance for TMA submission</li>
+            <li><i className="fa-solid fa-lightbulb"></i><span>Exam Preparation Tips</span> - Strategies to score high</li>
           </ul>
         </div>
 
         <div className="l360-enroll-form">
-          <h2>Student Registration Form</h2>
-          <div className="l360-form-subtitle">Fill the details below to create your LMS account</div>
+          <div className="l360-form-header">
+            <h2>Student Registration</h2>
+            <div className="l360-form-subtitle">Fill the details below to create your LMS account</div>
+          </div>
+
+          {alertMsg.text && (
+            <div className={`l360-form-alert alert-${alertMsg.type}`}>
+              <i className={`fa-solid ${alertMsg.type === 'success' ? 'fa-check-circle' : 'fa-circle-exclamation'}`}></i>
+              <span>{alertMsg.text}</span>
+            </div>
+          )}
 
           <form onSubmit={handleRegister}>
             <div className="l360-form-row">
               <div className="l360-form-group">
                 <label>Full Name <span>*</span></label>
                 <input type="text" name="full_name" value={formData.full_name} onChange={handleChange} placeholder="Enter your full name" className={errors.full_name ? 'error-input' : ''} />
-                {errors.full_name && <span className="error-message">{errors.full_name}</span>}
+                {errors.full_name && <span className="l360-error-text">{errors.full_name}</span>}
               </div>
               <div className="l360-form-group">
                 <label>Mobile Number <span>*</span></label>
                 <input type="tel" name="mobile" value={formData.mobile} onChange={handleChange} placeholder="10-digit mobile number" className={errors.mobile ? 'error-input' : ''} />
-                {errors.mobile && <span className="error-message">{errors.mobile}</span>}
+                {errors.mobile && <span className="l360-error-text">{errors.mobile}</span>}
               </div>
             </div>
 
@@ -195,7 +211,7 @@ const Register = () => {
                   </button>
                 </div>
                 {emailVerified && <span className="l360-otp-status success">✓ Verified</span>}
-                {errors.email && <span className="error-message">{errors.email}</span>}
+                {errors.email && <span className="l360-error-text">{errors.email}</span>}
               </div>
               <div className="l360-form-group">
                 <label>OTP <span>*</span></label>
@@ -205,7 +221,7 @@ const Register = () => {
                     {otpLoading ? 'Verifying...' : 'Verify OTP'}
                   </button>
                 )}
-                {errors.otp && <span className="error-message">{errors.otp}</span>}
+                {errors.otp && <span className="l360-error-text">{errors.otp}</span>}
               </div>
             </div>
 
@@ -218,7 +234,7 @@ const Register = () => {
                   <option value="bbose">BBOSE Board</option>
                   <option value="bosse">BOSSE Board</option>
                 </select>
-                {errors.board && <span className="error-message">{errors.board}</span>}
+                {errors.board && <span className="l360-error-text">{errors.board}</span>}
               </div>
               <div className="l360-form-group">
                 <label>Select Class <span>*</span></label>
@@ -227,7 +243,7 @@ const Register = () => {
                   <option value="10th">10th (Secondary)</option>
                   <option value="12th">12th (Senior Secondary)</option>
                 </select>
-                {errors.class && <span className="error-message">{errors.class}</span>}
+                {errors.class && <span className="l360-error-text">{errors.class}</span>}
               </div>
             </div>
 
@@ -235,12 +251,12 @@ const Register = () => {
               <div className="l360-form-group">
                 <label>Create Password <span>*</span></label>
                 <input type="password" name="password" value={formData.password} onChange={handleChange} placeholder="Create a password" className={errors.password ? 'error-input' : ''} />
-                {errors.password && <span className="error-message">{errors.password}</span>}
+                {errors.password && <span className="l360-error-text">{errors.password}</span>}
               </div>
               <div className="l360-form-group">
                 <label>Confirm Password <span>*</span></label>
                 <input type="password" name="confirm_password" value={formData.confirm_password} onChange={handleChange} placeholder="Confirm password" className={errors.confirm_password ? 'error-input' : ''} />
-                {errors.confirm_password && <span className="error-message">{errors.confirm_password}</span>}
+                {errors.confirm_password && <span className="l360-error-text">{errors.confirm_password}</span>}
               </div>
             </div>
 
@@ -255,13 +271,6 @@ const Register = () => {
           </form>
         </div>
       </div>
-
-      {/* Toast */}
-      {toast.show && (
-        <div className={`toast-notification toast-${toast.type}`}>
-          {toast.message}
-        </div>
-      )}
     </div>
   );
 };

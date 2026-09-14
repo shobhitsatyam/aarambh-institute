@@ -120,7 +120,7 @@ const Login = () => {
                 onChange={handleChange}
                 className={errors.email ? 'error-input' : ''}
               />
-              {errors.email && <span className="error-message">{errors.email}</span>}
+              {errors.email && <span className="l360-error-text">{errors.email}</span>}
             </div>
 
             <div className="l360-form-group">
@@ -138,7 +138,7 @@ const Login = () => {
                   <i className={`fa-regular ${showPassword ? 'fa-eye-slash' : 'fa-eye'}`}></i>
                 </button>
               </div>
-              {errors.password && <span className="error-message">{errors.password}</span>}
+              {errors.password && <span className="l360-error-text">{errors.password}</span>}
             </div>
 
             <div className="l360-form-options">

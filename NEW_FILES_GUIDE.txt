@@ -1,0 +1,176 @@
+AARAMBH INSTITUTE - DASHBOARD MIGRATION GUIDE
+==============================================
+All 42 PHP files have been successfully migrated to modern React (.jsx) files.
+The frontend UI is 100% complete. No PHP pages are left behind!
+
+Here is a complete list of the newly created React files, what they do, and how you can view their UI on your local server.
+
+HOW TO ACCESS THE UI
+--------------------
+Your Vite development server is currently running.
+Open your browser and go to: http://localhost:5173
+
+If it's running on a different port, check your terminal where `npm run dev` is running.
+
+----------------------------------------------
+SECTION 1: STUDENT PORTAL (/student/...)
+----------------------------------------------
+To access these pages, either login as a student, or manually type the URL in your browser:
+e.g., http://localhost:5173/student
+
+1. StudentDashboard.jsx
+   - URL: /student
+   - Details: The main home page for students. Shows a welcome banner, quick stats (attendance %, pending fees), today's class schedule, and recent notifications.
+
+2. Profile.jsx
+   - URL: /student/profile
+   - Details: Displays the student's personal details, address, and enrolled course info.
+
+3. LiveClasses.jsx
+   - URL: /student/live-classes
+   - Details: Shows upcoming live classes (with "Join Now" buttons) and past recordings.
+
+4. StudyMaterials.jsx
+   - URL: /student/materials
+   - Details: A grid to download PDF notes, assignments, and video lectures.
+
+5. Subject.jsx
+   - URL: /student/subjects
+   - Details: Displays the subjects the student is enrolled in along with syllabus completion progress bars.
+
+6. Attendance.jsx
+   - URL: /student/attendance
+   - Details: A highly visual dashboard showing attendance percentage with a circular ring, and a table of past attendance records.
+
+7. Exams.jsx
+   - URL: /student/exams
+   - Details: Shows upcoming scheduled exams and a table of past exam results/grades.
+
+8. AcademicCalendar.jsx (Student)
+   - URL: /student/calendar
+   - Details: A timeline view of upcoming holidays, events, and exams.
+
+9. CourseFee.jsx
+   - URL: /student/fees
+   - Details: Shows total fees, amount paid, and pending installments. Includes a "Pay Now" modal mock for checkout.
+
+10. SwitchProgram.jsx (Student)
+    - URL: /student/switch-program
+    - Details: A form for students to request a batch or course transfer.
+
+11. SupportTicket.jsx
+    - URL: /student/tickets
+    - Details: Table of raised support tickets and a form to raise a new issue.
+
+12. DoubtSession.jsx
+    - URL: /student/doubts
+    - Details: Interface to ask academic questions to teachers.
+
+13. Notifications.jsx
+    - URL: /student/notifications
+    - Details: A feed of alerts, exam announcements, and fee reminders.
+
+14. SubmitFeedback.jsx
+    - URL: /student/feedback
+    - Details: A star-rating form for students to submit feedback on teachers/courses.
+
+
+----------------------------------------------
+SECTION 2: ADMIN PORTAL (/admin/...)
+----------------------------------------------
+To access these pages, either login as an admin, or manually type the URL:
+e.g., http://localhost:5173/admin
+
+1. AdminDashboard.jsx
+   - URL: /admin
+   - Details: The main Admin Command Center. Shows total active students, monthly revenue, open tickets, and quick action buttons.
+
+2. AllStudents.jsx
+   - URL: /admin/students
+   - Details: A powerful data table showing all enrolled students with search and filters.
+
+3. StudentDetails.jsx
+   - URL: /admin/students/:id (e.g., /admin/students/123)
+   - Details: Accessible by clicking the "Eye" icon in the All Students table. Shows a deep-dive profile of a single student (their fees, exams, attendance).
+
+4. ManageLiveClass.jsx
+   - URL: /admin/live-classes
+   - Details: Schedule new classes and view the ongoing timetable.
+
+5. ManageStudyMaterial.jsx
+   - URL: /admin/materials
+   - Details: Upload PDFs/videos and assign them to specific batches.
+
+6. ManageExams.jsx
+   - URL: /admin/exams
+   - Details: Schedule new exams and track ongoing ones.
+
+7. AcademicCalendar.jsx (Admin)
+   - URL: /admin/calendar
+   - Details: Add institute holidays and events to the calendar.
+
+8. ManageTickets.jsx
+   - URL: /admin/tickets
+   - Details: View all student support tickets and respond to them via a modal.
+
+9. ManageDoubtSessions.jsx
+   - URL: /admin/doubts
+   - Details: View student doubts and assign them to specific teachers.
+
+10. ManageQueries.jsx
+    - URL: /admin/queries
+    - Details: A tabbed interface showing leads from Contact form, Registration, Home page, and Join Us pages.
+
+11. ManageAttendance.jsx
+    - URL: /admin/attendance
+    - Details: Filter by batch/date and quickly mark students as Present/Absent using toggle buttons.
+
+12. ManageNotifications.jsx
+    - URL: /admin/notifications
+    - Details: Broadcast announcements or SMS messages to specific batches.
+
+13. ManageFinance.jsx
+    - URL: /admin/finance
+    - Details: Dashboard showing revenue collection, pending dues, and a transaction history table.
+
+14. ManageProgramSwitches.jsx
+    - URL: /admin/switch-program
+    - Details: Approve or reject student requests to change their course.
+
+15. ManageBlogs.jsx
+    - URL: /admin/blogs
+    - Details: Write and publish new articles for the website.
+
+16. ManageBlogCategories.jsx
+    - URL: /admin/blog-categories
+    - Details: Add/Edit categories (like "Exam Prep", "Study Tips") for blogs.
+
+----------------------------------------------
+SECTION 3: TEACHER PORTAL (/teacher)
+----------------------------------------------
+To access this page, manually type the URL:
+http://localhost:5173/teacher
+
+1. TeacherDashboard.jsx
+   - URL: /teacher
+   - Details: A standalone Command Center for Faculty members! It features a "Good Morning" greeting, stats (Classes Today, Pending Grading), a Timeline view of Today's Schedule (Live Classes, Doubts), and a quick list of Recent Assignment Submissions from students.
+
+2. MyClasses.jsx (Teacher)
+   - URL: /teacher/classes
+   - Details: Shows the specific batches/subjects the teacher is assigned to, with a "Join Live Class" button.
+
+3. Assignments.jsx (Teacher)
+   - URL: /teacher/assignments
+   - Details: Interface for teachers to create new assignments and grade pending student submissions.
+
+4. Students.jsx (Teacher)
+   - URL: /teacher/students
+   - Details: Displays a table of the teacher's students, allowing them to quickly mark daily attendance.
+
+----------------------------------------------
+BACKEND STATUS
+----------------------------------------------
+- The Frontend UI is 100% complete and wired to routes.
+- The Backend currently has basic routes (auth, contact, blog). 
+- I have just created `studentRoutes.js` and `studentController.js` to serve data to the Student Portal.
+- The Admin Backend APIs (`adminRoutes.js`) are the final pending piece which we can build next!
