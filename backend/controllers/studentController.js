@@ -1,33 +1,46 @@
 const db = require('../config/db');
 
+// Helper to get student ID from authenticated JWT token
+const getStudentId = (req) => {
+  return req.user.id;
+};
+
 // @desc    Get Student Dashboard Stats
 // @route   GET /api/student/dashboard
 exports.getDashboardStats = async (req, res) => {
   try {
-    // Assuming student ID is attached to req.user by auth middleware
-    const studentId = req.user ? req.user.id : 1; // Default to 1 for testing
+    const studentId = getStudentId(req);
 
-    // Fetch basic stats (Mocked queries for now, relying on expected tables)
-    // const [attendanceStats] = await db.execute('SELECT COUNT(*) as present FROM attendance WHERE student_id = ? AND status = "Present"', [studentId]);
-    // const [feeStats] = await db.execute('SELECT total_fee, paid_fee FROM student_fees WHERE student_id = ?', [studentId]);
-    
-    // For now, return structured data that the React dashboard expects
+    // Fetch user details
+    const [userRows] = await db.execute('SELECT full_name FROM users WHERE id = ?', [studentId]);
+    const studentName = userRows.length > 0 ? userRows[0].full_name : 'Student';
+
+    // Fetch attendance stats
+    const [attendanceRows] = await db.execute('SELECT COUNT(*) as total, SUM(CASE WHEN status = "Present" THEN 1 ELSE 0 END) as present FROM attendance WHERE student_id = ?', [studentId]);
+    const totalClasses = attendanceRows[0].total || 0;
+    const presentClasses = attendanceRows[0].present || 0;
+    const attendancePercentage = totalClasses > 0 ? Math.round((presentClasses / totalClasses) * 100) : 0;
+
+    // Fetch fees
+    const [feeRows] = await db.execute('SELECT pending_amount FROM student_fees WHERE student_id = ?', [studentId]);
+    const pendingFees = feeRows.length > 0 ? feeRows[0].pending_amount : 0;
+
+    // Fetch upcoming classes
+    const [classRows] = await db.execute('SELECT id, subject, topic, DATE_FORMAT(schedule_time, "%h:%i %p") as time, status FROM classes WHERE status IN ("Live", "Upcoming") ORDER BY schedule_time ASC LIMIT 2');
+
+    // Fetch recent notifications
+    const [notificationRows] = await db.execute('SELECT id, title, type as icon, DATE_FORMAT(created_at, "%Y-%m-%d %h:%i %p") as time FROM notifications WHERE student_id = ? OR student_id IS NULL ORDER BY created_at DESC LIMIT 2', [studentId]);
+
     res.json({
       success: true,
       data: {
-        studentName: 'Rahul Sharma', // Would come from DB
-        attendancePercentage: 85,
-        activeSubjects: 4,
-        pendingFees: 15000,
-        lastExamScore: 82,
-        upcomingClasses: [
-          { id: 1, subject: 'Physics', topic: 'Kinematics', time: '10:00 AM', status: 'Live' },
-          { id: 2, subject: 'Chemistry', topic: 'Organic', time: '12:00 PM', status: 'Upcoming' }
-        ],
-        recentNotifications: [
-          { id: 1, title: 'Holiday Announcement', time: '2 hours ago', icon: 'bullhorn' },
-          { id: 2, title: 'Fee Payment Reminder', time: 'Yesterday', icon: 'wallet' }
-        ]
+        studentName,
+        attendancePercentage,
+        activeSubjects: 4, // Mocked for now, could be calculated
+        pendingFees,
+        lastExamScore: 82, // Mocked for now
+        upcomingClasses: classRows,
+        recentNotifications: notificationRows
       }
     });
   } catch (error) {
@@ -40,22 +53,23 @@ exports.getDashboardStats = async (req, res) => {
 // @route   GET /api/student/profile
 exports.getProfile = async (req, res) => {
   try {
-    const studentId = req.user ? req.user.id : 1;
-    // const [rows] = await db.execute('SELECT * FROM users WHERE id = ?', [studentId]);
+    const studentId = getStudentId(req);
+    const [rows] = await db.execute('SELECT id, full_name as name, email, mobile as phone, class as course, DATE_FORMAT(created_at, "%b %d, %Y") as joinDate FROM users WHERE id = ?', [studentId]);
     
+    if (rows.length === 0) {
+      return res.status(404).json({ success: false, message: 'User not found' });
+    }
+
+    const user = rows[0];
+    user.id = `#STU-10${user.id}`; // Format ID for display
+    user.address = 'Not provided'; // Add to DB later if needed
+
     res.json({
       success: true,
-      data: {
-        id: '#STU-1024',
-        name: 'Rahul Sharma',
-        email: 'rahul.s@example.com',
-        phone: '+91 9876543210',
-        course: 'BBOSE 10th - Morning',
-        joinDate: 'Aug 10, 2026',
-        address: '123, Block C, Malviya Nagar, New Delhi'
-      }
+      data: user
     });
   } catch (error) {
+    console.error('Error in getProfile:', error);
     res.status(500).json({ success: false, message: 'Server Error' });
   }
 };
@@ -64,23 +78,31 @@ exports.getProfile = async (req, res) => {
 // @route   GET /api/student/fees
 exports.getFees = async (req, res) => {
   try {
-    const studentId = req.user ? req.user.id : 1;
-    // const [fees] = await db.execute('SELECT * FROM fees WHERE student_id = ?', [studentId]);
+    const studentId = getStudentId(req);
+    const [feeRows] = await db.execute('SELECT * FROM student_fees WHERE student_id = ?', [studentId]);
+    const [installments] = await db.execute('SELECT id, amount, DATE_FORMAT(due_date, "%b %d, %Y") as dueDate, status, receipt_no as receiptNo FROM fee_installments WHERE student_id = ? ORDER BY due_date ASC', [studentId]);
     
+    let totalFee = 0;
+    let paidAmount = 0;
+    let pendingAmount = 0;
+
+    if (feeRows.length > 0) {
+      totalFee = feeRows[0].total_fee;
+      paidAmount = feeRows[0].paid_amount;
+      pendingAmount = feeRows[0].pending_amount;
+    }
+
     res.json({
       success: true,
       data: {
-        totalFee: 45000,
-        paidAmount: 15000,
-        pendingAmount: 30000,
-        installments: [
-          { id: 1, amount: 15000, dueDate: 'Aug 15, 2026', status: 'Paid', receiptNo: 'REC-00124' },
-          { id: 2, amount: 15000, dueDate: 'Nov 15, 2026', status: 'Pending', receiptNo: null },
-          { id: 3, amount: 15000, dueDate: 'Feb 15, 2027', status: 'Pending', receiptNo: null },
-        ]
+        totalFee,
+        paidAmount,
+        pendingAmount,
+        installments
       }
     });
   } catch (error) {
+    console.error('Error in getFees:', error);
     res.status(500).json({ success: false, message: 'Server Error' });
   }
 };
@@ -89,15 +111,15 @@ exports.getFees = async (req, res) => {
 // @route   GET /api/student/tickets
 exports.getTickets = async (req, res) => {
   try {
-    // const [tickets] = await db.execute('SELECT * FROM tickets WHERE student_id = ?', [req.user.id]);
+    const studentId = getStudentId(req);
+    const [tickets] = await db.execute('SELECT ticket_id as id, subject, DATE_FORMAT(created_at, "%b %d, %Y") as date, status, DATE_FORMAT(last_update, "%Y-%m-%d %h:%i %p") as lastUpdate FROM tickets WHERE student_id = ? ORDER BY created_at DESC', [studentId]);
+    
     res.json({
       success: true,
-      data: [
-        { id: '#TKT-104', subject: 'Login issue on mobile app', date: 'Oct 24, 2026', status: 'Open', lastUpdate: '2 hours ago' },
-        { id: '#TKT-103', subject: 'Missing study material for Physics', date: 'Oct 22, 2026', status: 'Resolved', lastUpdate: '1 day ago' }
-      ]
+      data: tickets
     });
   } catch (error) {
+    console.error('Error in getTickets:', error);
     res.status(500).json({ success: false, message: 'Server Error' });
   }
 };
@@ -106,11 +128,132 @@ exports.getTickets = async (req, res) => {
 // @route   POST /api/student/tickets
 exports.createTicket = async (req, res) => {
   try {
+    const studentId = getStudentId(req);
     const { category, subject, description } = req.body;
-    // await db.execute('INSERT INTO tickets (student_id, category, subject, description, status) VALUES (?, ?, ?, ?, ?)', [req.user.id, category, subject, description, 'Open']);
+    
+    // Generate a unique ticket ID
+    const ticketId = `#TKT-${Math.floor(Math.random() * 10000)}`;
+
+    await db.execute('INSERT INTO tickets (ticket_id, student_id, category, subject, description) VALUES (?, ?, ?, ?, ?)', [ticketId, studentId, category, subject, description]);
     
     res.status(201).json({ success: true, message: 'Ticket created successfully' });
   } catch (error) {
+    console.error('Error in createTicket:', error);
+    res.status(500).json({ success: false, message: 'Server Error' });
+  }
+};
+
+// @desc    Get Attendance
+// @route   GET /api/student/attendance
+exports.getAttendance = async (req, res) => {
+  try {
+    const studentId = getStudentId(req);
+    const [attendance] = await db.execute('SELECT id, subject, DATE_FORMAT(date, "%b %d, %Y") as date, time, status FROM attendance WHERE student_id = ? ORDER BY date DESC', [studentId]);
+    
+    res.json({
+      success: true,
+      data: attendance
+    });
+  } catch (error) {
+    console.error('Error in getAttendance:', error);
+    res.status(500).json({ success: false, message: 'Server Error' });
+  }
+};
+
+// @desc    Get Doubts
+// @route   GET /api/student/doubts
+exports.getDoubts = async (req, res) => {
+  try {
+    const studentId = getStudentId(req);
+    const [doubts] = await db.execute('SELECT id, subject, topic, question, status, answer, DATE_FORMAT(created_at, "%b %d, %Y") as date FROM doubts WHERE student_id = ? ORDER BY created_at DESC', [studentId]);
+    
+    res.json({
+      success: true,
+      data: doubts
+    });
+  } catch (error) {
+    console.error('Error in getDoubts:', error);
+    res.status(500).json({ success: false, message: 'Server Error' });
+  }
+};
+
+// @desc    Create Doubt
+// @route   POST /api/student/doubts
+exports.createDoubt = async (req, res) => {
+  try {
+    const studentId = getStudentId(req);
+    const { subject, topic, question } = req.body;
+    
+    await db.execute('INSERT INTO doubts (student_id, subject, topic, question) VALUES (?, ?, ?, ?)', [studentId, subject, topic, question]);
+    
+    res.status(201).json({ success: true, message: 'Doubt submitted successfully' });
+  } catch (error) {
+    console.error('Error in createDoubt:', error);
+    res.status(500).json({ success: false, message: 'Server Error' });
+  }
+};
+
+// @desc    Get Notifications
+// @route   GET /api/student/notifications
+exports.getNotifications = async (req, res) => {
+  try {
+    const studentId = getStudentId(req);
+    const [notifications] = await db.execute('SELECT id, type, title, message, is_new as isNew, DATE_FORMAT(created_at, "%b %d, %Y %h:%i %p") as time FROM notifications WHERE student_id = ? OR student_id IS NULL ORDER BY created_at DESC', [studentId]);
+    
+    res.json({
+      success: true,
+      data: notifications
+    });
+  } catch (error) {
+    console.error('Error in getNotifications:', error);
+    res.status(500).json({ success: false, message: 'Server Error' });
+  }
+};
+
+// @desc    Submit Feedback
+// @route   POST /api/student/feedback
+exports.submitFeedback = async (req, res) => {
+  try {
+    const studentId = getStudentId(req);
+    const { rating, category, relatedTeacher, feedbackText } = req.body;
+    
+    await db.execute('INSERT INTO feedback (student_id, rating, category, related_teacher, feedback_text) VALUES (?, ?, ?, ?, ?)', [studentId, rating, category, relatedTeacher, feedbackText]);
+    
+    res.status(201).json({ success: true, message: 'Feedback submitted successfully' });
+  } catch (error) {
+    console.error('Error in submitFeedback:', error);
+    res.status(500).json({ success: false, message: 'Server Error' });
+  }
+};
+
+// @desc    Submit Program Change Request
+// @route   POST /api/student/switch-program
+exports.submitProgramChange = async (req, res) => {
+  try {
+    const studentId = getStudentId(req);
+    const { currentProgram, newProgram, reason } = req.body;
+    
+    await db.execute('INSERT INTO program_change_requests (student_id, current_program, new_program, reason) VALUES (?, ?, ?, ?)', [studentId, currentProgram, newProgram, reason]);
+    
+    res.status(201).json({ success: true, message: 'Program change request submitted successfully' });
+  } catch (error) {
+    console.error('Error in submitProgramChange:', error);
+    res.status(500).json({ success: false, message: 'Server Error' });
+  }
+};
+
+// @desc    Get Calendar/Classes
+// @route   GET /api/student/classes
+exports.getClasses = async (req, res) => {
+  try {
+    const [classes] = await db.execute('SELECT id, subject, topic, instructor, status, link, thumbnail, DATE_FORMAT(schedule_time, "%Y-%m-%d") as date, DATE_FORMAT(schedule_time, "%h:%i %p") as time, duration FROM classes ORDER BY schedule_time ASC');
+    
+    res.json({
+      success: true,
+      data: classes
+    });
+  } catch (error) {
+    console.error('Error in getClasses:', error);
     res.status(500).json({ success: false, message: 'Server Error' });
   }
 };

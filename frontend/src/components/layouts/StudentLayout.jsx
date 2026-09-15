@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
 import './Dashboard.css';
 
@@ -7,6 +7,14 @@ const StudentLayout = () => {
   const [showNotifications, setShowNotifications] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
+
+  // Scroll to top of the main container when route changes
+  useEffect(() => {
+    const mainContainer = document.getElementById('main-scroll-container');
+    if (mainContainer) {
+      mainContainer.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+    }
+  }, [location.pathname]);
 
   const handleLogout = (e) => {
     e.preventDefault();
@@ -122,7 +130,7 @@ const StudentLayout = () => {
         </header>
 
         {/* Scrollable Content (Outlet) */}
-        <main className="flex-1 overflow-y-auto p-8">
+        <main id="main-scroll-container" className="flex-1 overflow-y-auto p-8">
             <Outlet />
         </main>
       </div>
