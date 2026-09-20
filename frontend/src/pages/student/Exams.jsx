@@ -74,7 +74,7 @@ const Exams = () => {
                 </div>
               </div>
               
-              <button className="w-full bg-slate-50 border border-slate-200 hover:bg-rose-500 hover:text-white hover:border-rose-500 text-slate-700 font-bold py-3.5 rounded-xl transition-all duration-300 text-sm shadow-sm hover:shadow-[0_8px_20px_rgba(225,29,72,0.3)] relative z-10 group/btn overflow-hidden">
+              <button onClick={() => alert("Guidelines will be available soon.")} className="w-full bg-slate-50 border border-slate-200 hover:bg-rose-500 hover:text-white hover:border-rose-500 text-slate-700 font-bold py-3.5 rounded-xl transition-all duration-300 text-sm shadow-sm hover:shadow-[0_8px_20px_rgba(225,29,72,0.3)] relative z-10 group/btn overflow-hidden">
                 <span className="relative z-10 flex items-center justify-center gap-2">
                   View Guidelines <i className="fas fa-arrow-right text-xs opacity-0 group-hover/btn:opacity-100 -translate-x-2 group-hover/btn:translate-x-0 transition-all"></i>
                 </span>
@@ -131,7 +131,7 @@ const Exams = () => {
                       </span>
                     </td>
                     <td className="p-6 text-right">
-                      <button className="text-emerald-600 hover:text-white font-bold text-xs bg-white border border-emerald-200 hover:bg-emerald-500 px-5 py-2.5 rounded-xl transition-all shadow-sm hover:shadow-[0_5px_15px_rgba(16,185,129,0.3)] hover:-translate-y-0.5">
+                      <button onClick={() => alert("Result details will be available soon.")} className="text-emerald-600 hover:text-white font-bold text-xs bg-white border border-emerald-200 hover:bg-emerald-500 px-5 py-2.5 rounded-xl transition-all shadow-sm hover:shadow-[0_5px_15px_rgba(16,185,129,0.3)] hover:-translate-y-0.5">
                         View Details
                       </button>
                     </td>

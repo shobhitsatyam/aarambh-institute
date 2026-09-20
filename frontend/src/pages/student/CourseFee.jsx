@@ -1,10 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import api from '../../services/api';
 
+const loadRazorpayScript = () => {
+  return new Promise((resolve) => {
+    const script = document.createElement('script');
+    script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+    script.onload = () => resolve(true);
+    script.onerror = () => resolve(false);
+    document.body.appendChild(script);
+  });
+};
+
 const CourseFee = () => {
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [selectedInstallment, setSelectedInstallment] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [processing, setProcessing] = useState(false);
   const [feeDetails, setFeeDetails] = useState({
     totalFee: 0,
     paidAmount: 0,
@@ -13,27 +24,27 @@ const CourseFee = () => {
     installments: []
   });
 
-  useEffect(() => {
-    const fetchFees = async () => {
-      try {
-        const { data: result } = await api.get('/student/fees');
-        
-        if (result.success) {
-          setFeeDetails({
-            totalFee: result.data.totalFee,
-            paidAmount: result.data.paidAmount,
-            pendingAmount: result.data.pendingAmount,
-            courseName: 'Medical Prep - 11th & 12th', // Assuming course name is static or fetched elsewhere
-            installments: result.data.installments
-          });
-        }
-      } catch (error) {
-        console.error('Error fetching fees:', error);
-      } finally {
-        setLoading(false);
+  const fetchFees = async () => {
+    try {
+      const { data: result } = await api.get('/student/fees');
+      
+      if (result.success) {
+        setFeeDetails({
+          totalFee: result.data.totalFee,
+          paidAmount: result.data.paidAmount,
+          pendingAmount: result.data.pendingAmount,
+          courseName: 'Medical Prep - 11th & 12th', // Assuming course name is static or fetched elsewhere
+          installments: result.data.installments
+        });
       }
-    };
+    } catch (error) {
+      console.error('Error fetching fees:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
     fetchFees();
   }, []);
 
@@ -48,6 +59,78 @@ const CourseFee = () => {
   const handlePayClick = (installment) => {
     setSelectedInstallment(installment);
     setShowPaymentModal(true);
+  };
+
+  const processPayment = async () => {
+    setProcessing(true);
+    try {
+      const res = await loadRazorpayScript();
+      if (!res) {
+        alert('Razorpay SDK failed to load. Are you online?');
+        setProcessing(false);
+        return;
+      }
+
+      const { data: orderData } = await api.post('/payment/create-order', {
+        amount: selectedInstallment.amount,
+        itemId: selectedInstallment.id, 
+        itemType: 'course' 
+      });
+
+      if (!orderData.success) {
+        alert('Failed to create order. Please try again.');
+        setProcessing(false);
+        return;
+      }
+
+      const options = {
+        key: 'rzp_test_placeholder', // Usually fetched from env or backend
+        amount: orderData.order.amount,
+        currency: orderData.order.currency,
+        name: 'Aarambh Institute',
+        description: `Payment for Installment #${selectedInstallment.id}`,
+        order_id: orderData.order.id,
+        handler: async function (response) {
+          try {
+            const verifyRes = await api.post('/payment/verify', {
+              razorpay_order_id: response.razorpay_order_id,
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_signature: response.razorpay_signature,
+              itemId: selectedInstallment.id,
+              itemType: 'course',
+              amountPaid: selectedInstallment.amount
+            });
+
+            if (verifyRes.data.success) {
+              alert('Payment Successful!');
+              setShowPaymentModal(false);
+              fetchFees(); // Refresh data
+            } else {
+              alert(verifyRes.data.message || 'Payment Verification Failed!');
+            }
+          } catch (error) {
+            console.error('Verify error:', error);
+            alert(error.response?.data?.message || 'An error occurred during verification.');
+          }
+        },
+        prefill: {
+          name: 'Student Name', // Should ideally come from user profile
+          email: 'student@example.com',
+          contact: '9999999999'
+        },
+        theme: {
+          color: '#6366f1'
+        }
+      };
+
+      const paymentObject = new window.Razorpay(options);
+      paymentObject.open();
+    } catch (error) {
+      console.error('Payment processing error:', error);
+      alert('An error occurred while processing the payment.');
+    } finally {
+      setProcessing(false);
+    }
   };
 
   return (
@@ -247,11 +330,17 @@ const CourseFee = () => {
                 </div>
               </div>
 
-              <button type="button" onClick={() => {
-                alert('This is a mock UI. In production, this would redirect to Razorpay/Stripe.');
-                setShowPaymentModal(false);
-              }} className="w-full bg-gradient-to-r from-slate-900 to-slate-800 hover:from-slate-800 hover:to-slate-700 text-white font-black py-5 rounded-[1.25rem] transition-all shadow-[0_10px_30px_rgba(0,0,0,0.2)] hover:shadow-[0_15px_40px_rgba(0,0,0,0.3)] hover:-translate-y-0.5 flex items-center justify-center gap-3">
-                <i className="fas fa-credit-card"></i> Proceed to Gateway
+              <button 
+                type="button" 
+                onClick={processPayment} 
+                disabled={processing}
+                className="w-full bg-gradient-to-r from-slate-900 to-slate-800 hover:from-slate-800 hover:to-slate-700 text-white font-black py-5 rounded-[1.25rem] transition-all shadow-[0_10px_30px_rgba(0,0,0,0.2)] hover:shadow-[0_15px_40px_rgba(0,0,0,0.3)] hover:-translate-y-0.5 flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0"
+              >
+                {processing ? (
+                  <><div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div> Processing...</>
+                ) : (
+                  <><i className="fas fa-credit-card"></i> Proceed to Gateway</>
+                )}
               </button>
               <p className="text-[10px] font-black text-center text-slate-400 mt-6 uppercase tracking-widest flex items-center justify-center gap-2">
                 <i className="fas fa-shield-alt text-emerald-500"></i> 100% Secure & Encrypted

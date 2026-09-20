@@ -1,6 +1,8 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const crypto = require('crypto');
 const db = require('../config/db');
+const emailService = require('../utils/emailService');
 
 // Helper to generate 6-digit OTP
 const generateOTP = () => {
@@ -76,8 +78,8 @@ exports.sendRegisterOtp = async (req, res) => {
     const otp = generateOTP();
     const expiresAt = new Date(Date.now() + 10 * 60000); // 10 minutes from now
 
-    // Log OTP to console (Simulating email sending)
-    console.log(`[SIMULATED EMAIL] Registration OTP for ${email} is: ${otp}`);
+    // Send OTP via Email
+    await emailService.sendOTP(email, otp, 'register');
 
     // Store OTP in database
     await db.query(
@@ -163,14 +165,26 @@ exports.login = async (req, res) => {
       return res.status(401).json({ success: false, message: 'Invalid email or password' });
     }
 
-    // Generate JWT token
+    // Generate a unique session token for Single Device Login
+    const sessionToken = crypto.randomBytes(32).toString('hex');
+
+    // Update the user's session_token in the database
+    await db.query('UPDATE users SET session_token = ? WHERE id = ?', [sessionToken, user.id]);
+
+    // Generate JWT token including the session_token
     const token = jwt.sign(
-      { id: user.id, email: user.email, full_name: user.full_name },
+      { 
+        id: user.id, 
+        email: user.email, 
+        full_name: user.full_name, 
+        role: user.role || 'student',
+        session_token: sessionToken
+      },
       process.env.JWT_SECRET || 'super_secret_key',
       { expiresIn: '24h' }
     );
 
-    res.json({ success: true, token, message: 'Login successful' });
+    res.json({ success: true, token, role: user.role || 'student', message: 'Login successful' });
   } catch (error) {
     console.error('Error in login:', error);
     res.status(500).json({ success: false, message: 'Login failed' });
@@ -200,8 +214,8 @@ exports.sendForgotPasswordOtp = async (req, res) => {
     const otp = generateOTP();
     const expiresAt = new Date(Date.now() + 10 * 60000); // 10 minutes
 
-    // Log OTP to console (Simulating email sending)
-    console.log(`[SIMULATED EMAIL] Forgot Password OTP for ${email} is: ${otp}`);
+    // Send OTP via Email
+    await emailService.sendOTP(email, otp, 'forgot_password');
 
     // Store OTP in database
     await db.query(
@@ -262,5 +276,36 @@ exports.resetPassword = async (req, res) => {
   } catch (error) {
     console.error('Error resetting password:', error);
     res.status(500).json({ success: false, message: 'Failed to reset password' });
+  }
+};
+
+// ==========================================
+// CHANGE PASSWORD (AUTHENTICATED)
+// ==========================================
+
+exports.changePassword = async (req, res) => {
+  try {
+    const { currentPassword, newPassword } = req.body;
+    const userId = req.user.id;
+
+    const [users] = await db.query('SELECT * FROM users WHERE id = ?', [userId]);
+    const user = users[0];
+
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User not found' });
+    }
+
+    const isValidPassword = await bcrypt.compare(currentPassword, user.password);
+    if (!isValidPassword) {
+      return res.status(400).json({ success: false, message: 'Incorrect current password' });
+    }
+
+    const hashedNewPassword = await bcrypt.hash(newPassword, 10);
+    await db.query('UPDATE users SET password = ? WHERE id = ?', [hashedNewPassword, userId]);
+
+    res.json({ success: true, message: 'Password changed successfully' });
+  } catch (error) {
+    console.error('Error changing password:', error);
+    res.status(500).json({ success: false, message: 'Failed to change password' });
   }
 };

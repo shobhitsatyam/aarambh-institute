@@ -1,10 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const studentController = require('../controllers/studentController');
-const authMiddleware = require('../middleware/authMiddleware');
+const { protect } = require('../middleware/authMiddleware');
 
 // Note: Applying auth middleware to secure all student routes
-router.use(authMiddleware);
+router.use(protect);
 
 router.get('/dashboard', studentController.getDashboardStats);
 router.get('/profile', studentController.getProfile);
@@ -34,5 +34,11 @@ router.post('/switch-program', studentController.submitProgramChange);
 
 // Classes / Academic Calendar
 router.get('/classes', studentController.getClasses);
+
+// Study Materials
+router.get('/materials', studentController.getMaterials);
+
+// Courses
+router.get('/courses', studentController.getCourses);
 
 module.exports = router;

@@ -1,12 +1,32 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import api from '../../services/api';
 
 const ManageFinance = () => {
-  const transactions = [
-    { id: '#TRX-901', student: 'Rahul Sharma', course: 'BBOSE 10th', amount: 15000, date: 'Oct 24, 2026', status: 'Success', method: 'UPI' },
-    { id: '#TRX-902', student: 'Priya Singh', course: 'NIOS 12th', amount: 20000, date: 'Oct 23, 2026', status: 'Success', method: 'Card' },
-    { id: '#TRX-903', student: 'Amit Kumar', course: 'Medical Prep', amount: 15000, date: 'Oct 23, 2026', status: 'Failed', method: 'UPI' },
-    { id: '#TRX-904', student: 'Neha Gupta', course: 'BBOSE 12th', amount: 12000, date: 'Oct 21, 2026', status: 'Success', method: 'Net Banking' },
-  ];
+  const [data, setData] = useState({
+    totalCollection: 0,
+    pendingDues: 0,
+    fullyPaidStudents: 0,
+    transactions: []
+  });
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchFinanceStats = async () => {
+      try {
+        const response = await api.get('/admin/finance');
+        if (response.data.success) {
+          setData(response.data.data);
+        }
+      } catch (error) {
+        console.error('Error fetching finance stats:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchFinanceStats();
+  }, []);
+
+  if (loading) return <div className="p-8 flex justify-center"><div className="animate-spin text-indigo-500 text-3xl"><i className="fas fa-circle-notch"></i></div></div>;
 
   return (
     <div>
@@ -29,8 +49,8 @@ const ManageFinance = () => {
             <div className="w-12 h-12 rounded-xl bg-white/20 backdrop-blur flex items-center justify-center text-xl mb-4">
               <i className="fas fa-rupee-sign"></i>
             </div>
-            <p className="text-sm font-bold text-emerald-100 mb-1 uppercase tracking-wider">Total Collection (This Month)</p>
-            <h4 className="text-3xl font-black">₹4,25,000</h4>
+            <p className="text-sm font-bold text-emerald-100 mb-1 uppercase tracking-wider">Total Collection</p>
+            <h4 className="text-3xl font-black">₹{Number(data.totalCollection).toLocaleString()}</h4>
           </div>
           <i className="fas fa-chart-line absolute -right-6 -bottom-6 text-[100px] text-white/10 group-hover:scale-110 transition-transform"></i>
         </div>
@@ -41,10 +61,10 @@ const ManageFinance = () => {
               <i className="fas fa-exclamation-circle"></i>
             </div>
             <p className="text-sm font-bold text-slate-500 mb-1 uppercase tracking-wider">Pending Dues</p>
-            <h4 className="text-3xl font-black text-slate-800">₹1,15,000</h4>
+            <h4 className="text-3xl font-black text-slate-800">₹{Number(data.pendingDues).toLocaleString()}</h4>
           </div>
           <p className="text-xs font-semibold text-rose-500 mt-4 flex items-center gap-1">
-            <i className="fas fa-arrow-up"></i> 12% higher than last month
+            <i className="fas fa-clock"></i> Action required
           </p>
         </div>
 
@@ -54,7 +74,7 @@ const ManageFinance = () => {
               <i className="fas fa-users"></i>
             </div>
             <p className="text-sm font-bold text-slate-500 mb-1 uppercase tracking-wider">Fully Paid Students</p>
-            <h4 className="text-3xl font-black text-slate-800">452</h4>
+            <h4 className="text-3xl font-black text-slate-800">{data.fullyPaidStudents}</h4>
           </div>
           <button className="text-indigo-600 hover:text-indigo-700 font-bold text-sm bg-indigo-50 hover:bg-indigo-100 px-4 py-2 rounded-lg transition-colors mt-4 w-fit">
             View List
@@ -85,7 +105,11 @@ const ManageFinance = () => {
               </tr>
             </thead>
             <tbody className="text-sm">
-              {transactions.map((trx, idx) => (
+              {data.transactions.length === 0 ? (
+                <tr>
+                  <td colSpan="5" className="p-8 text-center text-slate-500">No recent transactions found.</td>
+                </tr>
+              ) : data.transactions.map((trx, idx) => (
                 <tr key={idx} className="hover:bg-slate-50/50 transition-colors border-b border-slate-50 last:border-0 group">
                   <td className="p-5 font-bold text-slate-700 font-mono">{trx.id}</td>
                   <td className="p-5">
@@ -97,14 +121,18 @@ const ManageFinance = () => {
                     <p className="text-xs font-semibold text-slate-500">{trx.method}</p>
                   </td>
                   <td className="p-5 text-right font-black text-slate-800 text-base">
-                    ₹{trx.amount.toLocaleString()}
+                    ₹{Number(trx.amount).toLocaleString()}
                   </td>
                   <td className="p-5 text-center">
-                    <span className={`inline-block px-3 py-1 rounded-full text-xs font-bold ${
-                      trx.status === 'Success' ? 'bg-emerald-100 text-emerald-700' : 'bg-rose-100 text-rose-700'
-                    }`}>
-                      {trx.status}
-                    </span>
+                    {trx.status === 'Success' ? (
+                      <span className="bg-emerald-100 text-emerald-600 px-3 py-1 rounded-full text-xs font-bold flex items-center justify-center gap-1 w-max mx-auto">
+                        <i className="fas fa-check-circle"></i> Success
+                      </span>
+                    ) : (
+                      <span className="bg-rose-100 text-rose-600 px-3 py-1 rounded-full text-xs font-bold flex items-center justify-center gap-1 w-max mx-auto">
+                        <i className="fas fa-times-circle"></i> Failed
+                      </span>
+                    )}
                   </td>
                 </tr>
               ))}

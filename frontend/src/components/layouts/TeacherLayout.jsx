@@ -10,10 +10,12 @@ const TeacherLayout = () => {
 
   // Scroll to top of the main container when route changes
   useEffect(() => {
-    const mainContainer = document.getElementById('main-scroll-container');
-    if (mainContainer) {
-      mainContainer.scrollTo({ top: 0, left: 0, behavior: 'instant' });
-    }
+    setTimeout(() => {
+      const mainContainer = document.getElementById('main-scroll-container');
+      if (mainContainer) {
+        mainContainer.scrollTop = 0;
+      }
+    }, 10);
   }, [location.pathname]);
 
   const menuItems = [
@@ -64,8 +66,17 @@ const TeacherLayout = () => {
             <input type="text" placeholder="Search students, classes..." className="bg-transparent border-none outline-none ml-3 w-full text-sm text-slate-700 placeholder-slate-400" />
           </div>
           
-          <div className="flex items-center gap-6">
-            <div className="relative">
+          <div className="flex items-center gap-6 relative">
+            
+            {/* Click Outside Overlay */}
+            {showNotifications && (
+              <div 
+                className="fixed inset-0 z-40" 
+                onClick={() => setShowNotifications(false)}
+              ></div>
+            )}
+
+            <div className="relative z-50">
               <button onClick={() => setShowNotifications(!showNotifications)} className="relative text-slate-500 hover:text-sky-500 transition-colors">
                 <i className="far fa-bell text-xl"></i>
                 <span className="absolute -top-1 -right-1 w-4 h-4 bg-sky-500 text-white text-[10px] font-bold flex items-center justify-center rounded-full border-2 border-white">2</span>

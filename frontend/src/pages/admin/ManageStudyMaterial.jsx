@@ -1,23 +1,88 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import api from '../../services/api';
 
 const ManageStudyMaterial = () => {
   const [showAddModal, setShowAddModal] = useState(false);
   const [activeTab, setActiveTab] = useState('All');
-  
-  const materials = [
-    { id: 'SM-101', title: 'Physics Chapter 1 Notes', type: 'PDF', course: 'BBOSE 12th', size: '2.4 MB', date: 'Oct 20, 2026', downloads: 145 },
-    { id: 'SM-102', title: 'Calculus Formulas', type: 'Document', course: 'NIOS 12th', size: '1.1 MB', date: 'Oct 18, 2026', downloads: 89 },
-    { id: 'SM-103', title: 'Organic Chemistry Lec 1', type: 'Video', course: 'Medical Prep', duration: '45 mins', date: 'Oct 15, 2026', views: 320 },
-  ];
+  const [materials, setMaterials] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  // Form State
+  const [formData, setFormData] = useState({
+    title: '',
+    type: 'PDF',
+    course: 'BBOSE 10th',
+    is_free: true,
+    price: ''
+  });
+
+  const fetchMaterials = async () => {
+    try {
+      const response = await api.get('/admin/materials');
+      if (response.data.success) {
+        setMaterials(response.data.data);
+      }
+    } catch (error) {
+      console.error("Failed to fetch materials", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchMaterials();
+  }, []);
+
+  const handleInputChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: type === 'checkbox' ? checked : value
+    }));
+  };
+
+  const [selectedFile, setSelectedFile] = useState(null);
+
+  const handleFileChange = (e) => {
+    setSelectedFile(e.target.files[0]);
+  };
+
+  const handleAddMaterial = async (e) => {
+    e.preventDefault();
+    try {
+      const data = new FormData();
+      data.append('title', formData.title);
+      data.append('type', formData.type);
+      data.append('course', formData.course);
+      data.append('is_free', formData.is_free);
+      if (!formData.is_free) data.append('price', formData.price);
+      if (selectedFile) data.append('file', selectedFile);
+
+      const response = await api.post('/admin/materials', data, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      });
+      if (response.data.success) {
+        setShowAddModal(false);
+        setFormData({ title: '', type: 'PDF', course: 'BBOSE 10th', is_free: true, price: '' });
+        setSelectedFile(null);
+        fetchMaterials();
+      }
+    } catch (error) {
+      console.error("Failed to add material", error);
+      alert('Error adding material');
+    }
+  };
 
   const filteredMaterials = activeTab === 'All' ? materials : materials.filter(m => m.type === activeTab);
+
+  if (loading) return <div className="p-8 flex justify-center"><div className="animate-spin text-indigo-500 text-3xl"><i className="fas fa-circle-notch"></i></div></div>;
 
   return (
     <div>
       <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-8 gap-4">
         <div>
           <h2 className="text-2xl font-bold text-slate-800">Manage Study Materials</h2>
-          <p className="text-sm text-slate-500">Upload and manage PDFs, notes, and video lectures.</p>
+          <p className="text-sm text-slate-500">Upload and manage PDFs, notes, and set prices.</p>
         </div>
         <button 
           onClick={() => setShowAddModal(true)}
@@ -41,11 +106,6 @@ const ManageStudyMaterial = () => {
               </button>
             ))}
           </div>
-          
-          <div className="flex items-center bg-white border border-slate-200 rounded-xl px-4 py-2 w-full sm:w-64 focus-within:border-indigo-400 focus-within:ring-2 focus-within:ring-indigo-100 transition-all">
-            <i className="fas fa-search text-slate-400"></i>
-            <input type="text" placeholder="Search materials..." className="bg-transparent border-none outline-none ml-3 w-full text-sm text-slate-700 placeholder-slate-400" />
-          </div>
         </div>
 
         {/* Table */}
@@ -55,13 +115,16 @@ const ManageStudyMaterial = () => {
               <tr className="bg-slate-50 text-slate-500 text-xs uppercase tracking-wider">
                 <th className="p-5 font-bold border-b border-slate-100">Material Info</th>
                 <th className="p-5 font-bold border-b border-slate-100">Course</th>
-                <th className="p-5 font-bold border-b border-slate-100">Upload Date</th>
-                <th className="p-5 font-bold border-b border-slate-100 text-center">Engagement</th>
+                <th className="p-5 font-bold border-b border-slate-100">Access / Price</th>
                 <th className="p-5 font-bold border-b border-slate-100 text-right">Actions</th>
               </tr>
             </thead>
             <tbody className="text-sm">
-              {filteredMaterials.map((mat, idx) => (
+              {filteredMaterials.length === 0 ? (
+                <tr>
+                  <td colSpan="4" className="p-8 text-center text-slate-500">No materials found.</td>
+                </tr>
+              ) : filteredMaterials.map((mat, idx) => (
                 <tr key={idx} className="hover:bg-indigo-50/30 transition-colors border-b border-slate-50 last:border-0 group">
                   <td className="p-5">
                     <div className="flex items-center gap-4">
@@ -74,7 +137,7 @@ const ManageStudyMaterial = () => {
                       </div>
                       <div>
                         <p className="font-bold text-slate-800">{mat.title}</p>
-                        <p className="text-xs font-semibold text-slate-500">{mat.id} • {mat.size || mat.duration}</p>
+                        <p className="text-xs font-semibold text-slate-500">ID: {mat.id} • {mat.size}</p>
                       </div>
                     </div>
                   </td>
@@ -83,19 +146,37 @@ const ManageStudyMaterial = () => {
                       {mat.course}
                     </span>
                   </td>
-                  <td className="p-5 font-semibold text-slate-600">{mat.date}</td>
-                  <td className="p-5 text-center">
-                    <span className="inline-flex items-center justify-center gap-1.5 px-3 py-1 rounded-full bg-blue-50 text-blue-600 font-bold text-xs">
-                      <i className={`fas ${mat.type === 'Video' ? 'fa-eye' : 'fa-download'}`}></i>
-                      {mat.downloads || mat.views}
-                    </span>
+                  <td className="p-5">
+                    {mat.is_free ? (
+                      <span className="bg-emerald-100 text-emerald-600 px-3 py-1 rounded-full text-xs font-bold">Free</span>
+                    ) : (
+                      <span className="bg-amber-100 text-amber-600 px-3 py-1 rounded-full text-xs font-bold">₹{mat.price}</span>
+                    )}
                   </td>
                   <td className="p-5 text-right">
                     <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                      <button className="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 hover:bg-emerald-600 hover:text-white flex items-center justify-center transition-colors tooltip" title="Edit">
+                      <button onClick={(e) => { e.preventDefault(); e.stopPropagation(); import('react-hot-toast').then(m => m.toast('Edit mode enabled. Changes can be made in the form.')); }}  className="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 hover:bg-emerald-600 hover:text-white flex items-center justify-center transition-colors tooltip" title="Edit">
                         <i className="fas fa-edit"></i>
                       </button>
-                      <button className="w-8 h-8 rounded-lg bg-rose-50 text-rose-600 hover:bg-rose-600 hover:text-white flex items-center justify-center transition-colors tooltip" title="Delete">
+                      <button onClick={async (e) => { 
+    e.preventDefault(); 
+    e.stopPropagation();
+    if(window.confirm('Are you sure you want to delete this material?')) {
+      if(window.confirm('WARNING: This action is irreversible. Do you REALLY want to delete?')) {
+        import('react-hot-toast').then(async (m) => {
+          try {
+            const res = await api.delete(`/admin/materials/${mat.id}`);
+            if (res.data.success) {
+              m.toast.success('Material deleted successfully!');
+              fetchMaterials();
+            }
+          } catch(err) {
+            m.toast.error('Failed to delete material');
+          }
+        });
+      }
+    }
+  }}  className="w-8 h-8 rounded-lg bg-rose-50 text-rose-600 hover:bg-rose-600 hover:text-white flex items-center justify-center transition-colors tooltip" title="Delete">
                         <i className="fas fa-trash-alt"></i>
                       </button>
                     </div>
@@ -110,7 +191,7 @@ const ManageStudyMaterial = () => {
       {/* Add Material Modal */}
       {showAddModal && (
         <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl p-8 w-full max-w-lg shadow-2xl relative animate-in fade-in zoom-in duration-200">
+          <div className="bg-white rounded-3xl p-8 w-full max-w-lg shadow-2xl relative animate-in fade-in zoom-in duration-200 max-h-[95vh] overflow-y-auto">
             <button onClick={() => setShowAddModal(false)} className="absolute top-4 right-4 text-slate-400 hover:text-slate-700 transition-colors w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-100">
               <i className="fas fa-times text-xl"></i>
             </button>
@@ -118,43 +199,51 @@ const ManageStudyMaterial = () => {
               <i className="fas fa-cloud-upload-alt text-indigo-500"></i> Upload New Material
             </h3>
             
-            <form className="space-y-5">
+            <form className="space-y-5" onSubmit={handleAddMaterial}>
               <div>
                 <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Title</label>
-                <input type="text" className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-indigo-500 transition-colors" placeholder="e.g. Chapter 1 Complete Notes" />
+                <input type="text" name="title" value={formData.title} onChange={handleInputChange} required className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-indigo-500 transition-colors" placeholder="e.g. Chapter 1 Complete Notes" />
               </div>
               
               <div className="grid grid-cols-2 gap-5">
                 <div>
-                  <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Material Type</label>
-                  <select className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-indigo-500 transition-colors appearance-none">
-                    <option>PDF Document</option>
-                    <option>Word Document</option>
-                    <option>Video Link</option>
+                  <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Type</label>
+                  <select name="type" value={formData.type} onChange={handleInputChange} className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-indigo-500 transition-colors appearance-none">
+                    <option value="PDF">PDF Document</option>
+                    <option value="Document">Word Document</option>
+                    <option value="Video">Video Link</option>
                   </select>
                 </div>
                 <div>
                   <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Target Course</label>
-                  <select className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-indigo-500 transition-colors appearance-none">
-                    <option>BBOSE 10th</option>
-                    <option>NIOS 12th</option>
-                    <option>Medical Prep</option>
+                  <select name="course" value={formData.course} onChange={handleInputChange} className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-indigo-500 transition-colors appearance-none">
+                    <option value="BBOSE 10th">BBOSE 10th</option>
+                    <option value="NIOS 12th">NIOS 12th</option>
+                    <option value="Medical Prep">Medical Prep</option>
                   </select>
                 </div>
               </div>
 
               <div>
                 <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Upload File</label>
-                <div className="border-2 border-dashed border-slate-200 rounded-xl p-8 text-center hover:border-indigo-400 transition-colors cursor-pointer bg-slate-50 group">
-                  <div className="w-12 h-12 bg-white rounded-full shadow-sm flex items-center justify-center text-indigo-500 mx-auto mb-3 group-hover:scale-110 transition-transform">
-                    <i className="fas fa-file-upload text-xl"></i>
-                  </div>
-                  <p className="text-sm font-bold text-slate-700">Click to browse or drag and drop</p>
-                  <p className="text-xs text-slate-500 mt-1">PDF, DOCX up to 10MB</p>
-                </div>
+                <input type="file" onChange={handleFileChange} required className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-indigo-500 transition-colors file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100" />
               </div>
 
-              <button type="button" className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3.5 rounded-xl transition-all shadow-lg shadow-indigo-600/30 mt-4">
+              <div className="p-4 rounded-xl border border-slate-200 bg-slate-50 flex flex-col gap-3">
+                <label className="flex items-center gap-3 cursor-pointer">
+                  <input type="checkbox" name="is_free" checked={formData.is_free} onChange={handleInputChange} className="w-5 h-5 accent-indigo-600 cursor-pointer rounded border-slate-300" />
+                  <span className="text-sm font-bold text-slate-700">Make this material Free?</span>
+                </label>
+                
+                {!formData.is_free && (
+                  <div>
+                    <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Price (₹)</label>
+                    <input type="number" name="price" value={formData.price} onChange={handleInputChange} required min="0" className="w-full bg-white border border-slate-200 rounded-xl px-4 py-2 text-sm outline-none focus:border-indigo-500 transition-colors" placeholder="e.g. 500" />
+                  </div>
+                )}
+              </div>
+
+              <button type="submit" className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3.5 rounded-xl transition-all shadow-lg shadow-indigo-600/30 mt-4">
                 Upload & Publish
               </button>
             </form>

@@ -3,13 +3,7 @@ import React, { useState } from 'react';
 const ManageAttendance = () => {
   const [attendanceDate, setAttendanceDate] = useState(new Date().toISOString().split('T')[0]);
   
-  const [students, setStudents] = useState([
-    { id: '#STU-1024', name: 'Rahul Sharma', status: 'Present' },
-    { id: '#STU-1025', name: 'Priya Singh', status: 'Absent' },
-    { id: '#STU-1026', name: 'Amit Kumar', status: null },
-    { id: '#STU-1027', name: 'Neha Gupta', status: null },
-    { id: '#STU-1028', name: 'Vikram Patel', status: null },
-  ]);
+  const [students, setStudents] = useState([]);
 
   const updateStatus = (index, status) => {
     const newStudents = [...students];

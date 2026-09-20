@@ -12,10 +12,12 @@ const AdminLayout = () => {
 
   // Scroll to top of the main container when route changes
   useEffect(() => {
-    const mainContainer = document.getElementById('main-scroll-container');
-    if (mainContainer) {
-      mainContainer.scrollTo({ top: 0, left: 0, behavior: 'instant' });
-    }
+    setTimeout(() => {
+      const mainContainer = document.getElementById('main-scroll-container');
+      if (mainContainer) {
+        mainContainer.scrollTop = 0;
+      }
+    }, 10);
   }, [location.pathname]);
 
   const handleLogout = (e) => {
@@ -31,6 +33,7 @@ const AdminLayout = () => {
     { icon: 'fa-user-graduate', label: 'Students', path: '/admin/students' },
     { icon: 'fa-video', label: 'Live Classes', path: '/admin/live-classes' },
     { icon: 'fa-book-open', label: 'Study Materials', path: '/admin/materials' },
+    { icon: 'fa-graduation-cap', label: 'Courses', path: '/admin/courses' },
     { icon: 'fa-file-alt', label: 'Exams', path: '/admin/exams' },
   ];
 
@@ -112,8 +115,17 @@ const AdminLayout = () => {
           </div>
           
           <div className="flex items-center gap-5 relative">
+            
+            {/* Click Outside Overlay */}
+            {(showQuickAdd || showNotifications || showProfileMenu) && (
+              <div 
+                className="fixed inset-0 z-40" 
+                onClick={() => { setShowQuickAdd(false); setShowNotifications(false); setShowProfileMenu(false); }}
+              ></div>
+            )}
+
             {/* Quick Add Menu */}
-            <div className="relative">
+            <div className="relative z-50">
               <button 
                 onClick={() => { setShowQuickAdd(!showQuickAdd); setShowNotifications(false); setShowProfileMenu(false); }} 
                 className="bg-indigo-50 text-indigo-600 hover:bg-indigo-100 px-4 py-2 rounded-full text-sm font-bold transition-colors shadow-sm border border-indigo-100 hidden md:flex items-center gap-2"
@@ -143,7 +155,7 @@ const AdminLayout = () => {
             <div className="h-6 w-px bg-slate-200 mx-2"></div>
             
             {/* Notification Menu */}
-            <div className="relative">
+            <div className="relative z-50">
               <button 
                 onClick={() => { setShowNotifications(!showNotifications); setShowQuickAdd(false); setShowProfileMenu(false); }} 
                 className="relative text-slate-500 hover:text-indigo-600 transition-colors"
@@ -172,7 +184,7 @@ const AdminLayout = () => {
             </div>
 
             {/* Profile Menu */}
-            <div className="relative">
+            <div className="relative z-50">
               <div 
                 className="flex items-center gap-3 pl-2 cursor-pointer group"
                 onClick={() => { setShowProfileMenu(!showProfileMenu); setShowQuickAdd(false); setShowNotifications(false); }}
@@ -192,8 +204,8 @@ const AdminLayout = () => {
                   <p className="text-xs font-semibold text-slate-500 truncate">admin@aarambh.com</p>
                 </div>
                 <div className="py-2">
-                  <button className="w-full text-left px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-indigo-50 hover:text-indigo-600 flex items-center gap-2">
-                    <i className="fas fa-cog w-4"></i> Settings
+                  <button onClick={() => { navigate('/admin/change-password'); setShowProfileMenu(false); }} className="w-full text-left px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-indigo-50 hover:text-indigo-600 flex items-center gap-2">
+                    <i className="fas fa-key w-4"></i> Change Password
                   </button>
                   <div className="border-t border-slate-100 my-1"></div>
                   <button onClick={handleLogout} className="w-full text-left px-4 py-2 text-sm font-bold text-rose-600 hover:bg-rose-50 flex items-center gap-2">

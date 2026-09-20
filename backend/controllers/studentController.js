@@ -36,9 +36,9 @@ exports.getDashboardStats = async (req, res) => {
       data: {
         studentName,
         attendancePercentage,
-        activeSubjects: 4, // Mocked for now, could be calculated
+        activeSubjects: 0,
         pendingFees,
-        lastExamScore: 82, // Mocked for now
+        lastExamScore: 0,
         upcomingClasses: classRows,
         recentNotifications: notificationRows
       }
@@ -254,6 +254,116 @@ exports.getClasses = async (req, res) => {
     });
   } catch (error) {
     console.error('Error in getClasses:', error);
+    res.status(500).json({ success: false, message: 'Server Error' });
+  }
+};
+
+// @desc    Get Study Materials (with purchased status)
+// @route   GET /api/student/materials
+exports.getMaterials = async (req, res) => {
+  try {
+    const studentId = getStudentId(req);
+    
+    // Fetch all materials
+    const [materials] = await db.execute('SELECT * FROM study_materials ORDER BY created_at DESC');
+    
+    // Fetch purchased material IDs for this student
+    const [purchased] = await db.execute('SELECT material_id FROM purchased_materials WHERE student_id = ?', [studentId]);
+    const purchasedIds = purchased.map(p => p.material_id);
+    
+    // Attach is_purchased flag
+    const data = materials.map(m => ({
+      ...m,
+      is_purchased: m.is_free ? true : purchasedIds.includes(m.id)
+    }));
+    
+    res.json({ success: true, data });
+  } catch (error) {
+    console.error('Error in getMaterials:', error);
+    res.status(500).json({ success: false, message: 'Server Error' });
+  }
+};
+
+// @desc    Buy Material (Mock Payment)
+// @route   POST /api/student/buy-material
+exports.buyMaterial = async (req, res) => {
+  try {
+    const studentId = getStudentId(req);
+    const { material_id } = req.body;
+    
+    const [materials] = await db.execute('SELECT price FROM study_materials WHERE id = ?', [material_id]);
+    if (materials.length === 0) {
+      return res.status(404).json({ success: false, message: 'Material not found' });
+    }
+    
+    const price = materials[0].price;
+    
+    // Mock Payment: directly insert into purchased_materials
+    await db.execute(
+      'INSERT INTO purchased_materials (student_id, material_id, amount_paid) VALUES (?, ?, ?)',
+      [studentId, material_id, price]
+    );
+    
+    res.json({ success: true, message: 'Purchase successful!' });
+  } catch (error) {
+    // If it's a duplicate entry (MySQL error 1062)
+    if (error.code === 'ER_DUP_ENTRY') {
+      return res.status(400).json({ success: false, message: 'You have already purchased this material.' });
+    }
+    console.error('Error in buyMaterial:', error);
+    res.status(500).json({ success: false, message: 'Server Error' });
+  }
+};
+
+// --- COURSES ---
+exports.getCourses = async (req, res) => {
+  try {
+    const studentId = getStudentId(req);
+    
+    // Fetch all courses
+    const [courses] = await db.execute('SELECT * FROM courses ORDER BY created_at DESC');
+    
+    // Fetch purchased course IDs for this student
+    const [purchased] = await db.execute('SELECT course_id FROM purchased_courses WHERE student_id = ?', [studentId]);
+    const purchasedIds = purchased.map(p => p.course_id);
+    
+    // Attach is_purchased flag
+    const data = courses.map(c => ({
+      ...c,
+      is_purchased: c.is_free ? true : purchasedIds.includes(c.id)
+    }));
+    
+    res.json({ success: true, data });
+  } catch (error) {
+    console.error('Error in getCourses:', error);
+    res.status(500).json({ success: false, message: 'Server Error' });
+  }
+};
+
+exports.buyCourse = async (req, res) => {
+  try {
+    const studentId = getStudentId(req);
+    const { course_id } = req.body;
+    
+    const [courses] = await db.execute('SELECT price FROM courses WHERE id = ?', [course_id]);
+    if (courses.length === 0) {
+      return res.status(404).json({ success: false, message: 'Course not found' });
+    }
+    
+    const price = courses[0].price;
+    
+    // Mock Payment: directly insert into purchased_courses
+    await db.execute(
+      'INSERT INTO purchased_courses (student_id, course_id, price_paid) VALUES (?, ?, ?)',
+      [studentId, course_id, price]
+    );
+    
+    res.json({ success: true, message: 'Course purchased successfully!' });
+  } catch (error) {
+    if (error.code === 'ER_DUP_ENTRY') {
+      return res.status(400).json({ success: false, message: 'You have already purchased this course.' });
+    }
+    console.error('Error in buyCourse:', error);
     res.status(500).json({ success: false, message: 'Server Error' });
   }
 };

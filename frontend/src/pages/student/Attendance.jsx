@@ -73,7 +73,7 @@ const Attendance = () => {
             <div className="absolute inset-0 opacity-[0.03] bg-[url('https://www.transparenttextures.com/patterns/stardust.png')]"></div>
           </div>
 
-          <div className="relative z-10 bg-white/10 backdrop-blur-2xl rounded-[calc(3rem-7px)] p-6 sm:p-10 border border-white/20 shadow-[inset_0_0_30px_rgba(255,255,255,0.1)]">
+          <div className="relative z-10 bg-white/10 backdrop-blur-2xl rounded-[calc(3rem-7px)] p-6 sm:p-8 border border-white/20 shadow-[inset_0_0_30px_rgba(255,255,255,0.1)]">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
               
               {/* Left Side: Circular Progress */}
@@ -85,7 +85,7 @@ const Attendance = () => {
                   Overall Score
                 </h3>
                 
-                <div className="relative w-64 h-64 mt-12 group-hover:scale-105 transition-transform duration-700">
+                <div className="relative w-40 h-40 mt-12 group-hover:scale-105 transition-transform duration-700">
                   {/* Glowing Rings behind */}
                   <div className="absolute inset-0 rounded-full border border-fuchsia-200/20 shadow-[inset_0_0_50px_rgba(232,121,249,0.2)]"></div>
                   <div className="absolute inset-3 rounded-full border border-indigo-200/30 border-dashed animate-[spin_20s_linear_infinite]"></div>

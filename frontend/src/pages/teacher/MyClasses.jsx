@@ -1,22 +1,40 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import api from '../../services/api';
 
 const MyClasses = () => {
-  const classes = [
-    { id: 1, name: 'Mathematics 101 - Section A', batch: 'BBOSE 10th', time: '09:00 AM - 10:30 AM', students: 45, status: 'Live' },
-    { id: 2, name: 'Physics Fundamentals', batch: 'NIOS 12th', time: '11:30 AM - 12:30 PM', students: 30, status: 'Upcoming' },
-    { id: 3, name: 'Advanced Calculus', batch: 'BBOSE 12th', time: '02:00 PM - 04:00 PM', students: 28, status: 'Upcoming' },
-  ];
+  const [classes, setClasses] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchClasses = async () => {
+      try {
+        const response = await api.get('/teacher/classes');
+        if (response.data.success) {
+          setClasses(response.data.data);
+        }
+      } catch (error) {
+        console.error("Failed to fetch classes", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchClasses();
+  }, []);
+
+  if (loading) return <div className="p-8 flex justify-center"><div className="animate-spin text-sky-500 text-3xl"><i className="fas fa-circle-notch"></i></div></div>;
 
   return (
     <div>
       <h2 className="text-2xl font-bold text-slate-800 mb-6">My Classes</h2>
       <div className="grid gap-6">
-        {classes.map((cls) => (
+        {classes.length === 0 ? (
+          <div className="text-center py-8 text-slate-500">No classes scheduled yet.</div>
+        ) : classes.map((cls) => (
           <div key={cls.id} className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex flex-col md:flex-row items-center justify-between">
             <div>
-              <h3 className="text-lg font-bold text-slate-800">{cls.name}</h3>
-              <p className="text-slate-500 text-sm mt-1">Batch: {cls.batch} | Time: {cls.time}</p>
-              <p className="text-slate-500 text-sm mt-1">Enrolled Students: {cls.students}</p>
+              <h3 className="text-lg font-bold text-slate-800">{cls.subject}: {cls.topic}</h3>
+              <p className="text-slate-500 text-sm mt-1">Date: {cls.date} | Time: {cls.time}</p>
+              <p className="text-slate-500 text-sm mt-1">Duration: {cls.duration} mins</p>
             </div>
             <div className="mt-4 md:mt-0">
               {cls.status === 'Live' ? (

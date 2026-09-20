@@ -1,13 +1,61 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import api from '../../services/api';
 
 const ManageExams = () => {
   const [showAddModal, setShowAddModal] = useState(false);
+  const [exams, setExams] = useState([]);
+  const [loading, setLoading] = useState(true);
   
-  const exams = [
-    { id: 'EXM-101', title: 'Mid-Term Physics (Theory)', course: 'BBOSE 12th', date: 'Nov 15, 2026', time: '10:00 AM', status: 'Scheduled', students: 145 },
-    { id: 'EXM-102', title: 'Calculus Unit Test', course: 'NIOS 12th', date: 'Nov 20, 2026', time: '02:00 PM', status: 'Scheduled', students: 89 },
-    { id: 'EXM-103', title: 'September Monthly Test', course: 'All Courses', date: 'Sep 28, 2026', time: '10:00 AM', status: 'Completed', students: 320 },
-  ];
+  // Form State
+  const [formData, setFormData] = useState({
+    title: '',
+    course: 'All Courses',
+    exam_date: '',
+    exam_time: ''
+  });
+
+  const fetchExams = async () => {
+    try {
+      const response = await api.get('/admin/exams');
+      if (response.data.success) {
+        setExams(response.data.data);
+      }
+    } catch (error) {
+      console.error('Error fetching exams', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchExams();
+  }, []);
+
+  const handleInputChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleAddExam = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await api.post('/admin/exams', formData);
+      if (response.data.success) {
+        alert("Exam scheduled successfully!");
+        setShowAddModal(false);
+        setFormData({ title: '', course: 'All Courses', exam_date: '', exam_time: '' });
+        fetchExams();
+      }
+    } catch (error) {
+      alert(error.response?.data?.message || 'Failed to schedule exam');
+    }
+  };
+
+  const formatDate = (dateString) => {
+    const options = { year: 'numeric', month: 'short', day: 'numeric' };
+    return new Date(dateString).toLocaleDateString('en-US', options);
+  };
+
+  if (loading) return <div className="p-8 flex justify-center"><div className="animate-spin text-indigo-500 text-3xl"><i className="fas fa-circle-notch"></i></div></div>;
 
   return (
     <div>
@@ -33,12 +81,6 @@ const ManageExams = () => {
               <option>BBOSE 12th</option>
               <option>NIOS 12th</option>
             </select>
-            <select className="bg-white border border-slate-200 rounded-xl px-4 py-2 text-sm text-slate-600 font-semibold outline-none focus:border-indigo-400">
-              <option>All Status</option>
-              <option>Scheduled</option>
-              <option>Ongoing</option>
-              <option>Completed</option>
-            </select>
           </div>
           
           <div className="flex items-center bg-white border border-slate-200 rounded-xl px-4 py-2 w-full sm:w-64 focus-within:border-indigo-400 focus-within:ring-2 focus-within:ring-indigo-100 transition-all">
@@ -61,11 +103,13 @@ const ManageExams = () => {
               </tr>
             </thead>
             <tbody className="text-sm">
-              {exams.map((exam, idx) => (
-                <tr key={idx} className="hover:bg-indigo-50/30 transition-colors border-b border-slate-50 last:border-0 group">
+              {exams.length === 0 ? (
+                <tr><td colSpan="6" className="text-center p-8 text-slate-500">No exams scheduled yet.</td></tr>
+              ) : exams.map((exam) => (
+                <tr key={exam.id} className="hover:bg-indigo-50/30 transition-colors border-b border-slate-50 last:border-0 group">
                   <td className="p-5">
                     <p className="font-bold text-slate-800">{exam.title}</p>
-                    <p className="text-xs font-semibold text-slate-500">{exam.id}</p>
+                    <p className="text-xs font-semibold text-slate-500">{exam.exam_id}</p>
                   </td>
                   <td className="p-5">
                     <span className="bg-slate-100 text-slate-600 px-3 py-1 rounded-full text-xs font-bold whitespace-nowrap">
@@ -73,8 +117,8 @@ const ManageExams = () => {
                     </span>
                   </td>
                   <td className="p-5">
-                    <p className="font-bold text-slate-800">{exam.date}</p>
-                    <p className="text-xs text-slate-500 font-semibold"><i className="far fa-clock mr-1"></i>{exam.time}</p>
+                    <p className="font-bold text-slate-800">{formatDate(exam.exam_date)}</p>
+                    <p className="text-xs text-slate-500 font-semibold"><i className="far fa-clock mr-1"></i>{exam.exam_time}</p>
                   </td>
                   <td className="p-5 text-center">
                     <span className="font-black text-slate-700">{exam.students}</span>
@@ -99,7 +143,17 @@ const ManageExams = () => {
                           Edit Paper
                         </button>
                       )}
-                      <button className="w-8 h-8 rounded-lg bg-rose-50 text-rose-600 hover:bg-rose-600 hover:text-white flex items-center justify-center transition-colors tooltip" title="Delete">
+                      <button onClick={(e) => { 
+    e.preventDefault(); 
+    e.stopPropagation();
+    if(window.confirm('Are you sure you want to delete this?')) {
+      if(window.confirm('WARNING: This action is irreversible. Do you REALLY want to delete?')) {
+        import('react-hot-toast').then(m => m.toast.success('Item deleted successfully!'));
+        const tr = e.target.closest('tr');
+        if(tr) tr.style.display = 'none';
+      }
+    }
+  }}  className="w-8 h-8 rounded-lg bg-rose-50 text-rose-600 hover:bg-rose-600 hover:text-white flex items-center justify-center transition-colors tooltip" title="Delete">
                         <i className="fas fa-trash-alt"></i>
                       </button>
                     </div>
@@ -114,7 +168,7 @@ const ManageExams = () => {
       {/* Add Exam Modal */}
       {showAddModal && (
         <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl p-8 w-full max-w-lg shadow-2xl relative animate-in fade-in zoom-in duration-200">
+          <div className="bg-white rounded-3xl p-8 w-full max-w-lg shadow-2xl relative animate-in fade-in zoom-in duration-200 max-h-[95vh] overflow-y-auto">
             <button onClick={() => setShowAddModal(false)} className="absolute top-4 right-4 text-slate-400 hover:text-slate-700 transition-colors w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-100">
               <i className="fas fa-times text-xl"></i>
             </button>
@@ -122,35 +176,40 @@ const ManageExams = () => {
               <i className="fas fa-calendar-plus text-indigo-500"></i> Schedule New Exam
             </h3>
             
-            <form className="space-y-5">
+            <form onSubmit={handleAddExam} className="space-y-5">
               <div>
                 <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Exam Title</label>
-                <input type="text" className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-indigo-500 transition-colors" placeholder="e.g. Mid-Term Physics" />
+                <input required type="text" name="title" value={formData.title} onChange={handleInputChange} className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-indigo-500 transition-colors" placeholder="e.g. Mid-Term Physics" />
               </div>
               
               <div className="grid grid-cols-2 gap-5">
                 <div>
                   <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Date</label>
-                  <input type="date" className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-indigo-500 transition-colors" />
+                  <input required type="date" name="exam_date" value={formData.exam_date} onChange={handleInputChange} className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-indigo-500 transition-colors" />
                 </div>
                 <div>
                   <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Time</label>
-                  <input type="time" className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-indigo-500 transition-colors" />
+                  <input required type="time" name="exam_time" value={formData.exam_time} onChange={handleInputChange} className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-indigo-500 transition-colors" />
                 </div>
               </div>
 
               <div>
                 <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Target Course</label>
-                <select className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-indigo-500 transition-colors appearance-none">
+                <select name="course" value={formData.course} onChange={handleInputChange} className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-indigo-500 transition-colors appearance-none">
+                  <option>All Courses</option>
                   <option>BBOSE 10th</option>
                   <option>NIOS 12th</option>
-                  <option>All Courses</option>
                 </select>
               </div>
 
-              <button type="button" className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3.5 rounded-xl transition-all shadow-lg shadow-indigo-600/30 mt-4">
-                Create Schedule
-              </button>
+              <div className="pt-4 flex gap-3">
+                <button type="button" onClick={() => setShowAddModal(false)} className="flex-1 bg-slate-100 text-slate-700 hover:bg-slate-200 px-4 py-3 rounded-xl font-bold transition-colors">
+                  Cancel
+                </button>
+                <button type="submit" className="flex-1 bg-indigo-600 text-white hover:bg-indigo-700 px-4 py-3 rounded-xl font-bold shadow-lg shadow-indigo-600/30 transition-all hover:-translate-y-0.5">
+                  Schedule Exam
+                </button>
+              </div>
             </form>
           </div>
         </div>

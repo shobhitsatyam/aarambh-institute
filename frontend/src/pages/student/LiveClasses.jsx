@@ -6,6 +6,7 @@ const LiveClasses = () => {
   const [upcomingClasses, setUpcomingClasses] = useState([]);
   const [recordedClasses, setRecordedClasses] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [activeMeeting, setActiveMeeting] = useState(null); // For Jitsi
 
   useEffect(() => {
     const fetchClasses = async () => {
@@ -50,6 +51,35 @@ const LiveClasses = () => {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
         <div className="w-16 h-16 border-4 border-indigo-200 border-t-indigo-600 rounded-full animate-spin"></div>
+      </div>
+    );
+  }
+
+  // If a meeting is active, show the Jitsi iframe
+  if (activeMeeting) {
+    const roomName = `Aarambh_Institute_Class_${activeMeeting.id}`;
+    return (
+      <div className="flex flex-col h-[80vh] w-full bg-slate-900 rounded-3xl overflow-hidden shadow-2xl relative">
+        <div className="flex justify-between items-center p-4 bg-slate-800 text-white">
+          <div>
+            <h2 className="text-xl font-bold flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-rose-500 animate-pulse"></span>
+              {activeMeeting.title}
+            </h2>
+            <p className="text-xs text-slate-400">Instructor: {activeMeeting.instructor}</p>
+          </div>
+          <button 
+            onClick={() => setActiveMeeting(null)}
+            className="bg-rose-500 hover:bg-rose-600 text-white px-4 py-2 rounded-lg font-bold text-sm transition-colors flex items-center gap-2"
+          >
+            <i className="fas fa-phone-slash"></i> Leave Class
+          </button>
+        </div>
+        <iframe
+          src={`https://meet.jit.si/${roomName}`}
+          allow="camera; microphone; fullscreen; display-capture; autoplay"
+          className="flex-1 w-full border-none"
+        ></iframe>
       </div>
     );
   }
@@ -100,7 +130,9 @@ const LiveClasses = () => {
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {upcomingClasses.map((cls, idx) => (
+          {upcomingClasses.length === 0 ? (
+            <div className="col-span-full text-center p-8 text-slate-500">No upcoming classes scheduled.</div>
+          ) : upcomingClasses.map((cls, idx) => (
             <div key={idx} className="bg-white rounded-[2rem] p-7 shadow-[0_8px_30px_rgba(0,0,0,0.04)] border border-slate-100 hover:shadow-[0_20px_50px_rgba(99,102,241,0.12)] hover:-translate-y-2 hover:border-indigo-100 transition-all duration-500 group relative overflow-hidden flex flex-col h-full">
               {/* Subtle top gradient line */}
               <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-indigo-500 to-purple-500 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
@@ -126,7 +158,10 @@ const LiveClasses = () => {
                      {cls.time}
                   </span>
                 </div>
-                <button className="bg-indigo-50 text-indigo-600 hover:bg-indigo-600 hover:text-white px-6 py-2.5 rounded-xl text-sm font-bold transition-all duration-300 shadow-sm group-hover:shadow-[0_8px_20px_rgba(99,102,241,0.25)] flex items-center gap-2">
+                <button 
+                  onClick={() => setActiveMeeting(cls)}
+                  className="bg-indigo-50 text-indigo-600 hover:bg-indigo-600 hover:text-white px-6 py-2.5 rounded-xl text-sm font-bold transition-all duration-300 shadow-sm group-hover:shadow-[0_8px_20px_rgba(99,102,241,0.25)] flex items-center gap-2"
+                >
                   Join <i className="fas fa-arrow-right text-xs"></i>
                 </button>
               </div>
@@ -145,7 +180,9 @@ const LiveClasses = () => {
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {recordedClasses.map((rec) => (
+          {recordedClasses.length === 0 ? (
+            <div className="col-span-full text-center p-8 text-slate-500">No recordings available.</div>
+          ) : recordedClasses.map((rec) => (
             <div key={rec.id} className="bg-white rounded-[2rem] overflow-hidden shadow-[0_8px_30px_rgba(0,0,0,0.04)] border border-slate-100 hover:shadow-[0_20px_50px_rgba(244,63,94,0.12)] hover:-translate-y-2 hover:border-rose-100 transition-all duration-500 group cursor-pointer">
               <div className="h-52 relative overflow-hidden">
                 <img src={rec.thumbnail} alt={rec.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />

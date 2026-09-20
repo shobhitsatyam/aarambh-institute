@@ -67,8 +67,16 @@ const Login = () => {
       if (response.ok && data.success) {
         // Save token to localStorage or context
         localStorage.setItem('token', data.token);
+        
+        let redirectPath = '/student-dashboard';
+        if (data.role === 'admin') {
+          redirectPath = '/admin-dashboard';
+        } else if (data.role === 'teacher') {
+          redirectPath = '/teacher-dashboard';
+        }
+        
         setMessage({ text: 'Login successful! Redirecting...', type: 'success' });
-        setTimeout(() => navigate('/student-dashboard'), 1500);
+        setTimeout(() => navigate(redirectPath), 1500);
       } else {
         setMessage({ text: data.message || 'Invalid email or password', type: 'error' });
       }

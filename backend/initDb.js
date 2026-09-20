@@ -196,7 +196,89 @@ async function initializeDatabase() {
     await connection.query(createClassesTable);
     console.log('Classes table created or already exists.');
 
-    await connection.end();
+    // Create study_materials table
+    const createStudyMaterialsTable = `
+      CREATE TABLE IF NOT EXISTS study_materials (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        title VARCHAR(200) NOT NULL,
+        type VARCHAR(50) NOT NULL,
+        course VARCHAR(100) NOT NULL,
+        size VARCHAR(50),
+        is_free BOOLEAN DEFAULT TRUE,
+        price DECIMAL(10, 2) DEFAULT 0.00,
+        file_url VARCHAR(255),
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `;
+    await connection.query(createStudyMaterialsTable);
+    console.log('Study Materials table created or already exists.');
+
+    // Create purchased_materials table
+    const createPurchasedMaterialsTable = `
+      CREATE TABLE IF NOT EXISTS purchased_materials (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        student_id INT NOT NULL,
+        material_id INT NOT NULL,
+        amount_paid DECIMAL(10, 2) NOT NULL,
+        purchase_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (student_id) REFERENCES users(id) ON DELETE CASCADE,
+        FOREIGN KEY (material_id) REFERENCES study_materials(id) ON DELETE CASCADE,
+        UNIQUE KEY unique_purchase (student_id, material_id)
+      )
+    `;
+    await connection.query(createPurchasedMaterialsTable);
+    console.log('Purchased Materials table created or already exists.');
+
+    // Create courses table
+    const createCoursesTable = `
+      CREATE TABLE IF NOT EXISTS courses (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        title VARCHAR(200) NOT NULL,
+        description TEXT,
+        duration VARCHAR(100),
+        is_free BOOLEAN DEFAULT TRUE,
+        price DECIMAL(10, 2) DEFAULT 0.00,
+        includes_live_classes BOOLEAN DEFAULT FALSE,
+        includes_recorded_classes BOOLEAN DEFAULT FALSE,
+        thumbnail VARCHAR(255),
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `;
+    await connection.query(createCoursesTable);
+    console.log('Courses table created or already exists.');
+
+    // Create purchased_courses table
+    const createPurchasedCoursesTable = `
+      CREATE TABLE IF NOT EXISTS purchased_courses (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        student_id INT NOT NULL,
+        course_id INT NOT NULL,
+        price_paid DECIMAL(10,2) DEFAULT 0.00,
+        purchased_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (student_id) REFERENCES users(id),
+        FOREIGN KEY (course_id) REFERENCES courses(id)
+      )
+    `;
+    await connection.query(createPurchasedCoursesTable);
+    console.log('Purchased Courses table created or already exists.');
+
+    // Create exams table
+    const createExamsTable = `
+      CREATE TABLE IF NOT EXISTS exams (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        exam_id VARCHAR(50) NOT NULL,
+        title VARCHAR(255) NOT NULL,
+        course VARCHAR(100) NOT NULL,
+        exam_date DATE NOT NULL,
+        exam_time VARCHAR(50) NOT NULL,
+        status VARCHAR(50) DEFAULT 'Scheduled',
+        students INT DEFAULT 0,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `;
+    await connection.query(createExamsTable);
+    console.log('Exams table created or already exists.');
+
     console.log('Database initialization completed successfully.');
     process.exit(0);
   } catch (error) {

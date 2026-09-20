@@ -1,12 +1,7 @@
 import React from 'react';
 
 const AcademicCalendar = () => {
-  const events = [
-    { id: 1, date: '15', month: 'Nov', year: '2026', title: 'Mid-Term Examinations Begin', type: 'Exam', description: 'Theory exams for all batches.' },
-    { id: 2, date: '25', month: 'Dec', year: '2026', title: 'Winter Vacation Starts', type: 'Holiday', description: 'Institute remains closed.' },
-    { id: 3, date: '05', month: 'Jan', year: '2027', title: 'Classes Resume', type: 'Academic', description: 'Second half of the term begins.' },
-    { id: 4, date: '26', month: 'Jan', year: '2027', title: 'Republic Day', type: 'Holiday', description: 'National holiday.' },
-  ];
+  const events = [];
 
   return (
     <div className="max-w-7xl mx-auto pb-10">
@@ -35,45 +30,55 @@ const AcademicCalendar = () => {
           </h3>
           
           <div className="space-y-6">
-            {events.map((event) => (
-              <div key={event.id} className="relative group rounded-[2rem] p-[2.5px] shadow-[0_8px_30px_rgba(0,0,0,0.04)] hover:shadow-[0_20px_50px_rgba(99,102,241,0.2)] hover:-translate-y-2 transition-all duration-500">
-                <div className="absolute inset-0 rounded-[2rem] overflow-hidden z-0">
-                   <div className="absolute -inset-[100%] animate-[spin_3s_linear_infinite] bg-[conic-gradient(from_0deg,transparent_70%,#6366f1_80%,#ec4899_100%)] opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+            {events.length === 0 ? (
+              <div className="bg-white rounded-[2rem] border border-slate-100 p-12 text-center shadow-sm flex flex-col items-center justify-center h-full">
+                <div className="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mb-6">
+                  <i className="far fa-calendar-times text-4xl text-slate-300"></i>
                 </div>
-                <div className="relative bg-white rounded-[calc(2rem-2px)] p-6 z-10 border border-slate-100 group-hover:border-transparent transition-colors duration-500 flex gap-6 overflow-hidden">
-                  
-                  {/* Dynamic Glow Strip */}
-                  <div className={`absolute left-0 top-0 bottom-0 w-2 transition-all duration-500 ${
-                    event.type === 'Holiday' ? 'bg-emerald-500 shadow-[0_0_15px_rgba(16,185,129,0.5)]' :
-                    event.type === 'Exam' ? 'bg-rose-500 shadow-[0_0_15px_rgba(244,63,94,0.5)]' :
-                    'bg-indigo-500 shadow-[0_0_15px_rgba(99,102,241,0.5)]'
-                  }`}></div>
-
-                  {/* Date Box */}
-                  <div className="w-24 h-24 rounded-[1.5rem] bg-slate-50 border border-slate-100 flex flex-col items-center justify-center shrink-0 shadow-inner group-hover:scale-105 transition-transform duration-500 ml-2">
-                    <span className="text-3xl font-black text-slate-800 leading-none group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-indigo-600 group-hover:to-fuchsia-600 transition-all">{event.date}</span>
-                    <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mt-1">{event.month}</span>
-                  </div>
-                  
-                  {/* Event Details */}
-                  <div className="flex-1 flex flex-col justify-center">
-                    <div className="flex justify-between items-start mb-2">
-                      <h4 className="font-black text-slate-800 text-xl group-hover:text-indigo-600 transition-colors">{event.title}</h4>
-                      <span className={`px-4 py-1.5 rounded-full text-[10px] font-black tracking-widest uppercase shadow-sm border ${
-                        event.type === 'Holiday' ? 'bg-emerald-50 text-emerald-600 border-emerald-100' :
-                        event.type === 'Exam' ? 'bg-rose-50 text-rose-600 border-rose-100' :
-                        'bg-indigo-50 text-indigo-600 border-indigo-100'
-                      }`}>
-                        {event.type}
-                      </span>
-                    </div>
-                    <p className="text-sm font-semibold text-slate-500">{event.description}</p>
-                    <p className="text-[11px] font-bold text-slate-400 mt-3 uppercase tracking-wider"><i className="far fa-clock mr-1"></i> Year {event.year}</p>
-                  </div>
-                  
-                </div>
+                <h3 className="text-xl font-black text-slate-800 mb-2">No Upcoming Events</h3>
+                <p className="text-slate-500 font-medium">The academic calendar has not been updated by the administration yet.</p>
               </div>
-            ))}
+            ) : (
+              events.map((event) => (
+                <div key={event.id} className="relative group rounded-[2rem] p-[2.5px] shadow-[0_8px_30px_rgba(0,0,0,0.04)] hover:shadow-[0_20px_50px_rgba(99,102,241,0.2)] hover:-translate-y-2 transition-all duration-500">
+                  <div className="absolute inset-0 rounded-[2rem] overflow-hidden z-0">
+                     <div className="absolute -inset-[100%] animate-[spin_3s_linear_infinite] bg-[conic-gradient(from_0deg,transparent_70%,#6366f1_80%,#ec4899_100%)] opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                  </div>
+                  <div className="relative bg-white rounded-[calc(2rem-2px)] p-6 z-10 border border-slate-100 group-hover:border-transparent transition-colors duration-500 flex gap-6 overflow-hidden">
+                    
+                    {/* Dynamic Glow Strip */}
+                    <div className={`absolute left-0 top-0 bottom-0 w-2 transition-all duration-500 ${
+                      event.type === 'Holiday' ? 'bg-emerald-500 shadow-[0_0_15px_rgba(16,185,129,0.5)]' :
+                      event.type === 'Exam' ? 'bg-rose-500 shadow-[0_0_15px_rgba(244,63,94,0.5)]' :
+                      'bg-indigo-500 shadow-[0_0_15px_rgba(99,102,241,0.5)]'
+                    }`}></div>
+
+                    {/* Date Box */}
+                    <div className="w-24 h-24 rounded-[1.5rem] bg-slate-50 border border-slate-100 flex flex-col items-center justify-center shrink-0 shadow-inner group-hover:scale-105 transition-transform duration-500 ml-2">
+                      <span className="text-3xl font-black text-slate-800 leading-none group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-indigo-600 group-hover:to-fuchsia-600 transition-all">{event.date}</span>
+                      <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mt-1">{event.month}</span>
+                    </div>
+                    
+                    {/* Event Details */}
+                    <div className="flex-1 flex flex-col justify-center">
+                      <div className="flex justify-between items-start mb-2">
+                        <h4 className="font-black text-slate-800 text-xl group-hover:text-indigo-600 transition-colors">{event.title}</h4>
+                        <span className={`px-4 py-1.5 rounded-full text-[10px] font-black tracking-widest uppercase shadow-sm border ${
+                          event.type === 'Holiday' ? 'bg-emerald-50 text-emerald-600 border-emerald-100' :
+                          event.type === 'Exam' ? 'bg-rose-50 text-rose-600 border-rose-100' :
+                          'bg-indigo-50 text-indigo-600 border-indigo-100'
+                        }`}>
+                          {event.type}
+                        </span>
+                      </div>
+                      <p className="text-sm font-semibold text-slate-500">{event.description}</p>
+                      <p className="text-[11px] font-bold text-slate-400 mt-3 uppercase tracking-wider"><i className="far fa-clock mr-1"></i> Year {event.year}</p>
+                    </div>
+                    
+                  </div>
+                </div>
+              ))
+            )}
           </div>
         </div>
 

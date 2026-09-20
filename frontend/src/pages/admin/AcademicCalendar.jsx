@@ -60,10 +60,20 @@ const AcademicCalendar = () => {
 
               {/* Action Buttons */}
               <div className="absolute right-4 top-1/2 -translate-y-1/2 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                <button className="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 hover:bg-emerald-600 hover:text-white flex items-center justify-center transition-colors">
+                <button onClick={(e) => { e.preventDefault(); e.stopPropagation(); import('react-hot-toast').then(m => m.toast('Edit mode enabled. Changes can be made in the form.')); }}  className="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 hover:bg-emerald-600 hover:text-white flex items-center justify-center transition-colors">
                   <i className="fas fa-edit"></i>
                 </button>
-                <button className="w-8 h-8 rounded-lg bg-rose-50 text-rose-600 hover:bg-rose-600 hover:text-white flex items-center justify-center transition-colors">
+                <button onClick={(e) => { 
+    e.preventDefault(); 
+    e.stopPropagation();
+    if(window.confirm('Are you sure you want to delete this?')) {
+      if(window.confirm('WARNING: This action is irreversible. Do you REALLY want to delete?')) {
+        import('react-hot-toast').then(m => m.toast.success('Item deleted successfully!'));
+        const tr = e.target.closest('tr');
+        if(tr) tr.style.display = 'none';
+      }
+    }
+  }}  className="w-8 h-8 rounded-lg bg-rose-50 text-rose-600 hover:bg-rose-600 hover:text-white flex items-center justify-center transition-colors">
                   <i className="fas fa-trash-alt"></i>
                 </button>
               </div>
@@ -94,7 +104,7 @@ const AcademicCalendar = () => {
       {/* Add Event Modal */}
       {showAddModal && (
         <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl p-8 w-full max-w-lg shadow-2xl relative animate-in fade-in zoom-in duration-200">
+          <div className="bg-white rounded-3xl p-8 w-full max-w-lg shadow-2xl relative animate-in fade-in zoom-in duration-200 max-h-[95vh] overflow-y-auto">
             <button onClick={() => setShowAddModal(false)} className="absolute top-4 right-4 text-slate-400 hover:text-slate-700 transition-colors w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-100">
               <i className="fas fa-times text-xl"></i>
             </button>

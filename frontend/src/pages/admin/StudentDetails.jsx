@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 
 const StudentDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const [toastMsg, setToastMsg] = useState('');
 
   // Mock data for the student based on ID
   const student = {
@@ -23,8 +24,21 @@ const StudentDetails = () => {
     ]
   };
 
+  const handleAction = (msg) => {
+    setToastMsg(msg);
+    setTimeout(() => setToastMsg(''), 3000);
+  };
+
   return (
-    <div>
+    <div className="max-w-6xl mx-auto relative">
+      {/* Toast Notification */}
+      {toastMsg && (
+        <div className="fixed top-24 right-8 bg-slate-800 text-white px-6 py-3 rounded-xl shadow-2xl z-50 animate-[slideIn_0.3s_ease-out] flex items-center gap-3 font-bold border border-slate-700">
+          <i className="fas fa-check-circle text-emerald-400 text-xl"></i>
+          {toastMsg}
+        </div>
+      )}
+
       <div className="flex items-center gap-4 mb-8">
         <button 
           onClick={() => navigate(-1)}
@@ -80,10 +94,19 @@ const StudentDetails = () => {
             </div>
             
             <div className="mt-8 flex gap-2">
-              <button className="flex-1 bg-indigo-50 text-indigo-600 hover:bg-indigo-600 hover:text-white font-bold py-2.5 rounded-xl transition-colors">
+              <button 
+                onClick={() => handleAction('Edit Profile modal will open here (Demo)')}
+                className="flex-1 bg-indigo-50 text-indigo-600 hover:bg-indigo-600 hover:text-white font-bold py-2.5 rounded-xl transition-colors"
+              >
                 Edit Profile
               </button>
-              <button className="w-12 bg-slate-50 text-slate-600 hover:bg-rose-50 hover:text-rose-600 font-bold py-2.5 rounded-xl transition-colors border border-slate-200">
+              <button 
+                onClick={() => {
+                  const confirmBan = window.confirm('Are you sure you want to suspend this student account?');
+                  if(confirmBan) handleAction('Student account suspended successfully!');
+                }}
+                className="w-12 bg-slate-50 text-slate-600 hover:bg-rose-50 hover:text-rose-600 font-bold py-2.5 rounded-xl transition-colors border border-slate-200" title="Suspend Student"
+              >
                 <i className="fas fa-ban"></i>
               </button>
             </div>

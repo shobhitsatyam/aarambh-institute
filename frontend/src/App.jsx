@@ -18,6 +18,7 @@ import StudentDashboard from './pages/student/StudentDashboard';
 import Profile from './pages/student/Profile';
 import LiveClasses from './pages/student/LiveClasses';
 import StudyMaterials from './pages/student/StudyMaterials';
+import BrowseCourses from './pages/student/BrowseCourses';
 import Exams from './pages/student/Exams';
 import StudentCalendar from './pages/student/AcademicCalendar';
 import SupportTicket from './pages/student/SupportTicket';
@@ -33,6 +34,7 @@ import AllStudents from './pages/admin/AllStudents';
 import StudentDetails from './pages/admin/StudentDetails';
 import ManageLiveClass from './pages/admin/ManageLiveClass';
 import ManageStudyMaterial from './pages/admin/ManageStudyMaterial';
+import ManageCourses from './pages/admin/ManageCourses';
 import ManageExams from './pages/admin/ManageExams';
 import AdminCalendar from './pages/admin/AcademicCalendar';
 import ManageTickets from './pages/admin/ManageTickets';
@@ -68,12 +70,15 @@ import NiosOnDemand from './pages/courses/NiosOnDemand';
 import Login from './pages/auth/Login';
 import Register from './pages/auth/Register';
 import ForgotPassword from './pages/auth/ForgotPassword';
+import { Toaster } from 'react-hot-toast';
+import ChangePassword from './pages/ChangePassword';
 
 function App() {
   return (
     <Router>
       <ScrollToTop />
       <MetaPixel />
+      <Toaster position="top-right" toastOptions={{ duration: 4000, style: { background: '#1e293b', color: '#fff' } }} />
       <Routes>
         {/* Public Routes with Main Website Header/Footer */}
         <Route element={<MainLayout />}>
@@ -112,6 +117,7 @@ function App() {
           <Route path="profile" element={<Profile />} />
           <Route path="live-classes" element={<LiveClasses />} />
           <Route path="materials" element={<StudyMaterials />} />
+          <Route path="courses" element={<BrowseCourses />} />
           <Route path="exams" element={<Exams />} />
           <Route path="calendar" element={<StudentCalendar />} />
           <Route path="tickets" element={<SupportTicket />} />
@@ -122,6 +128,7 @@ function App() {
           <Route path="subjects" element={<Subject />} />
           <Route path="fees" element={<CourseFee />} />
           <Route path="switch-program" element={<SwitchProgramStudent />} />
+          <Route path="change-password" element={<ChangePassword />} />
         </Route>
         
         {/* Keeping old path for backward compatibility if needed, or redirect it */}
@@ -137,6 +144,7 @@ function App() {
           <Route path="students/:id" element={<StudentDetails />} />
           <Route path="live-classes" element={<ManageLiveClass />} />
           <Route path="materials" element={<ManageStudyMaterial />} />
+          <Route path="courses" element={<ManageCourses />} />
           <Route path="exams" element={<ManageExams />} />
           <Route path="calendar" element={<AdminCalendar />} />
           <Route path="tickets" element={<ManageTickets />} />
@@ -149,6 +157,7 @@ function App() {
           <Route path="blogs" element={<ManageBlogs />} />
           <Route path="blog-categories" element={<ManageBlogCategories />} />
           <Route path="teachers" element={<ManageTeachers />} />
+          <Route path="change-password" element={<ChangePassword />} />
         </Route>
 
         <Route path="/admin-dashboard" element={<AdminLayout />}>

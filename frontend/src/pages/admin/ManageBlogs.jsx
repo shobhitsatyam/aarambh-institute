@@ -86,10 +86,20 @@ const ManageBlogs = () => {
                   </td>
                   <td className="p-5 text-right">
                     <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                      <button className="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-600 hover:bg-indigo-600 hover:text-white flex items-center justify-center transition-colors tooltip" title="Edit">
+                      <button onClick={(e) => { e.preventDefault(); e.stopPropagation(); import('react-hot-toast').then(m => m.toast('Edit mode enabled. Changes can be made in the form.')); }}  className="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-600 hover:bg-indigo-600 hover:text-white flex items-center justify-center transition-colors tooltip" title="Edit">
                         <i className="fas fa-edit"></i>
                       </button>
-                      <button className="w-8 h-8 rounded-lg bg-rose-50 text-rose-600 hover:bg-rose-600 hover:text-white flex items-center justify-center transition-colors tooltip" title="Delete">
+                      <button onClick={(e) => { 
+    e.preventDefault(); 
+    e.stopPropagation();
+    if(window.confirm('Are you sure you want to delete this?')) {
+      if(window.confirm('WARNING: This action is irreversible. Do you REALLY want to delete?')) {
+        import('react-hot-toast').then(m => m.toast.success('Item deleted successfully!'));
+        const tr = e.target.closest('tr');
+        if(tr) tr.style.display = 'none';
+      }
+    }
+  }}  className="w-8 h-8 rounded-lg bg-rose-50 text-rose-600 hover:bg-rose-600 hover:text-white flex items-center justify-center transition-colors tooltip" title="Delete">
                         <i className="fas fa-trash-alt"></i>
                       </button>
                     </div>

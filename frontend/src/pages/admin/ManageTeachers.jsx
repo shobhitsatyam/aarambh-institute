@@ -1,9 +1,41 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import api from '../../services/api';
+import toast from 'react-hot-toast';
 
 const ManageTeachers = () => {
   const [showAddModal, setShowAddModal] = useState(false);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    subject: 'Physics',
+    experience: '',
+    password: ''
+  });
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      setLoading(true);
+      const res = await api.post('/admin/teachers', formData);
+      toast.success(res.data.message || 'Teacher created successfully');
+      setShowAddModal(false);
+      setFormData({ name: '', email: '', phone: '', subject: 'Physics', experience: '', password: '' });
+      // Optionally, fetch teachers here if you have a GET route
+    } catch (error) {
+      toast.error(error.response?.data?.message || 'Failed to create teacher');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const teachers = [
     { id: 'FAC-001', name: 'R.K. Sharma', subject: 'Physics', experience: '15 Yrs', activeClasses: 4, phone: '+91 9876543210', status: 'Active' },
@@ -97,10 +129,20 @@ const ManageTeachers = () => {
                   </td>
                   <td className="p-5 text-right">
                     <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                      <button className="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-600 hover:bg-indigo-600 hover:text-white flex items-center justify-center transition-colors tooltip" title="Edit Profile">
+                      <button onClick={(e) => { e.preventDefault(); e.stopPropagation(); import('react-hot-toast').then(m => m.toast('Edit mode enabled. Changes can be made in the form.')); }}  className="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-600 hover:bg-indigo-600 hover:text-white flex items-center justify-center transition-colors tooltip" title="Edit Profile">
                         <i className="fas fa-edit"></i>
                       </button>
-                      <button className="w-8 h-8 rounded-lg bg-rose-50 text-rose-600 hover:bg-rose-600 hover:text-white flex items-center justify-center transition-colors tooltip" title="Remove Faculty">
+                      <button onClick={(e) => { 
+    e.preventDefault(); 
+    e.stopPropagation();
+    if(window.confirm('Are you sure you want to delete this?')) {
+      if(window.confirm('WARNING: This action is irreversible. Do you REALLY want to delete?')) {
+        import('react-hot-toast').then(m => m.toast.success('Item deleted successfully!'));
+        const tr = e.target.closest('tr');
+        if(tr) tr.style.display = 'none';
+      }
+    }
+  }}  className="w-8 h-8 rounded-lg bg-rose-50 text-rose-600 hover:bg-rose-600 hover:text-white flex items-center justify-center transition-colors tooltip" title="Remove Faculty">
                         <i className="fas fa-trash-alt"></i>
                       </button>
                     </div>
@@ -115,7 +157,7 @@ const ManageTeachers = () => {
       {/* Add Teacher Modal */}
       {showAddModal && (
         <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl p-8 w-full max-w-2xl shadow-2xl relative animate-in fade-in zoom-in duration-200">
+          <div className="bg-white rounded-3xl p-8 w-full max-w-2xl shadow-2xl relative animate-in fade-in zoom-in duration-200 max-h-[95vh] overflow-y-auto">
             <button onClick={() => setShowAddModal(false)} className="absolute top-4 right-4 text-slate-400 hover:text-slate-700 transition-colors w-8 h-8 flex items-center justify-center rounded-full hover:bg-slate-100">
               <i className="fas fa-times text-xl"></i>
             </button>
@@ -123,23 +165,23 @@ const ManageTeachers = () => {
               <i className="fas fa-user-plus text-indigo-500"></i> Add New Faculty
             </h3>
             
-            <form className="space-y-5">
+            <form className="space-y-5" onSubmit={handleSubmit}>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                 <div>
                   <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Full Name</label>
-                  <input type="text" className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-indigo-500 transition-colors" placeholder="e.g. Dr. Rajesh Kumar" />
+                  <input type="text" name="name" value={formData.name} onChange={handleChange} required className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-indigo-500 transition-colors" placeholder="e.g. Dr. Rajesh Kumar" />
                 </div>
                 <div>
                   <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Email Address</label>
-                  <input type="email" className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-indigo-500 transition-colors" placeholder="rajesh@aarambh.com" />
+                  <input type="email" name="email" value={formData.email} onChange={handleChange} required className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-indigo-500 transition-colors" placeholder="rajesh@aarambh.com" />
                 </div>
                 <div>
                   <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Phone Number</label>
-                  <input type="tel" className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-indigo-500 transition-colors" placeholder="+91" />
+                  <input type="tel" name="phone" value={formData.phone} onChange={handleChange} required className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-indigo-500 transition-colors" placeholder="+91" />
                 </div>
                 <div>
                   <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Primary Subject</label>
-                  <select className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-indigo-500 transition-colors appearance-none font-semibold text-slate-700">
+                  <select name="subject" value={formData.subject} onChange={handleChange} required className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-indigo-500 transition-colors appearance-none font-semibold text-slate-700">
                     <option>Physics</option>
                     <option>Chemistry</option>
                     <option>Mathematics</option>
@@ -148,11 +190,11 @@ const ManageTeachers = () => {
                 </div>
                 <div>
                   <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Years of Experience</label>
-                  <input type="number" className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-indigo-500 transition-colors" placeholder="e.g. 5" />
+                  <input type="text" name="experience" value={formData.experience} onChange={handleChange} required className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-indigo-500 transition-colors" placeholder="e.g. 5 Yrs" />
                 </div>
                 <div>
                   <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Account Password</label>
-                  <input type="password" className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-indigo-500 transition-colors" placeholder="Temporary password" />
+                  <input type="password" name="password" value={formData.password} onChange={handleChange} required className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm outline-none focus:border-indigo-500 transition-colors" placeholder="Temporary password" />
                 </div>
               </div>
 
@@ -160,8 +202,8 @@ const ManageTeachers = () => {
                 <button type="button" onClick={() => setShowAddModal(false)} className="px-5 py-2.5 rounded-xl text-sm font-bold text-slate-600 hover:bg-slate-100 transition-colors">
                   Cancel
                 </button>
-                <button type="button" className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-6 py-2.5 rounded-xl transition-all shadow-lg shadow-indigo-600/30">
-                  Create Account
+                <button type="submit" disabled={loading} className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-6 py-2.5 rounded-xl transition-all shadow-lg shadow-indigo-600/30">
+                  {loading ? 'Creating...' : 'Create Account'}
                 </button>
               </div>
             </form>

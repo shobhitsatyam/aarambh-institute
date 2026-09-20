@@ -1,11 +1,17 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
 const Subject = () => {
-  const subjects = [
-    { id: 1, name: 'Physics', code: 'PHY-101', teacher: 'Prof. Sharma', progress: 65, totalChapters: 15, completedChapters: 10, color: 'indigo' },
-    { id: 2, name: 'Chemistry', code: 'CHE-101', teacher: 'Dr. Singh', progress: 40, totalChapters: 12, completedChapters: 5, color: 'emerald' },
-    { id: 3, name: 'Mathematics', code: 'MAT-101', teacher: 'Mr. Verma', progress: 80, totalChapters: 10, completedChapters: 8, color: 'rose' },
-  ];
+  // Using state to simulate fetching data. Empty for new users.
+  const [subjects, setSubjects] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    // Simulate API call
+    setTimeout(() => {
+      setSubjects([]); // No subjects for newly registered students
+      setLoading(false);
+    }, 500);
+  }, []);
 
   const colorMap = {
     indigo: {
@@ -52,68 +58,87 @@ const Subject = () => {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {subjects.map((sub) => {
-          const colors = colorMap[sub.color];
-          
-          return (
-            <div key={sub.id} className={`relative group rounded-[2rem] p-[2.5px] shadow-[0_8px_30px_rgba(0,0,0,0.04)] hover:-translate-y-2 transition-all duration-500 flex flex-col h-full ${colors.shadow}`}>
-              
-              {/* Animated Rotating Border */}
-              <div className="absolute inset-0 rounded-[2rem] overflow-hidden z-0">
-                 <div className="absolute -inset-[100%] animate-[spin_3s_linear_infinite] bg-[conic-gradient(from_0deg,transparent_70%,#6366f1_80%,#ec4899_100%)] opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-              </div>
+      {loading ? (
+        <div className="flex justify-center items-center h-64">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
+        </div>
+      ) : subjects.length > 0 ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {subjects.map((sub) => {
+            const colors = colorMap[sub.color];
+            
+            return (
+              <div key={sub.id} className={`relative group rounded-[2rem] p-[2.5px] shadow-[0_8px_30px_rgba(0,0,0,0.04)] hover:-translate-y-2 transition-all duration-500 flex flex-col h-full ${colors.shadow}`}>
+                
+                {/* Animated Rotating Border */}
+                <div className="absolute inset-0 rounded-[2rem] overflow-hidden z-0">
+                   <div className="absolute -inset-[100%] animate-[spin_3s_linear_infinite] bg-[conic-gradient(from_0deg,transparent_70%,#6366f1_80%,#ec4899_100%)] opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                </div>
 
-              {/* Actual Card Content */}
-              <div className="relative bg-white rounded-[calc(2rem-2px)] p-7 h-full flex flex-col z-10 border border-slate-100 group-hover:border-transparent transition-colors duration-500">
-                <div className="flex justify-between items-start mb-8">
-                  <div className={`w-14 h-14 rounded-2xl ${colors.light} ${colors.text} flex items-center justify-center text-2xl group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 shadow-sm border ${colors.border}`}>
-                    <i className="fas fa-book-open"></i>
-                  </div>
-                  <span className="bg-slate-50 border border-slate-200 text-slate-500 px-3 py-1.5 rounded-full text-[10px] font-black uppercase tracking-wider shadow-sm group-hover:bg-indigo-50 group-hover:text-indigo-600 transition-colors">
-                    {sub.code}
-                  </span>
-                </div>
-                
-                <h3 className={`font-black text-slate-800 text-2xl mb-2 group-hover:${colors.text} transition-colors`}>{sub.name}</h3>
-                <p className="text-sm font-semibold text-slate-500 mb-8 flex items-center gap-2">
-                  <i className={`fas fa-chalkboard-teacher ${colors.text} opacity-70`}></i> {sub.teacher}
-                </p>
-                
-                <div className="space-y-3 mt-auto">
-                  <div className="flex justify-between items-end text-sm">
-                    <span className="font-bold text-slate-600">Syllabus Progress</span>
-                    <span className={`font-black ${colors.text}`}>{sub.progress}%</span>
-                  </div>
-                  
-                  {/* Progress Bar */}
-                  <div className="w-full h-3 bg-slate-100 rounded-full overflow-hidden shadow-inner border border-slate-200/50">
-                    <div 
-                      className={`h-full ${colors.bgDark} rounded-full relative transition-all duration-1000 ease-out`}
-                      style={{ width: `${sub.progress}%` }}
-                    >
-                      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent w-full h-full animate-[shimmer_2s_infinite]"></div>
+                {/* Actual Card Content */}
+                <div className="relative bg-white rounded-[calc(2rem-2px)] p-7 h-full flex flex-col z-10 border border-slate-100 group-hover:border-transparent transition-colors duration-500">
+                  <div className="flex justify-between items-start mb-8">
+                    <div className={`w-14 h-14 rounded-2xl ${colors.light} ${colors.text} flex items-center justify-center text-2xl group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 shadow-sm border ${colors.border}`}>
+                      <i className="fas fa-book-open"></i>
                     </div>
+                    <span className="bg-slate-50 border border-slate-200 text-slate-500 px-3 py-1.5 rounded-full text-[10px] font-black uppercase tracking-wider shadow-sm group-hover:bg-indigo-50 group-hover:text-indigo-600 transition-colors">
+                      {sub.code}
+                    </span>
                   </div>
                   
-                  <p className="text-[11px] font-bold text-slate-400 text-right mt-1 tracking-wide uppercase">
-                    {sub.completedChapters} of {sub.totalChapters} Chapters
+                  <h3 className={`font-black text-slate-800 text-2xl mb-2 group-hover:${colors.text} transition-colors`}>{sub.name}</h3>
+                  <p className="text-sm font-semibold text-slate-500 mb-8 flex items-center gap-2">
+                    <i className={`fas fa-chalkboard-teacher ${colors.text} opacity-70`}></i> {sub.teacher}
                   </p>
-                </div>
-                
-                <div className="mt-8 pt-6 border-t border-slate-100 flex gap-3">
-                  <button className={`flex-1 ${colors.light} ${colors.text} ${colors.hoverBg} font-bold py-3 rounded-xl text-sm transition-all shadow-sm group-hover:shadow-md`}>
-                    View Syllabus
-                  </button>
-                  <button className={`flex-1 bg-white border border-slate-200 text-slate-600 hover:text-slate-800 hover:bg-slate-50 font-bold py-3 rounded-xl text-sm transition-all shadow-sm group-hover:shadow-md`}>
-                    Materials
-                  </button>
+                  
+                  <div className="space-y-3 mt-auto">
+                    <div className="flex justify-between items-end text-sm">
+                      <span className="font-bold text-slate-600">Syllabus Progress</span>
+                      <span className={`font-black ${colors.text}`}>{sub.progress}%</span>
+                    </div>
+                    
+                    {/* Progress Bar */}
+                    <div className="w-full h-3 bg-slate-100 rounded-full overflow-hidden shadow-inner border border-slate-200/50">
+                      <div 
+                        className={`h-full ${colors.bgDark} rounded-full relative transition-all duration-1000 ease-out`}
+                        style={{ width: `${sub.progress}%` }}
+                      >
+                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent w-full h-full animate-[shimmer_2s_infinite]"></div>
+                      </div>
+                    </div>
+                    
+                    <p className="text-[11px] font-bold text-slate-400 text-right mt-1 tracking-wide uppercase">
+                      {sub.completedChapters} of {sub.totalChapters} Chapters
+                    </p>
+                  </div>
+                  
+                  <div className="mt-8 pt-6 border-t border-slate-100 flex gap-3">
+                    <button onClick={() => alert("Modules will be available soon.")} className={`flex-1 ${colors.light} ${colors.text} ${colors.hoverBg} font-bold py-3 rounded-xl text-sm transition-all shadow-sm group-hover:shadow-md`}>
+                      View Modules
+                    </button>
+                    <button onClick={() => alert("Syllabus download starting...")} className={`flex-1 bg-white border border-slate-200 text-slate-600 hover:text-slate-800 hover:bg-slate-50 font-bold py-3 rounded-xl text-sm transition-all shadow-sm group-hover:shadow-md`}>
+                      Syllabus
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
-          );
-        })}
-      </div>
+            );
+          })}
+        </div>
+      ) : (
+        <div className="bg-white rounded-[2rem] border border-slate-100 p-12 text-center shadow-sm flex flex-col items-center justify-center min-h-[400px]">
+          <div className="w-24 h-24 bg-slate-50 rounded-full flex items-center justify-center mb-6">
+            <i className="fas fa-folder-open text-4xl text-slate-300"></i>
+          </div>
+          <h3 className="text-2xl font-black text-slate-800 mb-2 tracking-tight">No Subjects Assigned Yet</h3>
+          <p className="text-slate-500 font-medium max-w-md mx-auto mb-8">
+            You have just registered. The admin team is currently reviewing your profile and will assign you the relevant subjects shortly.
+          </p>
+          <button className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-8 py-3 rounded-xl transition-all shadow-lg shadow-indigo-600/30">
+            Refresh Status
+          </button>
+        </div>
+      )}
     </div>
   );
 };

@@ -6,10 +6,10 @@ const PendingAdmissions = () => {
   const navigate = useNavigate();
 
   const pendingList = [
-    { id: 'REQ-1001', name: 'Ravi Kumar', course: 'BBOSE 10th', date: 'Oct 24, 2026', phone: '+91 9876543210', email: 'ravi@example.com', prevSchool: 'Delhi Public School' },
-    { id: 'REQ-1002', name: 'Sneha Patel', course: 'NIOS 12th', date: 'Oct 23, 2026', phone: '+91 8765432109', email: 'sneha@example.com', prevSchool: 'Kendriya Vidyalaya' },
-    { id: 'REQ-1003', name: 'Arjun Singh', course: 'Medical Prep', date: 'Oct 22, 2026', phone: '+91 7654321098', email: 'arjun@example.com', prevSchool: 'St. Xaviers' },
-    { id: 'REQ-1004', name: 'Pooja Sharma', course: 'BOSSE 12th', date: 'Oct 20, 2026', phone: '+91 6543210987', email: 'pooja@example.com', prevSchool: 'DAV Public School' },
+    { id: 'REQ-1001', name: 'Ravi Kumar', course: 'BBOSE 10th', date: 'Oct 24, 2026', phone: '+91 9876543210', email: 'ravi@example.com', prevSchool: 'Delhi Public School', documents: [{ name: 'Aadhar_Card.pdf', type: 'pdf', url: '#' }, { name: 'Passport_Photo.jpg', type: 'image', url: '#' }] },
+    { id: 'REQ-1002', name: 'Sneha Patel', course: 'NIOS 12th', date: 'Oct 23, 2026', phone: '+91 8765432109', email: 'sneha@example.com', prevSchool: 'Kendriya Vidyalaya', documents: [{ name: 'Aadhar_Card.pdf', type: 'pdf', url: '#' }, { name: '10th_Marksheet.pdf', type: 'pdf', url: '#' }] },
+    { id: 'REQ-1003', name: 'Arjun Singh', course: 'Medical Prep', date: 'Oct 22, 2026', phone: '+91 7654321098', email: 'arjun@example.com', prevSchool: 'St. Xaviers', documents: [{ name: 'ID_Proof.pdf', type: 'pdf', url: '#' }] },
+    { id: 'REQ-1004', name: 'Pooja Sharma', course: 'BOSSE 12th', date: 'Oct 20, 2026', phone: '+91 6543210987', email: 'pooja@example.com', prevSchool: 'DAV Public School', documents: [{ name: 'Transfer_Certificate.pdf', type: 'pdf', url: '#' }, { name: 'Photo.jpg', type: 'image', url: '#' }] },
   ];
 
   return (
@@ -98,10 +98,22 @@ const PendingAdmissions = () => {
                       <button onClick={() => setSelectedStudent(student)} className="px-4 py-2.5 rounded-xl bg-white border border-slate-200/80 text-slate-600 hover:text-indigo-600 hover:border-indigo-200 hover:bg-indigo-50 font-bold text-xs transition-all shadow-sm hover:shadow-md hover:-translate-y-0.5">
                         <i className="fas fa-eye mr-1.5 opacity-70"></i> Review
                       </button>
-                      <button className="px-4 py-2.5 rounded-xl bg-emerald-50 text-emerald-600 hover:bg-emerald-600 hover:text-white font-bold text-xs transition-all shadow-sm hover:shadow-[0_8px_20px_rgba(16,185,129,0.25)] hover:-translate-y-0.5 group/btn">
+                      <button onClick={(e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    import('react-hot-toast').then(m => m.toast.success('Approved successfully!'));
+    const tr = e.target.closest('tr');
+    if(tr) tr.style.opacity = '0.5';
+  }}  className="px-4 py-2.5 rounded-xl bg-emerald-50 text-emerald-600 hover:bg-emerald-600 hover:text-white font-bold text-xs transition-all shadow-sm hover:shadow-[0_8px_20px_rgba(16,185,129,0.25)] hover:-translate-y-0.5 group/btn">
                         <i className="fas fa-check group-hover/btn:scale-110 transition-transform"></i>
                       </button>
-                      <button className="px-4 py-2.5 rounded-xl bg-rose-50 text-rose-600 hover:bg-rose-600 hover:text-white font-bold text-xs transition-all shadow-sm hover:shadow-[0_8px_20px_rgba(225,29,72,0.25)] hover:-translate-y-0.5 group/btn">
+                      <button onClick={(e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    import('react-hot-toast').then(m => m.toast.error('Rejected.'));
+    const tr = e.target.closest('tr');
+    if(tr) tr.style.display = 'none';
+  }}  className="px-4 py-2.5 rounded-xl bg-rose-50 text-rose-600 hover:bg-rose-600 hover:text-white font-bold text-xs transition-all shadow-sm hover:shadow-[0_8px_20px_rgba(225,29,72,0.25)] hover:-translate-y-0.5 group/btn">
                         <i className="fas fa-times group-hover/btn:scale-110 transition-transform"></i>
                       </button>
                     </div>
@@ -116,12 +128,12 @@ const PendingAdmissions = () => {
       {/* Review Application Modal */}
       {selectedStudent && (
         <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-md z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-[2rem] p-8 w-full max-w-2xl shadow-[0_20px_70px_rgba(0,0,0,0.2)] border border-white/20 relative animate-[zoomIn_0.3s_ease-out]">
+          <div className="bg-white rounded-[2rem] p-6 sm:p-8 w-full max-w-2xl shadow-[0_20px_70px_rgba(0,0,0,0.2)] border border-white/20 relative animate-[zoomIn_0.3s_ease-out] max-h-[95vh] overflow-y-auto">
             
             {/* Modal Glow effect */}
             <div className="absolute top-0 left-0 w-full h-32 bg-gradient-to-b from-indigo-50/50 to-transparent rounded-t-[2rem] pointer-events-none"></div>
 
-            <button onClick={() => setSelectedStudent(null)} className="absolute top-6 right-6 text-slate-400 hover:text-rose-500 hover:rotate-90 transition-all duration-300 w-10 h-10 flex items-center justify-center rounded-xl bg-slate-50 border border-slate-100 z-10">
+            <button onClick={() => setSelectedStudent(null)} className="absolute top-6 right-6 text-slate-400 hover:text-rose-500 hover:rotate-90 transition-all duration-300 w-10 h-10 flex items-center justify-center rounded-xl bg-slate-50 border border-slate-100 z-50">
               <i className="fas fa-times text-xl"></i>
             </button>
             
@@ -179,18 +191,18 @@ const PendingAdmissions = () => {
                 <i className="fas fa-paperclip text-slate-400"></i> Uploaded Documents
               </h5>
               <div className="flex flex-wrap gap-4">
-                <a href="#" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 px-5 py-3 bg-white border border-slate-200 rounded-2xl cursor-pointer hover:border-rose-300 hover:shadow-md hover:-translate-y-1 transition-all group">
-                  <div className="w-10 h-10 rounded-xl bg-rose-50 text-rose-500 flex items-center justify-center text-lg group-hover:scale-110 transition-transform">
-                    <i className="fas fa-file-pdf"></i>
-                  </div>
-                  <span className="text-sm font-bold text-slate-700">Aadhar_Card.pdf</span>
-                </a>
-                <a href="#" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 px-5 py-3 bg-white border border-slate-200 rounded-2xl cursor-pointer hover:border-emerald-300 hover:shadow-md hover:-translate-y-1 transition-all group">
-                  <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-500 flex items-center justify-center text-lg group-hover:scale-110 transition-transform">
-                    <i className="fas fa-image"></i>
-                  </div>
-                  <span className="text-sm font-bold text-slate-700">Passport_Photo.jpg</span>
-                </a>
+                {selectedStudent.documents && selectedStudent.documents.length > 0 ? (
+                  selectedStudent.documents.map((doc, i) => (
+                    <a key={i} href={doc.url} target="_blank" rel="noopener noreferrer" className={`flex items-center gap-3 px-5 py-3 bg-white border border-slate-200 rounded-2xl cursor-pointer hover:shadow-md hover:-translate-y-1 transition-all group ${doc.type === 'pdf' ? 'hover:border-rose-300' : 'hover:border-emerald-300'}`}>
+                      <div className={`w-10 h-10 rounded-xl flex items-center justify-center text-lg group-hover:scale-110 transition-transform ${doc.type === 'pdf' ? 'bg-rose-50 text-rose-500' : 'bg-emerald-50 text-emerald-500'}`}>
+                        <i className={`fas ${doc.type === 'pdf' ? 'fa-file-pdf' : 'fa-image'}`}></i>
+                      </div>
+                      <span className="text-sm font-bold text-slate-700">{doc.name}</span>
+                    </a>
+                  ))
+                ) : (
+                  <p className="text-sm text-slate-500 font-medium">No documents uploaded.</p>
+                )}
               </div>
             </div>
 
@@ -198,10 +210,27 @@ const PendingAdmissions = () => {
               <button onClick={() => setSelectedStudent(null)} className="w-full sm:w-auto px-6 py-3.5 rounded-xl text-sm font-bold text-slate-500 hover:bg-slate-100 hover:text-slate-700 transition-colors">
                 Cancel
               </button>
-              <button className="w-full sm:w-auto px-6 py-3.5 rounded-xl bg-rose-50 text-rose-600 hover:bg-rose-600 hover:text-white font-bold text-sm transition-all shadow-sm hover:shadow-[0_8px_20px_rgba(225,29,72,0.25)] hover:-translate-y-0.5 group">
+              <button onClick={(e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    import('react-hot-toast').then(m => m.toast.error('Rejected successfully.'));
+    const tr = e.target.closest('tr');
+    if(tr) tr.style.display = 'none';
+    const reviewModal = e.target.closest('.fixed.inset-0');
+    if(reviewModal) reviewModal.style.display = 'none';
+  }}  className="w-full sm:w-auto px-6 py-3.5 rounded-xl bg-rose-50 text-rose-600 hover:bg-rose-600 hover:text-white font-bold text-sm transition-all shadow-sm hover:shadow-[0_8px_20px_rgba(225,29,72,0.25)] hover:-translate-y-0.5 group">
                 <i className="fas fa-times mr-2 group-hover:rotate-90 transition-transform"></i> Reject 
               </button>
-              <button className="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-gradient-to-r from-emerald-500 to-emerald-400 hover:from-emerald-600 hover:to-emerald-500 text-white font-bold text-sm transition-all shadow-[0_8px_20px_rgba(16,185,129,0.3)] hover:shadow-[0_12px_25px_rgba(16,185,129,0.4)] hover:-translate-y-0.5 flex items-center gap-2 group">
+              <button onClick={(e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    import('react-hot-toast').then(m => m.toast.success('Approved successfully!'));
+    const tr = e.target.closest('tr');
+    if(tr) tr.style.opacity = '0.5';
+    // If it's a card (like PendingAdmissions review), close it
+    const reviewModal = e.target.closest('.fixed.inset-0');
+    if(reviewModal) reviewModal.style.display = 'none';
+  }}  className="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-gradient-to-r from-emerald-500 to-emerald-400 hover:from-emerald-600 hover:to-emerald-500 text-white font-bold text-sm transition-all shadow-[0_8px_20px_rgba(16,185,129,0.3)] hover:shadow-[0_12px_25px_rgba(16,185,129,0.4)] hover:-translate-y-0.5 flex items-center gap-2 group">
                 <i className="fas fa-check-circle group-hover:scale-110 transition-transform"></i> Approve & Create Account
               </button>
             </div>

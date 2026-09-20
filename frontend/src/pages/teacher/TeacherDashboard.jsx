@@ -1,35 +1,51 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import api from '../../services/api';
 
 const TeacherDashboard = () => {
-  // Mock Data
+  const [dashboardData, setDashboardData] = useState({
+    teacherName: 'Teacher',
+    upcomingClasses: [],
+    totalStudentsAssigned: 0,
+    pendingDoubts: 0,
+    assignmentsToGrade: 0
+  });
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchDashboard = async () => {
+      try {
+        const response = await api.get('/teacher/dashboard');
+        if (response.data.success) {
+          setDashboardData(response.data.data);
+        }
+      } catch (error) {
+        console.error("Failed to fetch teacher dashboard stats", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchDashboard();
+  }, []);
+
   const stats = [
-    { label: 'Classes Today', value: '3', icon: 'fa-chalkboard', color: 'text-sky-500', bg: 'bg-sky-100' },
-    { label: 'Pending Grading', value: '24', icon: 'fa-tasks', color: 'text-amber-500', bg: 'bg-amber-100' },
-    { label: 'Total Students', value: '156', icon: 'fa-user-graduate', color: 'text-purple-500', bg: 'bg-purple-100' },
-    { label: 'Average Attendance', value: '92%', icon: 'fa-chart-pie', color: 'text-emerald-500', bg: 'bg-emerald-100' },
+    { label: 'Classes Today', value: dashboardData.upcomingClasses.length || 0, icon: 'fa-chalkboard', color: 'text-sky-500', bg: 'bg-sky-100' },
+    { label: 'Pending Grading', value: dashboardData.assignmentsToGrade, icon: 'fa-tasks', color: 'text-amber-500', bg: 'bg-amber-100' },
+    { label: 'Total Students', value: dashboardData.totalStudentsAssigned, icon: 'fa-user-graduate', color: 'text-purple-500', bg: 'bg-purple-100' },
+    { label: 'Pending Doubts', value: dashboardData.pendingDoubts, icon: 'fa-question-circle', color: 'text-emerald-500', bg: 'bg-emerald-100' },
   ];
 
-  const schedule = [
-    { time: '09:00 AM', duration: '1.5 hr', title: 'Mathematics 101 - Section A', type: 'Live Class', link: '#' },
-    { time: '11:30 AM', duration: '1 hr', title: 'Physics Fundamentals', type: 'Doubt Clearing', link: '#' },
-    { time: '02:00 PM', duration: '2 hr', title: 'Advanced Calculus', type: 'Live Class', link: '#' },
-  ];
+  const recentSubmissions = [];
 
-  const recentSubmissions = [
-    { student: 'Aditya Ravi', assignment: 'Calculus Ch-4', time: '10 mins ago' },
-    { student: 'Priya Singh', assignment: 'Physics Lab Report', time: '1 hour ago' },
-    { student: 'Rahul Sharma', assignment: 'Calculus Ch-4', time: '2 hours ago' },
-    { student: 'Neha Gupta', assignment: 'Physics Lab Report', time: '3 hours ago' },
-  ];
+  if (loading) return <div className="p-8 flex justify-center"><div className="animate-spin text-sky-500 text-3xl"><i className="fas fa-circle-notch"></i></div></div>;
 
   return (
     <>
       {/* Welcome Banner */}
       <div className="premium-glass-card p-8 mb-8 flex flex-col md:flex-row items-center justify-between">
         <div className="relative z-10">
-          <h2 className="text-2xl font-bold text-slate-800 mb-2">Good Morning, Prof. Sharma! ☀️</h2>
-          <p className="text-slate-500 text-sm">You have 3 classes scheduled for today and 24 assignments waiting to be graded.</p>
+          <h2 className="text-2xl font-bold text-slate-800 mb-2">Good Morning, {dashboardData.teacherName}! ☀️</h2>
+          <p className="text-slate-500 text-sm">You have {dashboardData.upcomingClasses.length} classes scheduled and {dashboardData.assignmentsToGrade} assignments waiting to be graded.</p>
         </div>
         <div className="mt-6 md:mt-0 relative z-10 flex gap-4">
           <button className="bg-sky-50 hover:bg-sky-100 text-sky-600 px-5 py-2.5 rounded-full text-sm font-bold transition-colors shadow-sm">
@@ -69,17 +85,19 @@ const TeacherDashboard = () => {
             </div>
             
             <div className="space-y-4">
-              {schedule.map((item, idx) => (
+              {dashboardData.upcomingClasses.length === 0 ? (
+                <div className="text-center py-8 text-slate-500">No upcoming classes scheduled.</div>
+              ) : dashboardData.upcomingClasses.map((item, idx) => (
                 <div key={idx} className="flex flex-col sm:flex-row gap-4 p-4 rounded-xl border border-slate-100 hover:border-sky-100 hover:bg-sky-50/30 transition-colors group">
                   <div className="sm:w-32 flex flex-col justify-center shrink-0">
                     <span className="text-lg font-bold text-slate-800">{item.time}</span>
-                    <span className="text-xs font-semibold text-slate-500">{item.duration}</span>
+                    <span className="text-xs font-semibold text-slate-500">Live Class</span>
                   </div>
                   <div className="w-1 h-auto bg-slate-200 rounded-full hidden sm:block group-hover:bg-sky-300 transition-colors"></div>
                   <div className="flex-1 flex flex-col justify-center">
-                    <h4 className="font-bold text-slate-800 mb-1">{item.title}</h4>
+                    <h4 className="font-bold text-slate-800 mb-1">{item.subject}</h4>
                     <span className="text-xs font-semibold text-sky-600 bg-sky-100 px-2 py-0.5 rounded-full inline-block w-max mb-3 sm:mb-0">
-                      {item.type}
+                      {item.topic}
                     </span>
                   </div>
                   <div className="flex items-center sm:justify-end shrink-0">
@@ -102,20 +120,24 @@ const TeacherDashboard = () => {
             </div>
             
             <div className="flex-1 space-y-5">
-              {recentSubmissions.map((sub, idx) => (
-                <div key={idx} className="flex items-center justify-between group cursor-pointer">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 group-hover:bg-sky-100 group-hover:text-sky-600 transition-colors">
-                      <i className="fas fa-file-alt"></i>
+              {recentSubmissions.length === 0 ? (
+                <div className="text-center py-6 text-slate-500 text-sm">No recent submissions to review.</div>
+              ) : (
+                recentSubmissions.map((sub, idx) => (
+                  <div key={idx} className="flex items-center justify-between group cursor-pointer">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 group-hover:bg-sky-100 group-hover:text-sky-600 transition-colors">
+                        <i className="fas fa-file-alt"></i>
+                      </div>
+                      <div>
+                        <p className="text-sm font-bold text-slate-800 group-hover:text-sky-600 transition-colors">{sub.student}</p>
+                        <p className="text-xs font-medium text-slate-500">{sub.assignment}</p>
+                      </div>
                     </div>
-                    <div>
-                      <p className="text-sm font-bold text-slate-800 group-hover:text-sky-600 transition-colors">{sub.student}</p>
-                      <p className="text-xs font-medium text-slate-500">{sub.assignment}</p>
-                    </div>
+                    <span className="text-xs font-semibold text-slate-400">{sub.time}</span>
                   </div>
-                  <span className="text-xs font-semibold text-slate-400">{sub.time}</span>
-                </div>
-              ))}
+                ))
+              )}
             </div>
             
             <button className="w-full mt-6 py-2.5 rounded-xl border-2 border-dashed border-slate-200 text-slate-500 font-bold text-sm hover:border-sky-300 hover:text-sky-600 transition-colors">

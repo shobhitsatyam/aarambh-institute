@@ -1,8 +1,36 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import api from '../../services/api';
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(true);
+  const [stats, setStats] = useState({
+    activeStudents: 0,
+    monthlyRevenue: 0,
+    openTickets: 0,
+    newQueries: 0,
+    liveClassesToday: [],
+    recentLeads: []
+  });
+
+  useEffect(() => {
+    const fetchDashboard = async () => {
+      try {
+        const response = await api.get('/admin/dashboard');
+        if (response.data.success) {
+          setStats(response.data.data);
+        }
+      } catch (error) {
+        console.error("Failed to fetch admin stats", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchDashboard();
+  }, []);
+
+  if (loading) return <div className="p-8 flex justify-center"><div className="animate-spin text-indigo-500 text-3xl"><i className="fas fa-circle-notch"></i></div></div>;
 
   return (
     <div>
@@ -23,7 +51,7 @@ const AdminDashboard = () => {
               <i className="fas fa-arrow-up"></i> 12%
             </span>
           </div>
-          <h3 className="text-3xl font-black text-slate-800 mb-1">1,248</h3>
+          <h3 className="text-3xl font-black text-slate-800 mb-1">{stats.activeStudents}</h3>
           <p className="text-sm font-bold text-slate-400 uppercase tracking-wider">Active Students</p>
         </div>
 
@@ -33,11 +61,11 @@ const AdminDashboard = () => {
               <i className="fas fa-rupee-sign"></i>
             </div>
             <span className="text-emerald-500 font-bold text-sm bg-emerald-50 px-2 py-0.5 rounded flex items-center gap-1">
-              <i className="fas fa-arrow-up"></i> 8%
+              <i className="fas fa-arrow-up"></i> Live
             </span>
           </div>
-          <h3 className="text-3xl font-black text-slate-800 mb-1">₹4.2L</h3>
-          <p className="text-sm font-bold text-slate-400 uppercase tracking-wider">Revenue This Month</p>
+          <h3 className="text-3xl font-black text-slate-800 mb-1">₹{parseFloat(stats.monthlyRevenue).toLocaleString('en-IN', { maximumFractionDigits: 0 })}</h3>
+          <p className="text-sm font-bold text-slate-400 uppercase tracking-wider">Total Revenue</p>
         </div>
 
         <div className="premium-glass-card p-6 group">
@@ -46,10 +74,10 @@ const AdminDashboard = () => {
               <i className="fas fa-headset"></i>
             </div>
             <span className="text-rose-500 font-bold text-sm bg-rose-50 px-2 py-0.5 rounded flex items-center gap-1">
-              3 High Prio
+              Live
             </span>
           </div>
-          <h3 className="text-3xl font-black text-slate-800 mb-1">24</h3>
+          <h3 className="text-3xl font-black text-slate-800 mb-1">{stats.openTickets}</h3>
           <p className="text-sm font-bold text-slate-400 uppercase tracking-wider">Open Tickets</p>
         </div>
 
@@ -59,7 +87,7 @@ const AdminDashboard = () => {
               <i className="fas fa-question-circle"></i>
             </div>
           </div>
-          <h3 className="text-3xl font-black text-slate-800 mb-1">15</h3>
+          <h3 className="text-3xl font-black text-slate-800 mb-1">{stats.newQueries}</h3>
           <p className="text-sm font-bold text-slate-400 uppercase tracking-wider">New Queries</p>
         </div>
       </div>
@@ -111,31 +139,26 @@ const AdminDashboard = () => {
             </div>
             <div className="p-6">
               <div className="space-y-4">
-                <div className="flex gap-4 p-4 rounded-2xl bg-indigo-50/50 border border-indigo-100 items-center">
-                  <div className="text-center w-20">
-                    <p className="text-xs font-bold text-indigo-400">10:00 AM</p>
-                  </div>
-                  <div className="flex-1">
-                    <h4 className="font-bold text-slate-800">Physics - Kinematics</h4>
-                    <p className="text-xs font-semibold text-slate-500">BBOSE 10th Morning • Prof. Sharma</p>
-                  </div>
-                  <div>
-                    <span className="bg-emerald-100 text-emerald-600 px-3 py-1 rounded-full text-xs font-bold animate-pulse">Live</span>
-                  </div>
-                </div>
-
-                <div className="flex gap-4 p-4 rounded-2xl bg-slate-50 border border-slate-100 items-center">
-                  <div className="text-center w-20">
-                    <p className="text-xs font-bold text-slate-400">12:00 PM</p>
-                  </div>
-                  <div className="flex-1">
-                    <h4 className="font-bold text-slate-800">Chemistry - Organic</h4>
-                    <p className="text-xs font-semibold text-slate-500">NIOS 12th • Dr. Singh</p>
-                  </div>
-                  <div>
-                    <span className="bg-white text-slate-500 border border-slate-200 px-3 py-1 rounded-full text-xs font-bold">Upcoming</span>
-                  </div>
-                </div>
+                {stats.liveClassesToday.length === 0 ? (
+                  <div className="text-center py-6 text-slate-500">No live classes scheduled for today.</div>
+                ) : (
+                  stats.liveClassesToday.map((cls, idx) => (
+                    <div key={idx} className="flex gap-4 p-4 rounded-2xl bg-slate-50 border border-slate-100 items-center">
+                      <div className="text-center w-20">
+                        <p className="text-xs font-bold text-slate-400">{cls.time}</p>
+                      </div>
+                      <div className="flex-1">
+                        <h4 className="font-bold text-slate-800">{cls.subject}</h4>
+                        <p className="text-xs font-semibold text-slate-500">{cls.topic || 'Regular Class'}</p>
+                      </div>
+                      <div>
+                        <span className={`px-3 py-1 rounded-full text-xs font-bold ${cls.status === 'Live' ? 'bg-emerald-100 text-emerald-600 animate-pulse' : 'bg-white text-slate-500 border border-slate-200'}`}>
+                          {cls.status}
+                        </span>
+                      </div>
+                    </div>
+                  ))
+                )}
               </div>
             </div>
           </div>
@@ -177,27 +200,22 @@ const AdminDashboard = () => {
             </div>
             <div className="p-6 space-y-4">
               
-              <div className="flex gap-3 items-start border-b border-slate-50 pb-4">
-                <div className="w-8 h-8 rounded-full bg-indigo-50 text-indigo-500 flex items-center justify-center shrink-0">
-                  <i className="fas fa-envelope"></i>
-                </div>
-                <div>
-                  <h4 className="text-sm font-bold text-slate-800">Rahul Sharma</h4>
-                  <p className="text-xs text-slate-500 mt-0.5 line-clamp-1">Inquiry for Medical Prep batches...</p>
-                  <p className="text-[10px] font-bold text-slate-400 mt-1 uppercase">2 hrs ago • Contact Form</p>
-                </div>
-              </div>
-
-              <div className="flex gap-3 items-start border-b border-slate-50 pb-4">
-                <div className="w-8 h-8 rounded-full bg-emerald-50 text-emerald-500 flex items-center justify-center shrink-0">
-                  <i className="fas fa-user-plus"></i>
-                </div>
-                <div>
-                  <h4 className="text-sm font-bold text-slate-800">Priya Singh</h4>
-                  <p className="text-xs text-slate-500 mt-0.5 line-clamp-1">Submitted registration form online.</p>
-                  <p className="text-[10px] font-bold text-slate-400 mt-1 uppercase">5 hrs ago • Registration</p>
-                </div>
-              </div>
+              {stats.recentLeads.length === 0 ? (
+                <div className="text-center py-6 text-slate-500">No recent leads found.</div>
+              ) : (
+                stats.recentLeads.map((lead, idx) => (
+                  <div key={idx} className="flex gap-3 items-start border-b border-slate-50 pb-4">
+                    <div className="w-8 h-8 rounded-full bg-indigo-50 text-indigo-500 flex items-center justify-center shrink-0">
+                      <i className="fas fa-envelope"></i>
+                    </div>
+                    <div>
+                      <h4 className="text-sm font-bold text-slate-800">{lead.name}</h4>
+                      <p className="text-xs text-slate-500 mt-0.5 line-clamp-1">{lead.message}</p>
+                      <p className="text-[10px] font-bold text-slate-400 mt-1 uppercase">{lead.time} • Contact Form</p>
+                    </div>
+                  </div>
+                ))
+              )}
 
               <button onClick={() => navigate('/admin/queries')} className="w-full text-indigo-600 font-bold text-sm hover:underline mt-2">
                 View All Leads
