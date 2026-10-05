@@ -2,24 +2,35 @@ require('dotenv').config();
 const mysql = require('mysql2/promise');
 
 async function initializeDatabase() {
+  let connection;
+
   try {
-    // Connect without database to create it if it doesn't exist
-    const connection = await mysql.createConnection({
+    // Connect to MySQL server
+    connection = await mysql.createConnection({
       host: process.env.DB_HOST || 'localhost',
+      port: Number(process.env.DB_PORT) || 3307,
       user: process.env.DB_USER || 'root',
-      password: process.env.DB_PASSWORD || 'Ravi@12345'
+      password: process.env.DB_PASSWORD || ''
     });
 
     console.log('Connected to MySQL server.');
 
+    const databaseName = process.env.DB_NAME || 'aarambh_db';
+
     // Create database
-    await connection.query(`CREATE DATABASE IF NOT EXISTS \`${process.env.DB_NAME || 'aarambh_db'}\``);
-    console.log(`Database aarambh_db created or already exists.`);
+    await connection.query(
+      `CREATE DATABASE IF NOT EXISTS \`${databaseName}\``
+    );
+
+    console.log(`${databaseName} database created or already exists.`);
 
     // Switch to database
-    await connection.query(`USE \`${process.env.DB_NAME || 'aarambh_db'}\``);
+    await connection.query(`USE \`${databaseName}\``);
 
-    // Create users table
+    // ==========================================
+    // USERS TABLE
+    // ==========================================
+
     const createUsersTable = `
       CREATE TABLE IF NOT EXISTS users (
         id INT AUTO_INCREMENT PRIMARY KEY,
@@ -32,10 +43,14 @@ async function initializeDatabase() {
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       )
     `;
+
     await connection.query(createUsersTable);
     console.log('Users table created or already exists.');
 
-    // Create otps table
+    // ==========================================
+    // OTPs TABLE
+    // ==========================================
+
     const createOtpsTable = `
       CREATE TABLE IF NOT EXISTS otps (
         id INT AUTO_INCREMENT PRIMARY KEY,
@@ -45,10 +60,30 @@ async function initializeDatabase() {
         type VARCHAR(20) NOT NULL
       )
     `;
+
     await connection.query(createOtpsTable);
     console.log('OTPs table created or already exists.');
 
-    // Create attendance table
+    // ==========================================
+    // OTP RATE LIMITS TABLE
+    // ==========================================
+
+    const createOtpRateLimitsTable = `
+      CREATE TABLE IF NOT EXISTS otp_rate_limits (
+        email VARCHAR(100) NOT NULL PRIMARY KEY,
+        attempts INT NOT NULL DEFAULT 0,
+        last_attempt DATETIME NOT NULL,
+        block_until DATETIME DEFAULT NULL
+      )
+    `;
+
+    await connection.query(createOtpRateLimitsTable);
+    console.log('OTP Rate Limits table created or already exists.');
+
+    // ==========================================
+    // ATTENDANCE TABLE
+    // ==========================================
+
     const createAttendanceTable = `
       CREATE TABLE IF NOT EXISTS attendance (
         id INT AUTO_INCREMENT PRIMARY KEY,
@@ -61,10 +96,14 @@ async function initializeDatabase() {
         FOREIGN KEY (student_id) REFERENCES users(id) ON DELETE CASCADE
       )
     `;
+
     await connection.query(createAttendanceTable);
     console.log('Attendance table created or already exists.');
 
-    // Create student_fees table
+    // ==========================================
+    // STUDENT FEES TABLE
+    // ==========================================
+
     const createStudentFeesTable = `
       CREATE TABLE IF NOT EXISTS student_fees (
         id INT AUTO_INCREMENT PRIMARY KEY,
@@ -76,10 +115,14 @@ async function initializeDatabase() {
         FOREIGN KEY (student_id) REFERENCES users(id) ON DELETE CASCADE
       )
     `;
+
     await connection.query(createStudentFeesTable);
     console.log('Student Fees table created or already exists.');
 
-    // Create fee_installments table
+    // ==========================================
+    // FEE INSTALLMENTS TABLE
+    // ==========================================
+
     const createFeeInstallmentsTable = `
       CREATE TABLE IF NOT EXISTS fee_installments (
         id INT AUTO_INCREMENT PRIMARY KEY,
@@ -92,10 +135,14 @@ async function initializeDatabase() {
         FOREIGN KEY (student_id) REFERENCES users(id) ON DELETE CASCADE
       )
     `;
+
     await connection.query(createFeeInstallmentsTable);
     console.log('Fee Installments table created or already exists.');
 
-    // Create tickets table
+    // ==========================================
+    // TICKETS TABLE
+    // ==========================================
+
     const createTicketsTable = `
       CREATE TABLE IF NOT EXISTS tickets (
         id INT AUTO_INCREMENT PRIMARY KEY,
@@ -110,10 +157,14 @@ async function initializeDatabase() {
         FOREIGN KEY (student_id) REFERENCES users(id) ON DELETE CASCADE
       )
     `;
+
     await connection.query(createTicketsTable);
     console.log('Tickets table created or already exists.');
 
-    // Create doubts table
+    // ==========================================
+    // DOUBTS TABLE
+    // ==========================================
+
     const createDoubtsTable = `
       CREATE TABLE IF NOT EXISTS doubts (
         id INT AUTO_INCREMENT PRIMARY KEY,
@@ -127,10 +178,14 @@ async function initializeDatabase() {
         FOREIGN KEY (student_id) REFERENCES users(id) ON DELETE CASCADE
       )
     `;
+
     await connection.query(createDoubtsTable);
     console.log('Doubts table created or already exists.');
 
-    // Create program_change_requests table
+    // ==========================================
+    // PROGRAM CHANGE REQUESTS TABLE
+    // ==========================================
+
     const createProgramChangeRequestsTable = `
       CREATE TABLE IF NOT EXISTS program_change_requests (
         id INT AUTO_INCREMENT PRIMARY KEY,
@@ -143,14 +198,18 @@ async function initializeDatabase() {
         FOREIGN KEY (student_id) REFERENCES users(id) ON DELETE CASCADE
       )
     `;
+
     await connection.query(createProgramChangeRequestsTable);
     console.log('Program Change Requests table created or already exists.');
 
-    // Create notifications table
+    // ==========================================
+    // NOTIFICATIONS TABLE
+    // ==========================================
+
     const createNotificationsTable = `
       CREATE TABLE IF NOT EXISTS notifications (
         id INT AUTO_INCREMENT PRIMARY KEY,
-        student_id INT, -- NULL means broadcast to all
+        student_id INT DEFAULT NULL,
         type VARCHAR(50) NOT NULL,
         title VARCHAR(200) NOT NULL,
         message TEXT NOT NULL,
@@ -159,10 +218,14 @@ async function initializeDatabase() {
         FOREIGN KEY (student_id) REFERENCES users(id) ON DELETE CASCADE
       )
     `;
+
     await connection.query(createNotificationsTable);
     console.log('Notifications table created or already exists.');
 
-    // Create feedback table
+    // ==========================================
+    // FEEDBACK TABLE
+    // ==========================================
+
     const createFeedbackTable = `
       CREATE TABLE IF NOT EXISTS feedback (
         id INT AUTO_INCREMENT PRIMARY KEY,
@@ -175,10 +238,14 @@ async function initializeDatabase() {
         FOREIGN KEY (student_id) REFERENCES users(id) ON DELETE CASCADE
       )
     `;
+
     await connection.query(createFeedbackTable);
     console.log('Feedback table created or already exists.');
 
-    // Create classes table
+    // ==========================================
+    // CLASSES TABLE
+    // ==========================================
+
     const createClassesTable = `
       CREATE TABLE IF NOT EXISTS classes (
         id INT AUTO_INCREMENT PRIMARY KEY,
@@ -193,10 +260,14 @@ async function initializeDatabase() {
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       )
     `;
+
     await connection.query(createClassesTable);
     console.log('Classes table created or already exists.');
 
-    // Create study_materials table
+    // ==========================================
+    // STUDY MATERIALS TABLE
+    // ==========================================
+
     const createStudyMaterialsTable = `
       CREATE TABLE IF NOT EXISTS study_materials (
         id INT AUTO_INCREMENT PRIMARY KEY,
@@ -210,10 +281,14 @@ async function initializeDatabase() {
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       )
     `;
+
     await connection.query(createStudyMaterialsTable);
     console.log('Study Materials table created or already exists.');
 
-    // Create purchased_materials table
+    // ==========================================
+    // PURCHASED MATERIALS TABLE
+    // ==========================================
+
     const createPurchasedMaterialsTable = `
       CREATE TABLE IF NOT EXISTS purchased_materials (
         id INT AUTO_INCREMENT PRIMARY KEY,
@@ -226,10 +301,14 @@ async function initializeDatabase() {
         UNIQUE KEY unique_purchase (student_id, material_id)
       )
     `;
+
     await connection.query(createPurchasedMaterialsTable);
     console.log('Purchased Materials table created or already exists.');
 
-    // Create courses table
+    // ==========================================
+    // COURSES TABLE
+    // ==========================================
+
     const createCoursesTable = `
       CREATE TABLE IF NOT EXISTS courses (
         id INT AUTO_INCREMENT PRIMARY KEY,
@@ -244,25 +323,33 @@ async function initializeDatabase() {
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       )
     `;
+
     await connection.query(createCoursesTable);
     console.log('Courses table created or already exists.');
 
-    // Create purchased_courses table
+    // ==========================================
+    // PURCHASED COURSES TABLE
+    // ==========================================
+
     const createPurchasedCoursesTable = `
       CREATE TABLE IF NOT EXISTS purchased_courses (
         id INT AUTO_INCREMENT PRIMARY KEY,
         student_id INT NOT NULL,
         course_id INT NOT NULL,
-        price_paid DECIMAL(10,2) DEFAULT 0.00,
+        price_paid DECIMAL(10, 2) DEFAULT 0.00,
         purchased_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (student_id) REFERENCES users(id),
         FOREIGN KEY (course_id) REFERENCES courses(id)
       )
     `;
+
     await connection.query(createPurchasedCoursesTable);
     console.log('Purchased Courses table created or already exists.');
 
-    // Create exams table
+    // ==========================================
+    // EXAMS TABLE
+    // ==========================================
+
     const createExamsTable = `
       CREATE TABLE IF NOT EXISTS exams (
         id INT AUTO_INCREMENT PRIMARY KEY,
@@ -276,13 +363,22 @@ async function initializeDatabase() {
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       )
     `;
+
     await connection.query(createExamsTable);
     console.log('Exams table created or already exists.');
 
     console.log('Database initialization completed successfully.');
+
+    await connection.end();
     process.exit(0);
+
   } catch (error) {
     console.error('Error initializing database:', error);
+
+    if (connection) {
+      await connection.end();
+    }
+
     process.exit(1);
   }
 }
