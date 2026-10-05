@@ -180,7 +180,7 @@ exports.login = async (req, res) => {
         role: user.role || 'student',
         session_token: sessionToken
       },
-      process.env.JWT_SECRET || 'super_secret_key',
+      process.env.JWT_SECRET,
       { expiresIn: '24h' }
     );
 
