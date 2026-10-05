@@ -40,6 +40,7 @@ async function initializeDatabase() {
         board VARCHAR(50) NOT NULL,
         class VARCHAR(50) NOT NULL,
         password VARCHAR(255) NOT NULL,
+        session_token VARCHAR(255) DEFAULT NULL,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       )
     `;
@@ -55,9 +56,11 @@ async function initializeDatabase() {
       CREATE TABLE IF NOT EXISTS otps (
         id INT AUTO_INCREMENT PRIMARY KEY,
         email VARCHAR(100) NOT NULL,
-        otp VARCHAR(6) NOT NULL,
+        otp VARCHAR(255) NOT NULL,
+        attempts INT NOT NULL DEFAULT 0,
         expires_at DATETIME NOT NULL,
-        type VARCHAR(20) NOT NULL
+        type VARCHAR(50) NOT NULL,
+        INDEX idx_otps_email_type (email, type)
       )
     `;
 
