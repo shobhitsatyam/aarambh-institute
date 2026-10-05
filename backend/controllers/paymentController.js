@@ -4,10 +4,9 @@ const db = require('../config/db');
 const { sendInvoice } = require('../utils/emailService');
 
 // Initialize Razorpay
-// Note: We fallback to test keys if environment variables aren't set yet
 const razorpayInstance = new Razorpay({
-  key_id: process.env.RAZORPAY_KEY_ID || 'rzp_test_placeholder',
-  key_secret: process.env.RAZORPAY_KEY_SECRET || 'secret_placeholder'
+  key_id: process.env.RAZORPAY_KEY_ID,
+  key_secret: process.env.RAZORPAY_KEY_SECRET
 });
 
 exports.createOrder = async (req, res) => {
@@ -53,7 +52,7 @@ exports.verifyPayment = async (req, res) => {
       amountPaid
     } = req.body;
 
-    const secret = process.env.RAZORPAY_KEY_SECRET || 'secret_placeholder';
+    const secret = process.env.RAZORPAY_KEY_SECRET;
 
     // Verify Signature
     const generated_signature = crypto
@@ -62,13 +61,7 @@ exports.verifyPayment = async (req, res) => {
       .digest('hex');
 
     if (generated_signature !== razorpay_signature) {
-      // In development with placeholder keys, the signature will fail unless we are bypassing.
-      // If we are strictly using placeholders, let's allow it to pass ONLY if it's the placeholder key.
-      if (secret !== 'secret_placeholder') {
-        return res.status(400).json({ success: false, message: 'Invalid payment signature' });
-      } else {
-        console.warn('⚠️ WARNING: Bypassing signature verification because placeholder secret is active.');
-      }
+      return res.status(400).json({ success: false, message: 'Invalid payment signature' });
     }
 
     // Payment is verified. Now unlock the content in the database.
