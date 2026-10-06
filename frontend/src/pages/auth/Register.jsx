@@ -13,6 +13,7 @@ const Register = () => {
   // OTP Specific States
   const [otpTimer, setOtpTimer] = useState(0);
   const [emailVerified, setEmailVerified] = useState(false);
+  const [registrationToken, setRegistrationToken] = useState('');
   const [otpLoading, setOtpLoading] = useState(false);
 
   const navigate = useNavigate();
@@ -107,6 +108,9 @@ const Register = () => {
       if (data.success || res.ok) {
         showAlert('Email verified successfully! You can now register.', 'success');
         setEmailVerified(true);
+        if (data.registrationToken) {
+          setRegistrationToken(data.registrationToken);
+        }
       } else {
         showAlert(data.message || 'Invalid OTP', 'error');
         setErrors({ otp: data.message });
@@ -140,7 +144,7 @@ const Register = () => {
       const res = await fetch('/api/auth/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
+        body: JSON.stringify({ ...formData, registrationToken })
       });
       const data = await res.json();
 
