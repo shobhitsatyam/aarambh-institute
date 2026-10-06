@@ -43,7 +43,11 @@ require_once __DIR__ . '/PHPMailer/src/SMTP.php';
 
 function getAuthSecret()
 {
-    return getenv('AUTH_PEPPER') ?: (getenv('JWT_SECRET') ?: (defined('AUTH_PEPPER') ? AUTH_PEPPER : 'aarambh_live_php_auth_secret_key_v1'));
+    $secret = getenv('AUTH_PEPPER') ?: (defined('AUTH_PEPPER') ? AUTH_PEPPER : null);
+    if (empty($secret)) {
+        throw new RuntimeException('AUTH_PEPPER is not configured. Authentication cannot proceed safely.');
+    }
+    return $secret;
 }
 
 function hashOTP($email, $otp)
