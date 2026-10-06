@@ -21,6 +21,7 @@ if (empty($_SESSION['csrf_token'])) {
 
 ob_start();
 
+require_once dirname(__DIR__) . '/auth_secrets.php';
 require_once __DIR__ . '/base-path.php';
 require_once __DIR__ . '/includes/header.php';
 require_once __DIR__ . '/config/connection.php';

@@ -20,6 +20,7 @@ if (empty($_SESSION['csrf_token'])) {
     $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
 }
 
+require_once dirname(__DIR__) . '/auth_secrets.php';
 require_once __DIR__ . '/base-path.php';
 require_once __DIR__ . '/config/connection.php';
 
