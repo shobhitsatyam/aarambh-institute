@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { API_BASE_URL } from '../../api';
 import './ForgotPassword.css';
 
 const ForgotPassword = () => {
@@ -43,7 +44,7 @@ const ForgotPassword = () => {
     setLoading(true);
     try {
       // Replace with your Node.js endpoint
-      const res = await fetch('/api/auth/forgot-password/send-otp', {
+      const res = await fetch(`${API_BASE_URL}/api/auth/forgot-password/send-otp`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email })
@@ -71,7 +72,7 @@ const ForgotPassword = () => {
 
     setLoading(true);
     try {
-      const res = await fetch('/api/auth/forgot-password/verify-otp', {
+      const res = await fetch(`${API_BASE_URL}/api/auth/forgot-password/verify-otp`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, otp })
@@ -104,7 +105,7 @@ const ForgotPassword = () => {
 
     setLoading(true);
     try {
-      const res = await fetch('/api/auth/forgot-password/reset', {
+      const res = await fetch(`${API_BASE_URL}/api/auth/forgot-password/reset`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password: passwords.new })

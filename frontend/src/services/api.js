@@ -1,7 +1,10 @@
 import axios from 'axios';
+import { API_BASE_URL } from '../api';
+
+export { API_BASE_URL };
 
 const api = axios.create({
-  baseURL: '/api',
+  baseURL: `${API_BASE_URL}/api`,
 });
 
 // Request interceptor to inject JWT token

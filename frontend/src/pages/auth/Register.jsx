@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { API_BASE_URL } from '../../api';
 import './Register.css';
 
 const Register = () => {
@@ -71,7 +72,7 @@ const Register = () => {
 
     setOtpLoading(true);
     try {
-      const res = await fetch('/api/auth/register/send-otp', {
+      const res = await fetch(`${API_BASE_URL}/api/auth/register/send-otp`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: formData.email })
@@ -97,7 +98,7 @@ const Register = () => {
 
     setOtpLoading(true);
     try {
-      const res = await fetch('/api/auth/register/verify-otp', {
+      const res = await fetch(`${API_BASE_URL}/api/auth/register/verify-otp`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: formData.email, otp: formData.otp })
@@ -137,7 +138,7 @@ const Register = () => {
 
     setLoading(true);
     try {
-      const res = await fetch('/api/auth/register', {
+      const res = await fetch(`${API_BASE_URL}/api/auth/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData)
