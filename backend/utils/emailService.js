@@ -1,18 +1,26 @@
-const nodemailer = require('nodemailer');
+const { Resend } = require('resend');
 
-const transporter = nodemailer.createTransport({
-  host: process.env.EMAIL_HOST || 'smtp.hostinger.com',
-  port: Number(process.env.EMAIL_PORT) || 587,
-  secure: Number(process.env.EMAIL_PORT) === 465,
-  family: 4,
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS
-  },
-  tls: {
-    rejectUnauthorized: false
+let resendInstance = null;
+let cachedApiKey = null;
+
+const getResendClient = () => {
+  const apiKey = process.env.RESEND_API_KEY;
+  if (!apiKey) {
+    throw new Error('RESEND_API_KEY environment variable is missing.');
   }
-});
+  if (!resendInstance || cachedApiKey !== apiKey) {
+    resendInstance = new Resend(apiKey);
+    cachedApiKey = apiKey;
+  }
+  return resendInstance;
+};
+
+const getFromAddress = () => {
+  if (process.env.EMAIL_FROM && process.env.EMAIL_FROM.trim()) {
+    return process.env.EMAIL_FROM.trim();
+  }
+  return 'Aarambh Institute <onboarding@resend.dev>';
+};
 
 const sendOTP = async (toEmail, otp, type) => {
   try {
@@ -27,12 +35,7 @@ const sendOTP = async (toEmail, otp, type) => {
       text = `You requested a password reset. Your OTP is ${otp}. It is valid for 10 minutes.`;
     }
 
-    const mailOptions = {
-      from: `"Aarambh Institute" <${process.env.EMAIL_USER || 'no-reply@aarambhinstitute.com'}>`,
-      to: toEmail,
-      subject: subject,
-      text: text,
-      html: `
+    const html = `
         <!DOCTYPE html>
         <html>
         <head>
@@ -88,16 +91,29 @@ const sendOTP = async (toEmail, otp, type) => {
           </table>
         </body>
         </html>
-      `
-    };
+      `;
 
-    // Proceed to send the actual email via SMTP
     console.log(`[EMAIL DISPATCH] Sending OTP to ${toEmail}`);
 
-    const info = await transporter.sendMail(mailOptions);
-    return { success: true, messageId: info.messageId };
+    const resend = getResendClient();
+    const from = getFromAddress();
+
+    const { data, error } = await resend.emails.send({
+      from,
+      to: toEmail,
+      subject,
+      text,
+      html
+    });
+
+    if (error) {
+      console.error('Email sending failed:', error?.message || error);
+      return { success: false, error };
+    }
+
+    return { success: true, messageId: data?.id };
   } catch (error) {
-    console.error('Email sending failed:', error);
+    console.error('Email sending failed:', error?.message || error);
     return { success: false, error };
   }
 };
@@ -108,11 +124,7 @@ const sendInvoice = async (toEmail, studentName, itemName, itemType, amount, tra
       day: 'numeric', month: 'short', year: 'numeric'
     });
     
-    const mailOptions = {
-      from: `"Aarambh Institute" <${process.env.EMAIL_USER || 'no-reply@aarambhinstitute.com'}>`,
-      to: toEmail,
-      subject: `Payment Successful - Invoice for ${itemName}`,
-      html: `
+    const html = `
         <!DOCTYPE html>
         <html>
         <head>
@@ -201,14 +213,28 @@ const sendInvoice = async (toEmail, studentName, itemName, itemType, amount, tra
           </table>
         </body>
         </html>
-      `
-    };
+      `;
 
     console.log(`[EMAIL DISPATCH] Sending Invoice to ${toEmail}`);
-    const info = await transporter.sendMail(mailOptions);
-    return { success: true, messageId: info.messageId };
+
+    const resend = getResendClient();
+    const from = getFromAddress();
+
+    const { data, error } = await resend.emails.send({
+      from,
+      to: toEmail,
+      subject: `Payment Successful - Invoice for ${itemName}`,
+      html
+    });
+
+    if (error) {
+      console.error('Invoice email sending failed:', error?.message || error);
+      return { success: false, error };
+    }
+
+    return { success: true, messageId: data?.id };
   } catch (error) {
-    console.error('Invoice email sending failed:', error);
+    console.error('Invoice email sending failed:', error?.message || error);
     return { success: false, error };
   }
 };
