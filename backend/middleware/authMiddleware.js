@@ -7,7 +7,12 @@ const protect = async (req, res, next) => {
   if (!token) {
     return res.status(401).json({ error: 'Access denied. No token provided.' });
   }
-  
+
+  if (!process.env.JWT_SECRET) {
+    console.error('Server configuration error: JWT_SECRET environment variable is missing.');
+    return res.status(500).json({ error: 'Authentication service temporarily unavailable.' });
+  }
+
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     

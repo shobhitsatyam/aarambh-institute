@@ -9,6 +9,7 @@ const ForgotPassword = () => {
   const [otp, setOtp] = useState('');
   const [passwords, setPasswords] = useState({ new: '', confirm: '' });
   const [showPassword, setShowPassword] = useState({ new: false, confirm: false });
+  const [resetToken, setResetToken] = useState('');
 
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
@@ -81,6 +82,9 @@ const ForgotPassword = () => {
 
       if (data.success || res.ok) {
         showAlertMsg('OTP verified successfully!');
+        if (data.resetToken) {
+          setResetToken(data.resetToken);
+        }
         setStep(3);
       } else {
         showAlertMsg(data.message || 'Invalid OTP', 'error');
@@ -108,7 +112,7 @@ const ForgotPassword = () => {
       const res = await fetch(`${API_BASE_URL}/api/auth/forgot-password/reset`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password: passwords.new })
+        body: JSON.stringify({ email, password: passwords.new, resetToken })
       });
       const data = await res.json();
 

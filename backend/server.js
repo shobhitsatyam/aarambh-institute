@@ -77,11 +77,6 @@ app.use((err, req, res, next) => {
 
 const PORT = process.env.PORT || 5000;
 
-console.log('SMTP_CONFIG_CHECK:', {
-  host: process.env.EMAIL_HOST || 'smtp.hostinger.com',
-  port: process.env.EMAIL_PORT || '(default 587)'
-});
-
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`Server running on port ${PORT}`);
 });
