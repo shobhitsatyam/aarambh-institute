@@ -339,7 +339,13 @@ exports.sendRegisterOtp = async (req, res) => {
     const expiresAt = new Date(Date.now() + 10 * 60000); // 10 minutes from now
 
     // Send OTP via Email
-    await emailService.sendOTP(normalizedEmail, otp, 'register');
+    const emailResult = await emailService.sendOTP(normalizedEmail, otp, 'register');
+    if (!emailResult?.success) {
+      return res.status(502).json({
+        success: false,
+        message: 'Unable to send OTP right now. Please try again later.'
+      });
+    }
 
     // P0-4: Store hashed OTP in database
     await storeOTP(normalizedEmail, otp, expiresAt, 'register');
@@ -573,7 +579,13 @@ exports.sendForgotPasswordOtp = async (req, res) => {
     const expiresAt = new Date(Date.now() + 10 * 60000); // 10 minutes
 
     // Send OTP via Email (emailService does NOT log OTP)
-    await emailService.sendOTP(normalizedEmail, otp, 'forgot_password');
+    const emailResult = await emailService.sendOTP(normalizedEmail, otp, 'forgot_password');
+    if (!emailResult?.success) {
+      return res.status(502).json({
+        success: false,
+        message: 'Unable to send OTP right now. Please try again later.'
+      });
+    }
 
     // P0-4: Hashed OTP storage
     await storeOTP(normalizedEmail, otp, expiresAt, 'forgot_password');
