@@ -1,12 +1,36 @@
 import React, { useState, useEffect } from 'react';
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
+import api from '../../services/api';
 import './Dashboard.css';
 
 const StudentLayout = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [showNotifications, setShowNotifications] = useState(false);
+  const [studentName, setStudentName] = useState('Student');
   const location = useLocation();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    let isMounted = true;
+    const fetchProfile = async () => {
+      try {
+        const { data: result } = await api.get('/student/profile');
+        if (isMounted && result?.success && result?.data) {
+          const name = result.data.name || result.data.full_name;
+          if (name) {
+            setStudentName(name);
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching student profile for header:', error);
+      }
+    };
+
+    fetchProfile();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   // Scroll to top of the main container when route changes
   useEffect(() => {
@@ -132,11 +156,15 @@ const StudentLayout = () => {
             </div>
             <div className="flex items-center gap-3 border-l border-slate-200 pl-6 cursor-pointer group">
               <div className="text-right hidden md:block">
-                <p className="text-sm font-bold text-slate-700 group-hover:text-rose-500 transition-colors">Aditya Ravi</p>
+                <p className="text-sm font-bold text-slate-700 group-hover:text-rose-500 transition-colors">{studentName}</p>
                 <p className="text-xs text-slate-500">Student</p>
               </div>
               <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-rose-500 to-orange-400 p-[2px]">
-                <img src="https://ui-avatars.com/api/?name=Aditya+Ravi&background=ffffff&color=be123c" alt="Profile" className="w-full h-full rounded-full border-2 border-white object-cover" />
+                <img
+                  src={`https://ui-avatars.com/api/?name=${encodeURIComponent(studentName)}&background=ffffff&color=be123c`}
+                  alt={studentName}
+                  className="w-full h-full rounded-full border-2 border-white object-cover"
+                />
               </div>
             </div>
           </div>
