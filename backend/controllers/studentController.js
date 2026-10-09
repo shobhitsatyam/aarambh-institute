@@ -15,21 +15,62 @@ exports.getDashboardStats = async (req, res) => {
     const [userRows] = await db.execute('SELECT full_name FROM users WHERE id = ?', [studentId]);
     const studentName = userRows.length > 0 ? userRows[0].full_name : 'Student';
 
-    // Fetch attendance stats
-    const [attendanceRows] = await db.execute('SELECT COUNT(*) as total, SUM(CASE WHEN status = "Present" THEN 1 ELSE 0 END) as present FROM attendance WHERE student_id = ?', [studentId]);
-    const totalClasses = attendanceRows[0].total || 0;
-    const presentClasses = attendanceRows[0].present || 0;
-    const attendancePercentage = totalClasses > 0 ? Math.round((presentClasses / totalClasses) * 100) : 0;
+    // Fetch attendance stats (optional table)
+    let attendancePercentage = 0;
+    try {
+      const [attendanceRows] = await db.execute(
+        'SELECT COUNT(*) as total, SUM(CASE WHEN status = "Present" THEN 1 ELSE 0 END) as present FROM attendance WHERE student_id = ?',
+        [studentId]
+      );
+      const totalClasses = Number(attendanceRows[0]?.total) || 0;
+      const presentClasses = Number(attendanceRows[0]?.present) || 0;
+      attendancePercentage = totalClasses > 0 ? Math.round((presentClasses / totalClasses) * 100) : 0;
+    } catch (error) {
+      if (error.code === 'ER_NO_SUCH_TABLE') {
+        console.warn('Optional table "attendance" not found, defaulting attendance stats.');
+      } else {
+        throw error;
+      }
+    }
 
-    // Fetch fees
-    const [feeRows] = await db.execute('SELECT pending_amount FROM student_fees WHERE student_id = ?', [studentId]);
-    const pendingFees = feeRows.length > 0 ? feeRows[0].pending_amount : 0;
+    // Fetch fees (optional table)
+    let pendingFees = 0;
+    try {
+      const [feeRows] = await db.execute('SELECT pending_amount FROM student_fees WHERE student_id = ?', [studentId]);
+      pendingFees = feeRows.length > 0 ? (Number(feeRows[0].pending_amount) || 0) : 0;
+    } catch (error) {
+      if (error.code === 'ER_NO_SUCH_TABLE') {
+        console.warn('Optional table "student_fees" not found, defaulting pending fees.');
+      } else {
+        throw error;
+      }
+    }
 
-    // Fetch upcoming classes
-    const [classRows] = await db.execute('SELECT id, subject, topic, DATE_FORMAT(schedule_time, "%h:%i %p") as time, status FROM classes WHERE status IN ("Live", "Upcoming") ORDER BY schedule_time ASC LIMIT 2');
+    // Fetch upcoming classes (optional table)
+    let upcomingClasses = [];
+    try {
+      const [classRows] = await db.execute('SELECT id, subject, topic, DATE_FORMAT(schedule_time, "%h:%i %p") as time, status FROM classes WHERE status IN ("Live", "Upcoming") ORDER BY schedule_time ASC LIMIT 2');
+      upcomingClasses = classRows;
+    } catch (error) {
+      if (error.code === 'ER_NO_SUCH_TABLE') {
+        console.warn('Optional table "classes" not found, defaulting upcoming classes.');
+      } else {
+        throw error;
+      }
+    }
 
-    // Fetch recent notifications
-    const [notificationRows] = await db.execute('SELECT id, title, type as icon, DATE_FORMAT(created_at, "%Y-%m-%d %h:%i %p") as time FROM notifications WHERE student_id = ? OR student_id IS NULL ORDER BY created_at DESC LIMIT 2', [studentId]);
+    // Fetch recent notifications (optional table)
+    let recentNotifications = [];
+    try {
+      const [notificationRows] = await db.execute('SELECT id, title, type as icon, DATE_FORMAT(created_at, "%Y-%m-%d %h:%i %p") as time FROM notifications WHERE student_id = ? OR student_id IS NULL ORDER BY created_at DESC LIMIT 2', [studentId]);
+      recentNotifications = notificationRows;
+    } catch (error) {
+      if (error.code === 'ER_NO_SUCH_TABLE') {
+        console.warn('Optional table "notifications" not found, defaulting notifications.');
+      } else {
+        throw error;
+      }
+    }
 
     res.json({
       success: true,
@@ -39,8 +80,8 @@ exports.getDashboardStats = async (req, res) => {
         activeSubjects: 0,
         pendingFees,
         lastExamScore: 0,
-        upcomingClasses: classRows,
-        recentNotifications: notificationRows
+        upcomingClasses,
+        recentNotifications
       }
     });
   } catch (error) {
