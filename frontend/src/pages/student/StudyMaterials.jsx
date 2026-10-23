@@ -33,7 +33,31 @@ const StudyMaterials = () => {
     });
   };
 
-  const handleBuy = async (id, price) => {
+  const getAuthUserPrefill = () => {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) return {};
+      const payloadPart = token.split('.')[1];
+      if (!payloadPart) return {};
+      const base64 = payloadPart.replace(/-/g, '+').replace(/_/g, '/');
+      const decoded = JSON.parse(
+        decodeURIComponent(
+          atob(base64)
+            .split('')
+            .map((c) => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
+            .join('')
+        )
+      );
+      const prefill = {};
+      if (decoded?.full_name) prefill.name = decoded.full_name;
+      if (decoded?.email) prefill.email = decoded.email;
+      return prefill;
+    } catch (err) {
+      return {};
+    }
+  };
+
+  const handleBuy = async (id) => {
     try {
       // 1. Load Razorpay script
       const res = await loadRazorpayScript();
@@ -42,28 +66,32 @@ const StudyMaterials = () => {
         return;
       }
 
-      // 2. Create Order on Backend
+      // 2. Create Order on Backend (server-side price validation)
       const orderRes = await api.post('/payment/create-order', {
-        amount: price,
         itemId: id,
         itemType: 'material'
       });
 
-      if (!orderRes.data.success) {
-        alert("Failed to create order");
+      if (!orderRes.data?.success || !orderRes.data?.order) {
+        alert(orderRes.data?.message || "Failed to create order");
         return;
       }
 
       const { order, key_id } = orderRes.data;
+      const prefill = getAuthUserPrefill();
 
       // 3. Initialize Razorpay Checkout
       const options = {
         key: key_id,
         amount: order.amount,
-        currency: order.currency,
+        currency: order.currency || "INR",
         name: "Aarambh Institute",
         description: "Study Material Purchase",
         order_id: order.id,
+        prefill,
+        theme: {
+          color: "#4f46e5"
+        },
         handler: async function (response) {
           // 4. Verify Payment on Backend
           try {
@@ -72,32 +100,31 @@ const StudyMaterials = () => {
               razorpay_payment_id: response.razorpay_payment_id,
               razorpay_signature: response.razorpay_signature,
               itemId: id,
-              itemType: 'material',
-              amountPaid: price
+              itemType: 'material'
             });
 
-            if (verifyRes.data.success) {
-              alert("Payment successful! Material unlocked.");
+            if (verifyRes.data?.success) {
+              alert(verifyRes.data.message || "Payment successful! Material unlocked.");
               fetchMaterials(); // refresh the list
+            } else {
+              alert(verifyRes.data?.message || "Payment verification failed.");
             }
           } catch (error) {
+            console.error("Payment verification error:", error);
             alert(error.response?.data?.message || "Payment verification failed.");
           }
-        },
-        prefill: {
-          name: "Student Name",
-          email: "student@example.com",
-          contact: "9999999999"
-        },
-        theme: {
-          color: "#4f46e5"
         }
       };
 
       const paymentObject = new window.Razorpay(options);
+      paymentObject.on('payment.failed', function (failureResponse) {
+        console.error('Razorpay payment failed:', failureResponse?.error);
+        alert(`Payment failed: ${failureResponse?.error?.description || 'Transaction declined.'}`);
+      });
       paymentObject.open();
     } catch (error) {
-      alert("Something went wrong");
+      console.error("Order processing error:", error);
+      alert(error.response?.data?.message || "Something went wrong while processing your purchase.");
     }
   };
 
@@ -202,7 +229,7 @@ const StudyMaterials = () => {
                       {mat.type === 'Video' ? 'Play' : 'Download'}
                     </button>
                   ) : (
-                    <button onClick={() => handleBuy(mat.id, mat.price)} className="px-5 h-10 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 text-white flex items-center gap-2 text-sm font-bold transition-all duration-300 shadow-[0_8px_20px_rgba(245,158,11,0.3)] hover:shadow-[0_10px_25px_rgba(245,158,11,0.5)] hover:-translate-y-0.5">
+                    <button onClick={() => handleBuy(mat.id)} className="px-5 h-10 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 text-white flex items-center gap-2 text-sm font-bold transition-all duration-300 shadow-[0_8px_20px_rgba(245,158,11,0.3)] hover:shadow-[0_10px_25px_rgba(245,158,11,0.5)] hover:-translate-y-0.5">
                       Buy Now
                     </button>
                   )}

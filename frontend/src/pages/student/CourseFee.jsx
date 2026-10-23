@@ -11,6 +11,30 @@ const loadRazorpayScript = () => {
   });
 };
 
+const getAuthUserPrefill = () => {
+  try {
+    const token = localStorage.getItem('token');
+    if (!token) return {};
+    const payloadPart = token.split('.')[1];
+    if (!payloadPart) return {};
+    const base64 = payloadPart.replace(/-/g, '+').replace(/_/g, '/');
+    const decoded = JSON.parse(
+      decodeURIComponent(
+        atob(base64)
+          .split('')
+          .map((c) => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
+          .join('')
+      )
+    );
+    const prefill = {};
+    if (decoded?.full_name) prefill.name = decoded.full_name;
+    if (decoded?.email) prefill.email = decoded.email;
+    return prefill;
+  } catch (err) {
+    return {};
+  }
+};
+
 const CourseFee = () => {
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [selectedInstallment, setSelectedInstallment] = useState(null);
@@ -62,6 +86,11 @@ const CourseFee = () => {
   };
 
   const processPayment = async () => {
+    if (!selectedInstallment?.id) {
+      alert('Please select an installment to pay.');
+      return;
+    }
+
     setProcessing(true);
     try {
       const res = await loadRazorpayScript();
@@ -71,64 +100,74 @@ const CourseFee = () => {
         return;
       }
 
-      const { data: orderData } = await api.post('/payment/create-order', {
-        amount: selectedInstallment.amount,
-        itemId: selectedInstallment.id, 
-        itemType: 'course' 
+      // Order creation: send only itemId and itemType ('fee_installment')
+      const orderRes = await api.post('/payment/create-order', {
+        itemId: selectedInstallment.id,
+        itemType: 'fee_installment'
       });
 
-      if (!orderData.success) {
-        alert('Failed to create order. Please try again.');
+      if (!orderRes.data?.success || !orderRes.data?.order) {
+        alert(orderRes.data?.message || 'Failed to create order. Please try again.');
         setProcessing(false);
         return;
       }
 
+      const { order, key_id } = orderRes.data;
+      const prefill = getAuthUserPrefill();
+
       const options = {
-        key: 'rzp_test_placeholder', // Usually fetched from env or backend
-        amount: orderData.order.amount,
-        currency: orderData.order.currency,
+        key: key_id,
+        amount: order.amount,
+        currency: order.currency || "INR",
         name: 'Aarambh Institute',
         description: `Payment for Installment #${selectedInstallment.id}`,
-        order_id: orderData.order.id,
+        order_id: order.id,
+        prefill,
+        theme: {
+          color: '#6366f1'
+        },
         handler: async function (response) {
           try {
+            // Payment verification: razorpay IDs, signature, itemId, itemType
             const verifyRes = await api.post('/payment/verify', {
               razorpay_order_id: response.razorpay_order_id,
               razorpay_payment_id: response.razorpay_payment_id,
               razorpay_signature: response.razorpay_signature,
               itemId: selectedInstallment.id,
-              itemType: 'course',
-              amountPaid: selectedInstallment.amount
+              itemType: 'fee_installment'
             });
 
-            if (verifyRes.data.success) {
-              alert('Payment Successful!');
+            if (verifyRes.data?.success) {
+              alert(verifyRes.data.message || 'Payment Successful!');
               setShowPaymentModal(false);
               fetchFees(); // Refresh data
             } else {
-              alert(verifyRes.data.message || 'Payment Verification Failed!');
+              alert(verifyRes.data?.message || 'Payment Verification Failed!');
             }
           } catch (error) {
             console.error('Verify error:', error);
             alert(error.response?.data?.message || 'An error occurred during verification.');
+          } finally {
+            setProcessing(false);
           }
         },
-        prefill: {
-          name: 'Student Name', // Should ideally come from user profile
-          email: 'student@example.com',
-          contact: '9999999999'
-        },
-        theme: {
-          color: '#6366f1'
+        modal: {
+          ondismiss: function () {
+            setProcessing(false);
+          }
         }
       };
 
       const paymentObject = new window.Razorpay(options);
+      paymentObject.on('payment.failed', function (failureResponse) {
+        console.error('Razorpay payment failed:', failureResponse?.error);
+        alert(`Payment failed: ${failureResponse?.error?.description || 'Transaction declined.'}`);
+        setProcessing(false);
+      });
       paymentObject.open();
     } catch (error) {
       console.error('Payment processing error:', error);
-      alert('An error occurred while processing the payment.');
-    } finally {
+      alert(error.response?.data?.message || 'An error occurred while processing the payment.');
       setProcessing(false);
     }
   };
